@@ -1,0 +1,27 @@
+{
+  "name": "adfs-id-provider",
+  "version": "1.0.0-SNAPSHOT",
+  "description": "ADFS ID Provider",
+  "license": "Apache-2.0",
+  "author": "Christian Westgaard <cwe@enonic.com>",
+  "contributors": [
+    "Glenn Ricaud <gri@enonic.com>"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/enonic/app-adfs-idprovider.git"
+  },
+  "scripts": {
+    "copyNodeModules": "cd node_modules && find . -name '*.js' -o -name '*.json'| cpio -pdm ../src/main/resources/site/lib/;",
+    "doctoc": "doctoc README.md --bitbucket",
+    "generate-docs": "doctoc README.md --bitbucket && rm -r docs; node_modules/.bin/jsdoc -c jsdoc.json README.md",
+    "overwriteNodeModules": "cd node_modules && find . -name '*.js' -o -name '*.json'| cpio -updm ../src/main/resources/site/lib/;"
+  },
+  "devDependencies": {
+    "docdash": "0.4.0",
+    "doctoc": "1.3.1",
+    "jsdoc": "3.4.3",
+    "urijs": "1.18.12"
+  },
+  "private": "true"
+}

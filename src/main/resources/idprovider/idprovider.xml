@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<id-provider xmlns="urn:enonic:xp:model:1.0">
+	<mode>MIXED</mode>
+	<config>
+
+		<input name="authorizationUrl" type="TextLine">
+			<label>authorizationUrl</label>
+			<help-text>https://www.example.com/adfs/oauth2/authorize</help-text>
+			<occurrences minimum="1" maximum="1"/>
+			<default>https://www.example.com/adfs/oauth2/authorize</default>
+		</input>
+
+		<input name="tokenUrl" type="TextLine">
+			<label>tokenUrl</label>
+			<help-text>https://www.example.com/adfs/oauth2/token</help-text>
+			<occurrences minimum="1" maximum="1"/>
+			<default>https://www.example.com/adfs/oauth2/token</default>
+		</input>
+
+		<input name="logoutUrl" type="TextLine">
+			<label>logoutUrl</label>
+			<help-text>https://www.example.com/adfs/ls/?wa=wsignout1.0&amp;wreply=</help-text>
+			<occurrences minimum="1" maximum="1"/>
+			<default>https://www.example.com/adfs/ls/?wa=wsignout1.0&amp;wreply=</default>
+		</input>
+
+		<input name="clientId" type="TextLine">
+			<label>clientId</label>
+			<help-text>Specifies a client identifier for this OAuth 2.0 client in AD FS.</help-text>
+			<occurrences minimum="1" maximum="1"/>
+		</input>
+
+		<!-- AD FS currently does not support client secrets -->
+		<!--input name="clientSecret" type="TextLine">
+			<label>clientSecret</label>
+			<help-text></help-text>
+			<occurrences minimum="1" maximum="1"/>
+		</input-->
+
+		<input name="redirectUrl" type="TextLine">
+			<label>redirectUrl</label>
+			<help-text>Where AD FS should redirect to after login. Should be /_/idprovider/${userStoreKey}. Must also be configured in AD FS.</help-text>
+			<occurrences minimum="1" maximum="1"/>
+			<default>/_/idprovider/${userStoreKey}</default>
+		</input>
+
+		<input name="logIdProviderUrl" type="CheckBox">
+			<label>Log idProviderUrl</label>
+			<help-text>Output the idProviderUrl in the log so you know what to configure in AD FS.</help-text>
+			<occurrences minimum="0" maximum="1"/>
+			<default>checked</default>
+		</input>
+
+		<input name="logJwt" type="CheckBox">
+			<label>Log jwt</label>
+			<help-text>Output the jwt in the log so you can see which claims/properties AD FS returns.</help-text>
+			<occurrences minimum="0" maximum="1"/>
+			<default>checked</default>
+		</input>
+
+		<item-set name="user">
+			<label>User mappings</label>
+			<help-text>Configure how data from the jwt.payload shall be used to create and update users.</help-text>
+			<occurrences minimum="0" maximum="1"/>
+			<items>
+
+				<input name="name" type="TextLine">
+					<label>Name</label>
+					<help-text>This need to be unique. So good candidates are ${oid} or ${upn}</help-text>
+					<occurrences minimum="1" maximum="1"/>
+					<default>${oid}</default>
+				</input>
+
+				<input name="displayName" type="TextLine">
+					<label>Display name</label>
+					<help-text>Could be some elaborate format, but for simplicity ${unique_name} or ${upn} are good candidates.</help-text>
+					<occurrences minimum="1" maximum="1"/>
+					<default>${given_name} ${family_name} (${unique_name}) &lt;${upn}&gt;</default>
+				</input>
+
+				<input name="email" type="TextLine">
+					<label>Email</label>
+					<help-text>You probably want to use ${upn}</help-text>
+					<occurrences minimum="1" maximum="1"/>
+					<default>${upn}</default>
+				</input>
+
+			</items>
+		</item-set><!-- user -->
+
+		<input name="createAndUpdateGroupsOnLogin" type="CheckBox">
+			<label>Create and update groups?</label>
+			<help-text>Create and update groups when a user is logged in?</help-text>
+			<occurrences minimum="0" maximum="1"/>
+			<default>checked</default>
+		</input>
+
+		<item-set name="group">
+			<label>Group mapping</label>
+			<help-text>Configure how data from the jwt.payload shall be used to create and update group memberships.</help-text>
+			<occurrences minimum="0" maximum="1"/>
+			<items>
+
+				<input name="dn" type="TextLine">
+					<label>DN</label>
+					<help-text>Name / path of DN in jwt.payload. Typically ${dn}</help-text>
+					<occurrences minimum="1" maximum="1"/>
+					<default>${dn}</default>
+				</input>
+
+			</items>
+		</item-set><!-- group -->
+
+		<item-set name="proxy">
+			<label>Proxy</label>
+			<help-text>Configure a proxy to use when talking to AD FS (the Authorzation Server)</help-text>
+			<occurrences minimum="0" maximum="1"/>
+			<items>
+
+				<input name="host" type="TextLine">
+					<label>Host</label>
+					<help-text>Proxy host name to use.</help-text>
+					<occurrences minimum="1" maximum="1"/>
+				</input>
+
+				<input name="port" type="Long">
+					<label>Port Number</label>
+					<help-text>Proxy port to use. Between 0 and 65535.</help-text>
+					<occurrences minimum="0" maximum="1"/>
+					<config>
+						<regexp>^([0-9]{1,4}|[1-5][0-9]{4}|6[0-4][0-9]{3}|65[0-4][0-9]{2}|655[0-2][0-9]|6553[0-5])$</regexp><!-- 0 to 65535 --><!-- Does not work -->
+					</config>
+				</input>
+
+				<input name="user" type="TextLine">
+					<label>Username</label>
+					<help-text>Username for proxy authentication.</help-text>
+					<occurrences minimum="0" maximum="1"/>
+				</input>
+
+				<input name="password" type="TextLine">
+					<label>Password</label>
+					<help-text>Password for proxy authentication.</help-text>
+					<occurrences minimum="0" maximum="1"/>
+				</input>
+
+			</items>
+		</item-set><!-- proxy -->
+
+		<item-set name="profile">
+			<label>Property to user profile from AD FS JWT Claim</label>
+			<help-text>Enrich user profile with data from AD FS.</help-text>
+			<occurrences minimum="0" maximum="0"/>
+			<items>
+
+				<input name="from" type="TextLine">
+					<label>From jtw path</label>
+					<help-text>${given_name} ${family_name} (${unique_name}) &lt;${upn}&gt;</help-text>
+					<occurrences minimum="1" maximum="1"/>
+					<default></default>
+				</input>
+
+				<input name="to" type="TextLine">
+					<label>To profile path</label>
+					<help-text>scope.fullName</help-text>
+					<occurrences minimum="1" maximum="1"/>
+					<default></default>
+				</input>
+
+			</items>
+		</item-set><!-- profile -->
+
+	</config>
+</id-provider>

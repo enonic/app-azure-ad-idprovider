@@ -1,0 +1,24 @@
+<form
+    method="post"
+    data-th-action="${logoutUrl}"
+    data-th-data-part-name="${partName}"
+>
+    <p data-th-data-part-name="${partName}"
+        ><span data-th-text="${logoutPreText}"></span>
+        <button
+            type="submit"
+            name="submit_param"
+            value="submit_value"
+            data-th-text="${logoutText}"
+        ></button
+        ><span data-th-text="${logoutPostText}"></span
+    ></p>
+<!--/* p data-th-data-part-name="${partName}"
+><span data-th-text="${logoutPreText}"></span
+><a
+data-th-href="${logoutUrl}"
+data-th-text="${logoutText}"
+></a
+><span data-th-text="${logoutPostText}"></span
+></span */-->
+</form>

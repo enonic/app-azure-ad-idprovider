@@ -1,0 +1,13 @@
+{
+    "opts": {
+        "destination": "docs/",
+        "recurse": true,
+        "template": "node_modules/docdash",
+        "verbose": true
+    },
+    "source": {
+        "excludePattern": "(node_modules/|docs/|site/lib)",
+        "include": "src/main/resources",
+        "includePattern": ".js$"
+    }
+}
