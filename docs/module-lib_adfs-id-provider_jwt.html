@@ -1,0 +1,970 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>lib/adfs-id-provider/jwt - Documentation</title>
+
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc.css">
+</head>
+<body>
+
+<input type="checkbox" id="nav-trigger" class="nav-trigger" />
+<label for="nav-trigger" class="navicon-button x">
+  <div class="navicon"></div>
+</label>
+
+<label for="nav-trigger" class="overlay"></label>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-idprovider.html">idprovider</a><ul class='methods'><li data-type='method'><a href="module-idprovider.html#.get">get</a></li><li data-type='method'><a href="module-idprovider.html#.handle401">handle401</a></li><li data-type='method'><a href="module-idprovider.html#.login">login</a></li><li data-type='method'><a href="module-idprovider.html#.logout">logout</a></li><li data-type='method'><a href="module-idprovider.html#.post">post</a></li></ul></li><li><a href="module-lib_adfs-id-provider.html">lib/adfs-id-provider</a><ul class='methods'><li data-type='method'><a href="module-lib_adfs-id-provider.html#.handleIdProviderRequest">handleIdProviderRequest</a></li></ul></li><li><a href="module-lib_adfs-id-provider_array.html">lib/adfs-id-provider/array</a><ul class='methods'><li data-type='method'><a href="module-lib_adfs-id-provider_array.html#.inFirstButNotInSecond">inFirstButNotInSecond</a></li></ul></li><li><a href="module-lib_adfs-id-provider_auth.html">lib/adfs-id-provider/auth</a><ul class='methods'><li data-type='method'><a href="module-lib_adfs-id-provider_auth.html#.handleLogoutRequest">handleLogoutRequest</a></li><li data-type='method'><a href="module-lib_adfs-id-provider_auth.html#~getRedirectAfterLogoutUrl">getRedirectAfterLogoutUrl</a></li></ul></li><li><a href="module-lib_adfs-id-provider_auth_group.html">lib/adfs-id-provider/auth/group</a><ul class='methods'><li data-type='method'><a href="module-lib_adfs-id-provider_auth_group.html#.createAndUpdateGroupsFromJwt">createAndUpdateGroupsFromJwt</a></li><li data-type='method'><a href="module-lib_adfs-id-provider_auth_group.html#~addUser">addUser</a></li><li data-type='method'><a href="module-lib_adfs-id-provider_auth_group.html#~createOrModify">createOrModify</a></li><li data-type='method'><a href="module-lib_adfs-id-provider_auth_group.html#~removeUser">removeUser</a></li></ul></li><li><a href="module-lib_adfs-id-provider_auth_sanitizeName.html">lib/adfs-id-provider/auth/sanitizeName</a><ul class='methods'><li data-type='method'><a href="module-lib_adfs-id-provider_auth_sanitizeName.html#.sanitizeName">sanitizeName</a></li></ul></li><li><a href="module-lib_adfs-id-provider_auth_user.html">lib/adfs-id-provider/auth/user</a><ul class='methods'><li data-type='method'><a href="module-lib_adfs-id-provider_auth_user.html#.createOrUpdateFromJwt">createOrUpdateFromJwt</a></li><li data-type='method'><a href="module-lib_adfs-id-provider_auth_user.html#.getGroupKeys">getGroupKeys</a></li><li data-type='method'><a href="module-lib_adfs-id-provider_auth_user.html#.getGroups">getGroups</a></li><li data-type='method'><a href="module-lib_adfs-id-provider_auth_user.html#.getProfile">getProfile</a></li><li data-type='method'><a href="module-lib_adfs-id-provider_auth_user.html#.getRoles">getRoles</a></li><li data-type='method'><a href="module-lib_adfs-id-provider_auth_user.html#~createOrModify">createOrModify</a></li><li data-type='method'><a href="module-lib_adfs-id-provider_auth_user.html#~enrichProfileFromJwt">enrichProfileFromJwt</a></li><li data-type='method'><a href="module-lib_adfs-id-provider_auth_user.html#~modifyProfile">modifyProfile</a></li><li data-type='method'><a href="module-lib_adfs-id-provider_auth_user.html#~setPathToValue">setPathToValue</a></li></ul></li><li><a href="module-lib_adfs-id-provider_context.html">lib/adfs-id-provider/context</a><ul class='methods'><li data-type='method'><a href="module-lib_adfs-id-provider_context.html#.runAsAdmin">runAsAdmin</a></li></ul></li><li><a href="module-lib_adfs-id-provider_jwt.html">lib/adfs-id-provider/jwt</a><ul class='methods'><li data-type='method'><a href="module-lib_adfs-id-provider_jwt.html#.fromAccessToken">fromAccessToken</a></li></ul></li><li><a href="module-lib_adfs-id-provider_oauth2.html">lib/adfs-id-provider/oauth2</a><ul class='methods'><li data-type='method'><a href="module-lib_adfs-id-provider_oauth2.html#.redirectToAuthorizationUrl">redirectToAuthorizationUrl</a></li><li data-type='method'><a href="module-lib_adfs-id-provider_oauth2.html#.requestAccessToken">requestAccessToken</a></li><li data-type='method'><a href="module-lib_adfs-id-provider_oauth2.html#~getRedirectUri">getRedirectUri</a></li></ul></li><li><a href="module-lib_adfs-id-provider_object.html">lib/adfs-id-provider/object</a><ul class='methods'><li data-type='method'><a href="module-lib_adfs-id-provider_object.html#.valueFromFormat">valueFromFormat</a></li><li data-type='method'><a href="module-lib_adfs-id-provider_object.html#~isNotSet">isNotSet</a></li><li data-type='method'><a href="module-lib_adfs-id-provider_object.html#~isSet">isSet</a></li><li data-type='method'><a href="module-lib_adfs-id-provider_object.html#~toStr">toStr</a></li></ul></li><li><a href="module-lib_adfs-id-provider_portal.html">lib/adfs-id-provider/portal</a><ul class='methods'><li data-type='method'><a href="module-lib_adfs-id-provider_portal.html#.getReturnToUrl">getReturnToUrl</a></li><li data-type='method'><a href="module-lib_adfs-id-provider_portal.html#~getAbsoluteSiteUrl">getAbsoluteSiteUrl</a></li><li data-type='method'><a href="module-lib_adfs-id-provider_portal.html#~getAbsoluteUrlFromPath">getAbsoluteUrlFromPath</a></li><li data-type='method'><a href="module-lib_adfs-id-provider_portal.html#~isAbsoluteUrl">isAbsoluteUrl</a></li></ul></li><li><a href="module-site_filters_isAccessTokenExpired.html">site/filters/isAccessTokenExpired</a><ul class='methods'><li data-type='method'><a href="module-site_filters_isAccessTokenExpired.html#.responseFilter">responseFilter</a></li></ul></li><li><a href="module-site_parts_authentication.html">site/parts/authentication</a><ul class='methods'><li data-type='method'><a href="module-site_parts_authentication.html#.get">get</a></li></ul></li></ul>
+</nav>
+
+<div id="main">
+    
+    <h1 class="page-title">lib/adfs-id-provider/jwt</h1>
+    
+
+    
+
+
+
+
+<section>
+
+<header>
+    
+        
+            
+        
+    
+</header>
+
+<article>
+    <div class="container-overview">
+    
+        
+            <div class="description">Jwt module.</div>
+        
+
+        
+            
+
+
+
+
+<dl class="details">
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="lib_adfs-id-provider_jwt.js.html">lib/adfs-id-provider/jwt.js</a>, <a href="lib_adfs-id-provider_jwt.js.html#line1">line 1</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+    
+    </div>
+
+    
+
+    
+
+    
+
+     
+
+    
+
+    
+
+    
+        <h3 class="subsection-title">Methods</h3>
+
+        
+            
+
+    
+
+    <h4 class="name" id=".fromAccessToken"><span class="type-signature">(static) </span>fromAccessToken<span class="signature">(request)</span><span class="type-signature"> &rarr; {Jwt}</span></h4>
+
+    
+
+
+
+
+<dl class="details">
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="lib_adfs-id-provider_jwt.js.html">lib/adfs-id-provider/jwt.js</a>, <a href="lib_adfs-id-provider_jwt.js.html#line69">line 69</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+<div class="description">
+    base64UrlDecode an accessToken and JSON.parse its header and payload. Return an object with header, payload and signature.
+</div>
+
+
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>request</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">*</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    jwt
+</div>
+
+
+
+<dl class="param-type">
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Jwt</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+        
+    
+
+    
+        <h3 class="subsection-title">Type Definitions</h3>
+
+        
+                
+<h4 class="name" id="~Jwt">Jwt</h4>
+
+
+
+
+
+<dl class="details">
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="lib_adfs-id-provider_jwt.js.html">lib/adfs-id-provider/jwt.js</a>, <a href="lib_adfs-id-provider_jwt.js.html#line57">line 57</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+    <h5 class="subsection-title">Properties:</h5>
+
+    
+
+<table class="props">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>header</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">JwtHeader</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>payload</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">JwtPayload</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>signature</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+
+
+    <h5>Type:</h5>
+    <ul>
+        <li>
+            
+<span class="param-type">Object</span>
+
+
+        </li>
+    </ul>
+
+
+
+
+
+
+            
+                
+<h4 class="name" id="~JwtHeader">JwtHeader</h4>
+
+
+
+
+
+<dl class="details">
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="lib_adfs-id-provider_jwt.js.html">lib/adfs-id-provider/jwt.js</a>, <a href="lib_adfs-id-provider_jwt.js.html#line37">line 37</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+    <h5 class="subsection-title">Properties:</h5>
+
+    
+
+<table class="props">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>typ</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Type</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>alg</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Algorithm : Algorithm that was used to sign the token.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>x5t</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Particular public key that was used to sign the token.</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+
+
+    <h5>Type:</h5>
+    <ul>
+        <li>
+            
+<span class="param-type">Object</span>
+
+
+        </li>
+    </ul>
+
+
+
+
+
+
+            
+                
+<h4 class="name" id="~JwtPayload">JwtPayload</h4>
+
+
+
+
+
+<dl class="details">
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="lib_adfs-id-provider_jwt.js.html">lib/adfs-id-provider/jwt.js</a>, <a href="lib_adfs-id-provider_jwt.js.html#line44">line 44</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+    <h5 class="subsection-title">Properties:</h5>
+
+    
+
+<table class="props">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>aud</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Audience : The intended recipient of the token. The application that receives the token must verify that the audience value is correct and reject any tokens intended for a different audience.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>iss</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Issuer : Identifies the security token service (STS) that constructs and returns the token. In the tokens that Azure AD returns, the issuer is sts.windows.net. The GUID in the Issuer claim value is the tenant ID of the Azure AD directory. The tenant ID is an immutable and reliable identifier of the directory.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>iat</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">IssuedAt : Stores the time at which the token was issued. It is often used to measure token freshness.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>exp</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Expiration time : The time when the token expires. For the token to be valid, the current date/time must be less than or equal to the exp value. The time is represented as the number of seconds from January 1, 1970 (1970-01-01T0:0:0Z) UTC until the time the token was issued.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>upn</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">User Principal Name : Stores the user name of the user principal.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>auth_time</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">-</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>authmethod</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">-</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>ver</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Version : The version of the JWT token, typically 1.0.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>appid</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Application ID : Identifies the application that is using the token to access a resource. The application can act as itself or on behalf of a user. The application ID typically represents an application object, but it can also represent a service principal object in Azure AD.</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+
+
+    <h5>Type:</h5>
+    <ul>
+        <li>
+            
+<span class="param-type">Object</span>
+
+
+        </li>
+    </ul>
+
+
+
+
+
+
+            
+    
+
+    
+</article>
+
+</section>
+
+
+
+
+</div>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Tue Apr 17 2018 09:39:28 GMT+0200 (CEST) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
+</footer>
+
+<script>prettyPrint();</script>
+<script src="scripts/linenumber.js"></script>
+</body>
+</html>
