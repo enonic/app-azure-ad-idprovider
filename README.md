@@ -4,18 +4,17 @@
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
 
-- [How to use](#markdown-header-how-to-use)
-    - [Example idproviderUrls](#markdown-header-example-idproviderurls)
-- [How to make a site use a specific userstore](#markdown-header-how-to-make-a-site-use-a-specific-userstore)
-- [How to test the id provider on your site](#markdown-header-how-to-test-the-id-provider-on-your-site)
-- [How to test the id provider on localhost](#markdown-header-how-to-test-the-id-provider-on-localhost)
-- [How to enable debug logging](#markdown-header-how-to-enable-debug-logging)
-- [How to build the application](#markdown-header-how-to-build-the-application)
-- [Terms](#markdown-header-terms)
-- [Compatibility](#markdown-header-compatibility)
-- [Changelog](#markdown-header-changelog)
-    - [1.0.0](#markdown-header-100)
-- [TODO](#markdown-header-todo)
+- [How to use](#how-to-use)
+  - [Example idproviderUrls](#example-idproviderurls)
+- [How to make a site use a specific userstore](#how-to-make-a-site-use-a-specific-userstore)
+- [How to test the id provider on your site](#how-to-test-the-id-provider-on-your-site)
+- [How to test the id provider on localhost](#how-to-test-the-id-provider-on-localhost)
+- [How to enable debug logging](#how-to-enable-debug-logging)
+- [How to build the application](#how-to-build-the-application)
+- [Terms](#terms)
+- [Compatibility](#compatibility)
+- [Changelog](#changelog)
+  - [1.0.0](#100)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -90,13 +89,4 @@ Add the following to $XP_HOME/config/logback.xml
 
 ### 1.0.0
 
-* Implement id provider api
-* Login and logout using ADFS
-* Create/update user, profile and group
-
-## TODO
-
-* Unit tests
-* Scenario tests
-* Error handling?
-* Lets say the auth server is offline, what happens, error page?
+* Initial version

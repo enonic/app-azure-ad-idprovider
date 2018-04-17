@@ -13,8 +13,8 @@
   },
   "scripts": {
     "copyUriJs": "cd node_modules && find urijs -name '*.js' -o -name '*.json'| cpio -pdm ../build/resources/main/site/lib/;",
-    "doctoc": "doctoc README.md --bitbucket",
-    "generate-docs": "doctoc README.md --bitbucket && rm -r docs; node_modules/.bin/jsdoc -c jsdoc.json README.md"
+    "doctoc": "doctoc README.md --github",
+    "generate-docs": "doctoc README.md --github && rm -r docs; node_modules/.bin/jsdoc -c jsdoc.json README.md"
   },
   "devDependencies": {
     "docdash": "0.4.0",
