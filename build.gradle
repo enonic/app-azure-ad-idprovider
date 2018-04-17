@@ -15,10 +15,10 @@ dependencies {
     compile "com.enonic.xp:portal-api:${xpVersion}"
     include "com.enonic.xp:lib-auth:${xpVersion}"
     include "com.enonic.xp:lib-context:${xpVersion}"
-    include "com.enonic.xp:lib-http-client:${xpVersion}"
     include "com.enonic.xp:lib-io:${xpVersion}"
     include "com.enonic.xp:lib-portal:${xpVersion}"
     include "com.enonic.xp:lib-thymeleaf:${xpVersion}"
+    include 'com.enonic.lib:lib-http-client:1.0.1'
     include 'com.enonic.lib:text-encoding:1.1.0'
     include 'com.enonic.lib:util:1.1.1'
 }
@@ -32,8 +32,15 @@ repositories {
 //──────────────────────────────────────────────────────────────────────────────
 // Generate documentation
 //──────────────────────────────────────────────────────────────────────────────
-task generate_docs(type: Exec) {
+task generate_docs( type: Exec ) {
     executable 'npm'
     args = ['run', 'generate-docs']
     mustRunAfter 'build'
 }
+
+task copy_urijs( type: Exec ) {
+    executable 'npm'
+    args = ['run', 'copyUriJs']
+}
+processResources.dependsOn.add( copy_urijs )
+
