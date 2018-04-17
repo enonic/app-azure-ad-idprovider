@@ -6,33 +6,33 @@
 //──────────────────────────────────────────────────────────────────────────────
 // Require libs
 //──────────────────────────────────────────────────────────────────────────────
-exports.array  = require('./array');
-exports.auth   = require('./auth');
-exports.jwt    = require('./jwt');
+exports.array = require('./array');
+exports.auth = require('./auth');
+exports.jwt = require('./jwt');
 exports.oauth2 = require('./oauth2');
 exports.object = require('./object');
 
 var lib = {
-	xp: {
-		auth:   require('/lib/xp/auth'),
-		portal: require('/lib/xp/portal')
-	}
+    xp: {
+        auth: require('/lib/xp/auth'),
+        portal: require('/lib/xp/portal')
+    }
 };
 
 //──────────────────────────────────────────────────────────────────────────────
 // Alias functions from libs
 //──────────────────────────────────────────────────────────────────────────────
-var inFirstButNotInSecond        = exports.array.inFirstButNotInSecond;
+var inFirstButNotInSecond = exports.array.inFirstButNotInSecond;
 var createAndUpdateGroupsFromJwt = exports.auth.group.createAndUpdateGroupsFromJwt;
-var createOrUpdateFromJwt        = exports.auth.user.createOrUpdateFromJwt;
-var modifyProfile                = exports.auth.user.modifyProfile;
-var jwtFromAccessToken           = exports.jwt.fromAccessToken;
-var requestAccessToken           = exports.oauth2.requestAccessToken;
-var isSet                        = exports.object.isSet;
-var toStr                        = exports.object.toStr;
-var valueFromFormat              = exports.object.valueFromFormat;
-var getIdProviderConfig          = lib.xp.auth.getIdProviderConfig;
-var login                        = lib.xp.auth.login;
+var createOrUpdateFromJwt = exports.auth.user.createOrUpdateFromJwt;
+var modifyProfile = exports.auth.user.modifyProfile;
+var jwtFromAccessToken = exports.jwt.fromAccessToken;
+var requestAccessToken = exports.oauth2.requestAccessToken;
+var isSet = exports.object.isSet;
+var toStr = exports.object.toStr;
+var valueFromFormat = exports.object.valueFromFormat;
+var getIdProviderConfig = lib.xp.auth.getIdProviderConfig;
+var login = lib.xp.auth.login;
 
 //──────────────────────────────────────────────────────────────────────────────
 // ADFS ID provider methods
@@ -44,65 +44,65 @@ var login                        = lib.xp.auth.login;
  * @param {*} request
  * @returns {httpRedirectResponse}
  */
-exports.handleIdProviderRequest = function(request) {
-	log.debug('handleIdProviderRequest(' + toStr(request) + ')');
+exports.handleIdProviderRequest = function (request) {
+    log.debug('handleIdProviderRequest(' + toStr(request) + ')');
 
-	var accessTokenResponse = requestAccessToken(request);
-	//log.debug('accessTokenResponse:' + toStr(accessTokenResponse));
+    var accessTokenResponse = requestAccessToken(request);
+    log.debug('accessTokenResponse:' + toStr(accessTokenResponse));
 
-	var json = JSON.parse(accessTokenResponse.body);
-	//log.debug('json:' + toStr(json));
+    var json = JSON.parse(accessTokenResponse.body);
+    log.debug('json:' + toStr(json));
 
-	if(json.error) {
-		log.error(toStr(json));
-		throw new Error('Something went wrong when requesting access token.');
-	}
+    if (json.error) {
+        log.error(toStr(json));
+        throw new Error('Something went wrong when requesting access token.');
+    }
 
-	var jwt = jwtFromAccessToken({ accessToken: json.access_token });
+    var jwt = jwtFromAccessToken({accessToken: json.access_token});
 
-	var idProviderConfig = getIdProviderConfig();
-	log.debug('idProviderConfig:' + toStr(idProviderConfig));
+    var idProviderConfig = getIdProviderConfig();
+    log.debug('idProviderConfig:' + toStr(idProviderConfig));
 
-	if(idProviderConfig.logJwt != false) {
-		log.info('jwt payload:' + toStr(jwt.payload));
-	}
+    if (idProviderConfig.logJwt != false) {
+        log.info('jwt payload:' + toStr(jwt.payload));
+    }
 
-	var user = createOrUpdateFromJwt({ jwt: jwt	});
+    var user = createOrUpdateFromJwt({jwt: jwt});
 
-	if(json.expires_in) {
-		var now = new Date();
-		//json.expires_in = 2; // NOTE: TODO: DEBUGGING expire in 2 seconds (will autoLogin as not expired on SSO...)
-		var expiresAt = new Date(now.getTime() + (1000*json.expires_in));
-		log.debug('expires_in:' + toStr(json.expires_in) + ' now:' + toStr(now) + ' expiresAt:' + toStr(expiresAt));
-		modifyProfile({
-			key:     user.key,
-			profile: { expiresAt: expiresAt },
-			scope:   'accessToken',
-			log:     false
-		});
-	}
+    if (json.expires_in) {
+        var now = new Date();
+        //json.expires_in = 2; // NOTE: TODO: DEBUGGING expire in 2 seconds (will autoLogin as not expired on SSO...)
+        var expiresAt = new Date(now.getTime() + (1000 * json.expires_in));
+        log.debug('expires_in:' + toStr(json.expires_in) + ' now:' + toStr(now) + ' expiresAt:' + toStr(expiresAt));
+        modifyProfile({
+            key: user.key,
+            profile: {expiresAt: expiresAt},
+            scope: 'accessToken',
+            log: false
+        });
+    }
 
-	createAndUpdateGroupsFromJwt({
-		jwt:  jwt,
-		user: user
-	});
+    createAndUpdateGroupsFromJwt({
+        jwt: jwt,
+        user: user
+    });
 
-	var loginResult = login({
-		user:      user.login,
-		userStore: user.userStore,
-		skipAuth:  true
-	});
-	log.debug('loginResult:' + toStr(loginResult));
+    var loginResult = login({
+        user: user.login,
+        userStore: user.userStore,
+        skipAuth: true
+    });
+    log.debug('loginResult:' + toStr(loginResult));
 
-	var location = request.cookies && request.cookies.enonicXpReturnToUrl ? request.cookies.enonicXpReturnToUrl : '/';
+    var location = request.cookies && request.cookies.enonicXpReturnToUrl ? request.cookies.enonicXpReturnToUrl : '/';
 
-	return { // redirect to origUrl
-		status: 307,
-		headers: {
-			'Location': location
-		},
-		postProcess: false,
-		applyFilters: false
-	};
+    return { // redirect to origUrl
+        status: 307,
+        headers: {
+            'Location': location
+        },
+        postProcess: false,
+        applyFilters: false
+    };
 
 }; // function handleIdProviderRequest

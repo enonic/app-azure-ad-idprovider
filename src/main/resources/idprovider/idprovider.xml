@@ -30,18 +30,9 @@
 			<occurrences minimum="1" maximum="1"/>
 		</input>
 
-		<!-- AD FS currently does not support client secrets -->
-		<!--input name="clientSecret" type="TextLine">
-			<label>clientSecret</label>
-			<help-text></help-text>
-			<occurrences minimum="1" maximum="1"/>
-		</input-->
-
-		<input name="redirectUrl" type="TextLine">
-			<label>redirectUrl</label>
-			<help-text>Where AD FS should redirect to after login. Should be /_/idprovider/${userStoreKey}. Must also be configured in AD FS.</help-text>
-			<occurrences minimum="1" maximum="1"/>
-			<default>/_/idprovider/${userStoreKey}</default>
+		<input name="resource" type="TextLine">
+			<label>Resource</label>
+			<occurrences minimum="0" maximum="1"/>
 		</input>
 
 		<input name="logIdProviderUrl" type="CheckBox">

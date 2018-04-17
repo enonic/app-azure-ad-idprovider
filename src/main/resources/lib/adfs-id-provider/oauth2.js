@@ -36,33 +36,6 @@ var getIdProviderUrl    = lib.xp.portal.idProviderUrl;
 // Oauth2 methods
 //──────────────────────────────────────────────────────────────────────────────
 
-/**
- * Get the redirectUri by combining idProviderConfig and request.
- * @param {Object} params
- * @param {request} params.request
- * @param {Object} [params.idProviderConfig=getIdProviderConfig()]
- * @returns {lib.node.uriJs} redirectUri
- */
-function getRedirectUri(params) {
-	if(!params.idProviderConfig) { params.idProviderConfig = getIdProviderConfig(); }
-	log.debug('getRedirectUri(' + toStr(params) + ')');
-
-	var userStoreKey = getUserStoreKey();
-	log.debug('userStoreKey:' + toStr(userStoreKey));
-
-	var format = params.idProviderConfig.redirectUrl || '/_/idprovider/${userStoreKey}';
-	log.debug('format:' + toStr(format));
-
-	var redirectUri = new lib.node.uriJs(valueFromFormat({
-		format: format,
-		data: { userStoreKey: userStoreKey }
-	}), params.request.scheme + '://' + params.request.host + (params.request.port ? ':' + params.request.port : ''));
-
-	log.debug('getRedirectUri(' + toStr(params) + ') --> ' + toStr(redirectUri));
-	return redirectUri;
-};
-exports.getRedirectUri = getRedirectUri;
-
 
 /**
  * Redirect the browser to the SSO login page so the user can login.
@@ -75,16 +48,16 @@ exports.redirectToAuthorizationUrl = function(request) {
 	var idProviderConfig = getIdProviderConfig();
 	log.debug('idProviderConfig:' + toStr(idProviderConfig));
 
-	var resource = request.scheme + '://' + request.host + (request.port ? ':' + request.port : '');
+	var clientId = idProviderConfig.clientId;
+	var resource = idProviderConfig.resource || request.scheme + '://' + request.host + (request.port ? ':' + request.port : '');
+	var redirectUri = lib.xp.portal.idProviderUrl({type:'absolute'});
+    log.debug('redirectUri:' + redirectUri);
 	var returnToUrl = getReturnToUrl(request);
 	var location = new lib.node.uriJs(idProviderConfig.authorizationUrl);
 	location.addQuery('response_type', 'code');
-	location.addQuery('client_id', idProviderConfig.clientId);
+	location.addQuery('client_id', clientId);
 	location.addQuery('resource', resource);
-	location.addQuery('redirect_uri', getRedirectUri({
-		request:          request,
-		idProviderConfig: idProviderConfig
-	}).toString());
+	location.addQuery('redirect_uri', redirectUri);
 	var response = {
 		body: '', // NOTE: Workaround for Safari so Content-Length header becomes 0 on /admin/tool
 		status: 307, // Temporary redirect // http://insanecoding.blogspot.no/2014/02/http-308-incompetence-expected.html
