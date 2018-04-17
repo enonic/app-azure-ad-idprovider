@@ -30,8 +30,13 @@
 			<occurrences minimum="1" maximum="1"/>
 		</input>
 
+		<input name="clientSecret" type="TextLine">
+			<label>clientSecret</label>
+			<occurrences minimum="0" maximum="1"/>
+		</input>
+
 		<input name="resource" type="TextLine">
-			<label>Resource</label>
+			<label>resource</label>
 			<occurrences minimum="0" maximum="1"/>
 		</input>
 
