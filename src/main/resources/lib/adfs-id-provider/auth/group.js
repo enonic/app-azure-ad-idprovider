@@ -75,13 +75,13 @@ function createOrModify(params) {
                     return c;
                 }
             });
-            log.info('modified group:' + toStr(group));
+            log.debug('modified group:' + toStr(group));
         }
     } else {
         runAsAdmin(function () {
             group = createGroup(params);
         });
-        log.info('created group:' + toStr(group));
+        log.debug('created group:' + toStr(group));
     }
     return group;
 }; // function createOrModify
@@ -103,7 +103,7 @@ function addUser(params) {
     var addMembersResult = runAsAdmin(function () {
         return addMembers(params.groupKey, [params.userKey]);
     });
-    log.info('addMembersResult:' + toStr(addMembersResult)); // In Enonic XP 6.9.2 return undefined even if group is unmodified
+    log.debug('addMembersResult:' + toStr(addMembersResult)); // In Enonic XP 6.9.2 return undefined even if group is unmodified
 };
 exports.addUser = addUser;
 
@@ -120,7 +120,7 @@ function removeUser(params) {
     var removeMembersResult = runAsAdmin(function () {
         return removeMembers(params.groupKey, [params.userKey]);
     });
-    log.info('removeMembersResult:' + toStr(removeMembersResult));
+    log.debug('removeMembersResult:' + toStr(removeMembersResult));
 };
 exports.removeUser = removeUser;
 

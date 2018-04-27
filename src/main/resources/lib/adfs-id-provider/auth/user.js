@@ -91,13 +91,13 @@ function createOrModify(params) {
 					}
 				});
 			});
-			log.info('modified user:' + toStr(user));
+			log.debug('modified user:' + toStr(user));
 		}
 	} else {
 		runAsAdmin(function() {
 			user = createUser(params);
 		});
-		log.info('created user:' + toStr(user));
+		log.debug('created user:' + toStr(user));
 	}
 	return user;
 }; // function createOrModify
@@ -148,7 +148,7 @@ function modifyProfile(params) {
 		return xpModifyProfile(modifyProfileParams);
 	});
 	if(params.log != false) {
-		log.info('modifyProfile(' + toStr(params) + ') --> ' + toStr(modifyProfileResult));
+		log.debug('modifyProfile(' + toStr(params) + ') --> ' + toStr(modifyProfileResult));
 	}
 	return modifyProfileResult;
 };
