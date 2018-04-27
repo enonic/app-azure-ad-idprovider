@@ -137,9 +137,7 @@ exports.createAndUpdateGroupsFromJwt = function (params) {
     var idProviderConfig = getIdProviderConfig();
     log.debug('idProviderConfig:' + toStr(idProviderConfig));
 
-    var createAndUpdateGroupsOnLogin = isSet(idProviderConfig.createAndUpdateGroupsOnLogin)
-        ? idProviderConfig.createAndUpdateGroupsOnLogin
-        : true;
+    var createAndUpdateGroupsOnLogin = !!idProviderConfig.createAndUpdateGroupsOnLogin;
     log.debug('createAndUpdateGroupsOnLogin:' + toStr(createAndUpdateGroupsOnLogin));
 
     if (!createAndUpdateGroupsOnLogin) {
