@@ -102,7 +102,6 @@ exports.requestAccessToken = function(request) {
 		params: {
 			grant_type: 'authorization_code',
 			client_id: idProviderConfig.clientId,
-            client_secret: idProviderConfig.clientSecret,
 			redirect_uri: request.scheme + '://' + request.host + (request.port ? ':' + request.port : '') + idProviderUrl,
 			code: request.params.code
 		},

@@ -62,10 +62,7 @@ exports.handleIdProviderRequest = function (request) {
 
     var idProviderConfig = getIdProviderConfig();
     log.debug('idProviderConfig:' + toStr(idProviderConfig));
-
-    if (idProviderConfig.logJwt != false) {
-        log.debug('jwt payload:' + toStr(jwt.payload));
-    }
+    log.debug('jwt payload:' + toStr(jwt.payload));
 
     var user = createOrUpdateFromJwt({jwt: jwt});
 

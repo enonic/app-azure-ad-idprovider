@@ -145,7 +145,7 @@ exports.createAndUpdateGroupsFromJwt = function (params) {
     if (!createAndUpdateGroupsOnLogin) {
         return;
     }
-    var dnFormat = idProviderConfig.group && idProviderConfig.group.dn || '${dn}';
+    var dnFormat = '${dn}';
     var dn = valueFromFormat({
         format: dnFormat,
         data: params.jwt.payload
