@@ -40,13 +40,6 @@
 			<occurrences minimum="0" maximum="1"/>
 		</input>
 
-		<input name="logIdProviderUrl" type="CheckBox">
-			<label>Log idProviderUrl</label>
-			<help-text>Output the idProviderUrl in the log so you know what to configure in AD FS.</help-text>
-			<occurrences minimum="0" maximum="1"/>
-			<default>checked</default>
-		</input>
-
 		<input name="logJwt" type="CheckBox">
 			<label>Log jwt</label>
 			<help-text>Output the jwt in the log so you can see which claims/properties AD FS returns.</help-text>
