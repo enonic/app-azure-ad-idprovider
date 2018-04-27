@@ -135,6 +135,7 @@ exports.getProfile = function(params) {
 function modifyProfile(params) {
 	var modifyProfileParams = {
 		key: params.key,
+		scope: 'adfs',
 		editor: function(c) {
 			if (!c) { c = {}; }
 			Object.keys(params.profile).forEach(function(property) {
