@@ -4,9 +4,6 @@
   "description": "ADFS ID Provider",
   "license": "Apache-2.0",
   "author": "Christian Westgaard <cwe@enonic.com>",
-  "contributors": [
-    "Glenn Ricaud <gri@enonic.com>"
-  ],
   "repository": {
     "type": "git",
     "url": "https://github.com/enonic/app-adfs-idprovider.git"
