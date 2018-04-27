@@ -20,19 +20,19 @@
 
 ## How to use
 
-1. Install the app so it is listed on the Enonic XP Applications page.
-2. Create a userStore on Enonic XP Users page and configure it to use the app.
- * The userStore name is important, and is part of the idproviderUrls, which must be allowed as redirectUris in AD.
-3. While you are there configure the required settings. Setup a client in ADFS with the same settings.
-4. Configure the vhost file, so that your site uses the userstore you made.
-5. If you want automatic logout when an access token expires, add the app to all the sites that uses a userstore with the idprovider. This enables a filter to run on every response from Enonic XP.
+1. In the admin tool "Applications", install the application "ADFS ID Provider" .
+2. In the admin tool "Users", create a user store and configure it to use the ADFS application.
+3. Configure the required settings & setup a client in ADFS with the same settings.
+4. Configure the vhost file, so that your site or admin uses the user store you made.
 
-### Example idproviderUrls
+### Callback URLs
 
-    http://example.com:8080/_/idprovider/adfs
-    http://example.com:8080/admin/portal/admin/draft/_/idprovider/adfs (used for access to admin)
+IN ADFS, the callback URL to specify is "_/idprovider/<userstorename>" appended to your vhost target
 
-## How to make a site use a specific userstore
+    http://example.com:8080/_/idprovider/myuserstore
+    http://example.com:8080/admin/portal/admin/draft/_/idprovider/myuserstore (used for access to admin)
+
+### Vhost configuration
 
 Example of configuration in $XP_HOME/config/com.enonic.xp.web.vhost.cfg
 
@@ -47,17 +47,6 @@ Example of configuration in $XP_HOME/config/com.enonic.xp.web.vhost.cfg
     mapping.mysiteadmin.source = /admin
     mapping.mysiteadmin.target = /admin
     mapping.mysiteadmin.userStore = myuserstore
-
-## How to test the id provider on your site
-
-    You can either use the authentication part which provides a login/logout link,
-    or you can remove the Everyone role from the Permissions on some content under you site.
-
-## How to test the id provider on localhost
-
-Example configuration in /etc/hosts
-
-    127.0.0.1 example.com
 
 ## How to enable debug logging
 
@@ -83,7 +72,7 @@ Add the following to $XP_HOME/config/logback.xml
 
 | Version       | XP version |
 | ------------- | ---------- |
-| 1.0.0         | 6.9.2      |
+| 1.0.0         | 6.12.0     |
 
 ## Changelog
 
