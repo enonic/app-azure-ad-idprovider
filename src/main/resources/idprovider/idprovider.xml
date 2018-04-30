@@ -59,7 +59,7 @@
 
         <input name="email" type="TextLine">
           <label>Email</label>
-          <help-text>You probably want to use ${upn}</help-text>
+          <help-text>You probably want to use ${upn} or ${email}</help-text>
           <occurrences minimum="1" maximum="1"/>
           <default>${upn}</default>
         </input>
