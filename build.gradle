@@ -4,7 +4,7 @@ plugins {
 
 app {
     name = project.appName
-    displayName = 'Vanilla Starter Kit'
+    displayName = 'ADFS ID Provider'
     vendorName = 'Enonic AS'
     vendorUrl = 'http://enonic.com'
     systemVersion = "${xpVersion}"
@@ -13,17 +13,14 @@ app {
 dependencies {
     compile "com.enonic.xp:core-api:${xpVersion}"
     compile "com.enonic.xp:portal-api:${xpVersion}"
-    include "com.enonic.xp:lib-content:${xpVersion}"
+    include "com.enonic.xp:lib-auth:${xpVersion}"
+    include "com.enonic.xp:lib-context:${xpVersion}"
+    include "com.enonic.xp:lib-io:${xpVersion}"
     include "com.enonic.xp:lib-portal:${xpVersion}"
     include "com.enonic.xp:lib-thymeleaf:${xpVersion}"
-    //include "com.enonic.xp:lib-mustache:${xpVersion}"
-    //include "com.enonic.xp:lib-i18n:${xpVersion}"
-    //include "com.enonic.xp:lib-auth:${xpVersion}"
-    //include "com.enonic.xp:lib-context:${xpVersion}"
-    //include "com.enonic.xp:lib-io:${xpVersion}"
-    //include "com.enonic.xp:lib-mail:${xpVersion}"
-    //include "com.enonic.xp:lib-repo:${xpVersion}"
-    //include "com.enonic.xp:lib-websocket:${xpVersion}"
+    include 'com.enonic.lib:lib-http-client:1.0.1'
+    include 'com.enonic.lib:text-encoding:1.1.0'
+    include 'com.enonic.lib:util:1.1.1'
 }
 
 repositories {
@@ -31,3 +28,19 @@ repositories {
     jcenter()
     xp.enonicRepo()
 }
+
+//──────────────────────────────────────────────────────────────────────────────
+// Generate documentation
+//──────────────────────────────────────────────────────────────────────────────
+task generate_docs( type: Exec ) {
+    executable 'npm'
+    args = ['run', 'generate-docs']
+    mustRunAfter 'build'
+}
+
+task copy_urijs( type: Exec ) {
+    executable 'npm'
+    args = ['run', 'copyUriJs']
+}
+processResources.dependsOn.add( copy_urijs )
+
