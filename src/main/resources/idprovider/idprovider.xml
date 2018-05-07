@@ -54,7 +54,7 @@
         <input name="displayName" type="TextLine">
           <label>Display name</label>
           <occurrences minimum="1" maximum="1"/>
-          <default>${given_name} ${family_name} (${unique_name}) &lt;${upn}&gt;</default>
+          <default>${given_name} ${family_name} &lt;${upn}&gt;</default>
         </input>
 
         <input name="email" type="TextLine">
@@ -118,7 +118,7 @@
 
         <input name="from" type="TextLine">
           <label>From jtw path</label>
-          <help-text>Example: ${given_name} ${family_name} (${unique_name}) &lt;${upn}&gt;</help-text>
+          <help-text>Example: ${given_name} ${family_name} &lt;${upn}&gt;</help-text>
           <occurrences minimum="1" maximum="1"/>
           <default></default>
         </input>

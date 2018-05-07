@@ -284,7 +284,7 @@ exports.createOrUpdateFromJwt = function(params) {
 	}
 	userName = sanitizeName(userName);
 
-	var userDisplayNameFormat = idProviderConfig.user && idProviderConfig.user.displayName || '${given_name} ${family_name} (${unique_name}) <${upn}>';
+	var userDisplayNameFormat = idProviderConfig.user && idProviderConfig.user.displayName || '${given_name} ${family_name} <${upn}>';
 	var userDisplayName = valueFromFormat({
 		format: userDisplayNameFormat,
 		data:   params.jwt.payload
