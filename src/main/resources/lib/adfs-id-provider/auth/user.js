@@ -273,7 +273,7 @@ exports.createOrUpdateFromJwt = function(params) {
 	var idProviderConfig = getIdProviderConfig();
 	log.debug('idProviderConfig:' + toStr(idProviderConfig));
 
-	var userNameFormat = idProviderConfig.user && idProviderConfig.user.name || '${oid}';
+	var userNameFormat = idProviderConfig.user && idProviderConfig.user.name || '${objectSid}';
 	var userName = valueFromFormat({
 		format: userNameFormat,
 		data:   params.jwt.payload
