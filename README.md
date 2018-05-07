@@ -25,9 +25,9 @@
 3. Configure the required settings & setup a client in ADFS with the same settings.
 4. Configure the vhost file, so that your site or admin uses the user store you made.
 
-### Callback URLs
+### Redirect URIs
 
-IN ADFS, the callback URL to specify is "_/idprovider/<userstorename>" appended to your vhost target
+IN ADFS, the redirect URI to specify is "_/idprovider/<userstorename>" appended to your vhost target
 
     http://example.com:8080/_/idprovider/myuserstore
     http://example.com:8080/admin/portal/admin/draft/_/idprovider/myuserstore (used for access to admin)
