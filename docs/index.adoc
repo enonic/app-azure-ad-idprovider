@@ -1,0 +1,36 @@
+= ADFS ID Provider
+
+Authenticate your users using your Active Directory Federation Services .
+This ID Provider uses the OAuth endpoint of your ADFS to authenticate users.
+
+== Usage
+
+. In AD FS, setup your ADFS client
+. In the admin tool "Applications", install the application "ADFS ID Provider" .
+. In the admin tool "Users", create a user store and configure it to use the ADFS application.
+. Configure the required settings based on your ADFS client settings.
+. Configure the vhost configuration, so that your site or admin uses the user store you created.
+
+=== Redirect URIs
+
+IN AD FS, the redirect URIs to specify are "_/idprovider/<userstorename>" appended to your vhost target
+
+    http://example.com:8080/_/idprovider/myuserstore
+    http://example.com:8080/admin/portal/admin/draft/_/idprovider/myuserstore (used for access to admin)
+
+=== Vhost configuration
+
+Example of configuration in $XP_HOME/config/com.enonic.xp.web.vhost.cfg
+
+    # The site itself
+    mapping.mysite.host = example.com
+    mapping.mysite.source = /
+    mapping.mysite.target = /portal/master/mysite
+    mapping.mysite.userStore = myuserstore
+
+    # Make admin available on the same host
+    mapping.mysiteadmin.host = example.com
+    mapping.mysiteadmin.source = /admin
+    mapping.mysiteadmin.target = /admin
+    mapping.mysiteadmin.userStore = myuserstore
+
