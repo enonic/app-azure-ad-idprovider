@@ -1,7 +1,7 @@
 = AD FS ID Provider
 
-Authenticate your users using your Active Directory Federation Services .
-This ID Provider uses the OAuth endpoint of your ADFS to authenticate users.
+Authenticate your users using your Active Directory Federation Services.
+This ID Provider uses the OAuth endpoint of your AD FS to authenticate users.
 
 == Compatibility
 
