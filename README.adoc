@@ -11,9 +11,9 @@ This ID Provider uses the OAuth endpoint of your AD FS to authenticate users.
 |XP Version
 |Download
 
-|0.1.0
+|0.1.1
 |>= 6.12.0
-|http://repo.enonic.com/public/com/enonic/app/adfsidprovider/0.1.0/adfsidprovider-0.1.0.jar[Download]
+|http://repo.enonic.com/public/com/enonic/app/adfsidprovider/0.1.1/adfsidprovider-0.1.1.jar[Download]
 
 |===
 
