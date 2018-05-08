@@ -34,3 +34,12 @@ Example of configuration in $XP_HOME/config/com.enonic.xp.web.vhost.cfg
     mapping.mysiteadmin.target = /admin
     mapping.mysiteadmin.userStore = myuserstore
 
+== How to enable debug logging
+   
+Add the following to $XP_HOME/config/logback.xml and restart the server
+   
+    <logger name="com.enonic.app.adfsidprovider" additivity="false">
+        <level value="DEBUG" />
+        <appender-ref ref="STDOUT"/>
+        <appender-ref ref="FILE"/>
+    </logger>
