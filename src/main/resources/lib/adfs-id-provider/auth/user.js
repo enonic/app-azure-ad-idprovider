@@ -196,16 +196,18 @@ function enrichProfileFromJwt(params) {
 
 	if(!idProviderConfig.profile) { return }
 	forceArray(idProviderConfig.profile).forEach(function(property) {
-		modifyProfile({
-			key: params.key,
-			profile: setPathToValue(
-				{},
-				property.to,
-				valueFromFormat({
-					format: property.from,
-					data:   params.jwt.payload
-				}))
-		});
+		if(property.from && property.to) {
+            modifyProfile({
+                key: params.key,
+                profile: setPathToValue(
+                    {},
+                    property.to,
+                    valueFromFormat({
+                        format: property.from,
+                        data:   params.jwt.payload
+                    }))
+            });
+        }
 	}); // forEach property
 }; // function enrichProfileFromJwt
 exports.enrichProfileFromJwt = enrichProfileFromJwt;
