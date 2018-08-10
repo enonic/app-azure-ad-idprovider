@@ -3,6 +3,10 @@
 Authenticate your users using your Active Directory Federation Services.
 This ID Provider uses the OAuth endpoint of your AD FS to authenticate users.
 
+== Acknowledments
+
+Initial version provided by Bouvet
+
 == Compatibility
 
 [cols="1,1,3", options="header"]
