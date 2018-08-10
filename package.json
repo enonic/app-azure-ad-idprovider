@@ -1,6 +1,6 @@
 {
   "name": "adfs-id-provider",
-  "version": "1.0.0-SNAPSHOT",
+  "version": "1.0.1",
   "description": "ADFS ID Provider",
   "license": "Apache-2.0",
   "author": "Christian Westgaard <cwe@enonic.com>",
