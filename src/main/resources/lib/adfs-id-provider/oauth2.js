@@ -90,7 +90,7 @@ exports.requestAccessToken = function(request) {
 	var idProviderConfig = getIdProviderConfig();
 	log.debug('idProviderConfig:' + toStr(idProviderConfig));
 
-	var idProviderUrl = getIdProviderUrl({}); // /_/idprovider/adfs
+	var idProviderUrl = getIdProviderUrl({type:'absolute'});
 	log.debug('idProviderUrl:' + toStr(idProviderUrl));
 
 	var accessTokenRequest = {
@@ -102,7 +102,7 @@ exports.requestAccessToken = function(request) {
 		params: {
 			grant_type: 'authorization_code',
 			client_id: idProviderConfig.clientId,
-			redirect_uri: request.scheme + '://' + request.host + (request.port ? ':' + request.port : '') + idProviderUrl,
+			redirect_uri: idProviderUrl,
 			code: request.params.code
 		},
 		proxy: idProviderConfig.proxy
