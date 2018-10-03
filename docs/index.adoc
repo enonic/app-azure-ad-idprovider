@@ -1,14 +1,14 @@
 = ADFS ID Provider
 
-Authenticate your users using your Active Directory Federation Services .
-This ID Provider uses the OAuth endpoint of your ADFS to authenticate users.
+Authenticate your users using your Active Directory Federation Services.
+This ID Provider uses the OAuth2 endpoint of your ADFS to authenticate users.
 
 == Usage
 
-* On your AD FS server, link:adfs.adoc[setup your Relying Party Trust & ADFS client]
+* On your AD FS server, link:adfs.adoc[setup your Relying Party Trust & AD FS client]
 * On Enonic XP
 ** In the admin tool "Applications", install the application "ADFS ID Provider" .
-** In the admin tool "Users", create a user store and configure it to use the ADFS application.
+** In the admin tool "Users", create a user store and configure it to use the ADFS ID Provider.
 *** clientId: AD FS Client ID
 *** resource: Relying Party Trust identifier
 

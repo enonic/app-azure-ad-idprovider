@@ -1,14 +1,14 @@
 = Relying Party Trust & ADFS client
 
-We suppose here that you have a server with an Active Directory Federation Services setup and containing users.
+We suppose here that you already have a server with an Active Directory Federation Services setup.
 This example is using AD FS 4 but AD FS 3 is similar and compatible with the ID Provider.
 
 
-* In "AD FS Management", check that the endpoints '/adfs/ls' and '/adfs/oauth2' are enabled
+* In AD FS Management, check that the endpoints "/adfs/ls" and "/adfs/oauth2" are enabled
 
 image::images/endpoint_enabled.png[Installation,768,384]
 
-* In "AD FS Management", create your Relying Party Trust
+* In AD FS Management, create a Relying Party Trust
 
 image::images/rpt1.png[Installation,384]
 image::images/rpt2.png[Installation,768]
@@ -17,7 +17,7 @@ image::images/rpt3.png[Installation,768]
 * Configure the claims (Issuance Transform Rules)
 
 ** A window allowing you to define Issuance Transform Rules must have opened on the creation of the Relying party trust.
-Otherwise, select your created Relying party trust, and select the option "Edit Claim Issuance Policy..."
+Otherwise, select your created Relying Party Trust, and select the option "Edit Claim Issuance Policy..."
 
 image::images/transform1.png[Installation,768]
 
@@ -38,7 +38,7 @@ image::images/transform3.png[Installation,768]
 
 * Using PowerShell, add an AD FS Client
 
-** The redirect URI to specify is "_/idprovider/<userstorename>" appended to your vhost target.
+** The redirect URI to specify is "_/idprovider/<userstorename>" appended to your Enonic VHost mapping target (your site URL).
 
 ```
 Add-AdfsClient -RedirectUri "https://www.example.com/_/idprovider/adfs-userstore" -ClientId "5d51f771-b86a-419e-ad25-27696aafc02b" -Name "MyADFS4Client"
