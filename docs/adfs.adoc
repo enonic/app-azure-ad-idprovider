@@ -45,8 +45,8 @@ Add-AdfsClient -RedirectUri "https://www.example.com/_/idprovider/adfs-userstore
 ```
 
 * Using PowerShell, grant the AD FS Client permission to the resource
-** ClientRoleIdentifier is the ClientId user in the command above
-** ServerRoleIdentifier is the Relying Party Trust identifier you set when you created your Relying Party Trust.
+** ClientRoleIdentifier: ClientId used in the command above
+** ServerRoleIdentifier: Relying Party Trust identifier
 
 ```
 Grant-AdfsApplicationPermission -ClientRoleIdentifier "5d51f771-b86a-419e-ad25-27696aafc02b" -ServerRoleIdentifier "https://myadfs4app.local"
