@@ -5,28 +5,22 @@ This ID Provider uses the OAuth endpoint of your ADFS to authenticate users.
 
 == Usage
 
-. On your AD FS server, link:adfs.adoc[setup your Relying Party Trust & ADFS client]
-. On Enonic XP
-.. In the admin tool "Applications", install the application "ADFS ID Provider" .
-.. In the admin tool "Users", create a user store and configure it to use the ADFS application.
-... Configure the required settings based on your ADFS client settings.
-.. Configure the vhost configuration, so that your site or admin uses the user store you created.
+* On your AD FS server, link:adfs.adoc[setup your Relying Party Trust & ADFS client]
+* On Enonic XP
+** In the admin tool "Applications", install the application "ADFS ID Provider" .
+** In the admin tool "Users", create a user store and configure it to use the ADFS application.
+*** clientId: AD FS Client ID
+*** resource: Relying Party Trust identifier
 
-=== Vhost configuration
+image::images/idprov.png[Installation,768]
 
-Example of configuration in $XP_HOME/config/com.enonic.xp.web.vhost.cfg
+* In your Enonic VHost configuration, modify the approriate mappings so that your site or admin interface uses the user store you created.
 
     # Use ADFS for a site mysite
     mapping.mysite.host = example.com
     mapping.mysite.source = /
     mapping.mysite.target = /portal/master/mysite
-    mapping.mysite.userStore = myuserstore
-
-    # Use ADFS for the admin interface
-    mapping.mysiteadmin.host = example.com
-    mapping.mysiteadmin.source = /admin
-    mapping.mysiteadmin.target = /admin
-    mapping.mysiteadmin.userStore = myuserstore
+    mapping.mysite.userStore = adfs-userstore
 
 == How to enable debug logging
    
