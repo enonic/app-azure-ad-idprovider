@@ -38,7 +38,7 @@ image::images/transform3.png[Installation,768]
 
 * Using PowerShell, add an AD FS Client
 
-** The redirect URI to specify is "_/idprovider/<userstorename>" appended to your Enonic VHost mapping target (your site URL).
+** The redirect URI to specify is "_/idprovider/<userstorename>" appended to your Enonic VHost mapping source (your site URL).
 
 ```
 Add-AdfsClient -RedirectUri "https://www.example.com/_/idprovider/adfs-userstore" -ClientId "5d51f771-b86a-419e-ad25-27696aafc02b" -Name "MyADFS4Client"
