@@ -85,7 +85,9 @@ image::images/itr-4.png[Installation,768]
 # ADFS Client
 
 * Using PowerShell, add an AD FS Client
-
+** Choose a Client UD
+*** You can either come up with this or use a generator link:https://www.guidgenerator.com/online-guid-generator.aspx[Online GUID Generator]
+*** Keep this information as it will be required for the ID Provider configuration as "clientId"
 ** The redirect URI to specify is "_/idprovider/<userstorename>" appended to your Enonic VHost mapping source (your site URL).
 
 ```
