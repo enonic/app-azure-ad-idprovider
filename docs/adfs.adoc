@@ -37,6 +37,7 @@ image::images/rpt-5.png[Installation]
 image::images/rpt-6.png[Installation]
 
 * On the "Configure Identifiers" page, specify an identifier for this relying party, click "Add" to add it to the list, and then click "Next".
+** Keep this information as it will be required for the ID Provider configuration as "resource"
 
 image::images/rpt-7.png[Installation]
 
