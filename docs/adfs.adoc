@@ -54,27 +54,34 @@ image::images/rpt-10.png[Installation]
 
 # Claims (Issuance Transform Rules) configuration
 
-* A window "Edit Claim Issuance Policy" must have opened on the previous step.
+* A dialog "Edit Claim Issuance Policy" must have opened on the previous step.
 ** Otherwise, right-click the created Relying Party Trust, and then click "Edit Claim Issuance Policy..."
 
 image::images/itr-1.png[Installation]
 
+* In the "Edit Claim Issuance Policy" dialog box, under "Issuance Transform Rules" click "Add Rule" to start the rule wizard.
+
 image::images/itr-2.png[Installation]
 
-** Create a rule based on the template "Send LDAP Attributes as Claims"
+* On the "Select Rule Template" page, under "Claim rule template", select "Send LDAP Attributes as Claims" from the list, and then click Next.
 
-image::images/transform2.png[Installation,768]
+image::images/itr-3.png[Installation]
 
-** You can define the data that will be transferred to the Enonic ID Provider.
-By default, the ID Provider is expecting the 5 mappings below (the 2 last are not present in the list of possible values but are valid values)
-
+* On the "Configure Rule" page under "Claim rule name" type the display name for this rule, select the "Attribute Store", and then select the LDAP attribute and map it to the outgoing claim type.
+** By default, the ID Provider is expecting the 5 mappings below (You will notice that the 2 last values are not present in the list of possible values but are valid values)
 *** Given-Name -> Given-Name
 *** Surname -> Surname
 *** User-Principal-Name -> UPN
 *** objectSid -> objectSid
 *** distinguishedName -> dn
 
-image::images/transform3.png[Installation,768]
+image::images/itr-4.png[Installation,768]
+
+* Click the "Finish" button.
+
+* In the "Edit Claim Rules" dialog box, click "OK" to save the rule.
+
+# ADFS Client
 
 * Using PowerShell, add an AD FS Client
 
@@ -83,6 +90,9 @@ image::images/transform3.png[Installation,768]
 ```
 Add-AdfsClient -RedirectUri "https://www.example.com/_/idprovider/adfs-userstore" -ClientId "5d51f771-b86a-419e-ad25-27696aafc02b" -Name "MyADFS4Client"
 ```
+
+
+# ADFS Application permission
 
 * Using PowerShell, grant the AD FS Client permission to the resource
 ** ClientRoleIdentifier: ClientId used in the command above
