@@ -54,10 +54,11 @@ image::images/rpt-10.png[Installation]
 
 # Claims (Issuance Transform Rules) configuration
 
-** A window allowing you to define Issuance Transform Rules must have opened on the creation of the Relying party trust.
-Otherwise, select your created Relying Party Trust, and select the option "Edit Claim Issuance Policy..."
+* Create a rule to send LDAP attributes as claims for the created Relying Party Trust
+** A window allowing you to define Issuance Transform Rules must have opened on the previous step.
+Otherwise, right-click the created Relying Party Trust, and then click "Edit Claim Issuance Policy..."
 
-image::images/transform1.png[Installation,768]
+image::images/itr-1.png[Installation]
 
 ** Create a rule based on the template "Send LDAP Attributes as Claims"
 
