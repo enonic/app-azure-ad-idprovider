@@ -1,7 +1,8 @@
 = Create and configure a Relying Party Trust & an AD FS client
 
-We suppose here that a server with an Active Directory Federation Services setup.
-This example is using AD FS 4 but AD FS 3 is similar and compatible with the ID Provider.
+* We presuppose that a server with an Active Directory Federation Services is setup.
+* The steps and screenshots presented below have been performed on AD FS 4. Except minor renaming, the steps on AD FS 3 are similar.
+* The steps and values are given as an example. Please adapt to your situation
 
 
 # Check that the endpoints are enabled
@@ -12,7 +13,7 @@ image::images/endpoint_enabled.png[Installation]
 
 # Create a Relying Party Trust
 
-* In AD FS Management, add a Relying Party Trust. (The next steps and values are given as example. Please adapt to your situation)
+* In AD FS Management, add a Relying Party Trust.
 
 image::images/rpt-1.png[Installation]
 
@@ -24,7 +25,7 @@ image::images/rpt-2.png[Installation]
 
 image::images/rpt-3.png[Installation]
 
-* On the "Specify Display Name" page, type a name in Display name, under Notes type a description for this relying party trust, and then click Next.
+* On the "Specify Display Name" page, type a name in "Display name" and then click Next.
 
 image::images/rpt-4.png[Installation]
 
@@ -55,7 +56,7 @@ image::images/rpt-10.png[Installation]
 
 # Create a rule to send the LDAP attributes as claims
 
-* A dialog "Edit Claim Issuance Policy" must have opened on the previous step.
+* A dialog box "Edit Claim Issuance Policy" must have opened on the previous step.
 ** Otherwise, right-click the created Relying Party Trust, and then click "Edit Claim Issuance Policy..."
 
 image::images/itr-1.png[Installation]
