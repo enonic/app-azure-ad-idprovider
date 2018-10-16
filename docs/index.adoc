@@ -1,7 +1,8 @@
 = ADFS ID Provider
 
-Authenticate your users using your Active Directory Federation Services.
-This ID Provider uses the OAuth2 endpoint of your ADFS to authenticate users.
+Authenticate your users using Active Directory Federation Services.
+This ID Provider uses the OAuth2 endpoint of your AD FS to authenticate users.
+It is compatible with ADFS 3.0 (Windows Server 2012 R2) and ADFS 4.0 (Windows Server 2016)
 
 == Configuration
 
