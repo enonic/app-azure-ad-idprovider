@@ -4,13 +4,13 @@ We suppose here that you already have a server with an Active Directory Federati
 This example is using AD FS 4 but AD FS 3 is similar and compatible with the ID Provider.
 
 
-# Endpoints enabled
+# Check that the endpoints are enabled
 
 * In AD FS Management, check that the endpoints "/adfs/ls" and "/adfs/oauth2" are enabled
 
 image::images/endpoint_enabled.png[Installation]
 
-# Relying Party Trust creation
+# Create a Relying Party Trust
 
 * In AD FS Management, add a Relying Party Trust. (The next steps and values are given as example. Please adapt to your situation)
 
@@ -53,7 +53,7 @@ image::images/rpt-9.png[Installation]
 
 image::images/rpt-10.png[Installation]
 
-# Claims (Issuance Transform Rules) configuration
+# Create a rule to send the LDAP attributes as claims
 
 * A dialog "Edit Claim Issuance Policy" must have opened on the previous step.
 ** Otherwise, right-click the created Relying Party Trust, and then click "Edit Claim Issuance Policy..."
@@ -82,7 +82,7 @@ image::images/itr-4.png[Installation,768]
 
 * In the "Edit Claim Rules" dialog box, click "OK" to save the rule.
 
-# ADFS Client
+# Add an AD FS Client
 
 * Using PowerShell, add an AD FS Client
 ** Choose a Client UD
@@ -95,7 +95,7 @@ Add-AdfsClient -RedirectUri "https://www.example.com/_/idprovider/adfs-userstore
 ```
 
 
-# ADFS Application permission
+# Grand the AD FS Application permission to the resource
 
 * Using PowerShell, grant the AD FS Client permission to the resource
 ** ClientRoleIdentifier: ClientId used in the command above
