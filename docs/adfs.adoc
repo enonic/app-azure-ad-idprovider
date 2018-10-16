@@ -1,6 +1,6 @@
-= Relying Party Trust & ADFS client
+= Create and configure a Relying Party Trust & an AD FS client
 
-We suppose here that you already have a server with an Active Directory Federation Services setup.
+We suppose here that a server with an Active Directory Federation Services setup.
 This example is using AD FS 4 but AD FS 3 is similar and compatible with the ID Provider.
 
 
