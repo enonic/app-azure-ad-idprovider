@@ -4,17 +4,55 @@ We suppose here that you already have a server with an Active Directory Federati
 This example is using AD FS 4 but AD FS 3 is similar and compatible with the ID Provider.
 
 
+# Endpoints enabled
+
 * In AD FS Management, check that the endpoints "/adfs/ls" and "/adfs/oauth2" are enabled
 
-image::images/endpoint_enabled.png[Installation,768,384]
+image::images/endpoint_enabled.png[Installation]
 
-* In AD FS Management, create a Relying Party Trust
+# Relying Party Trust creation
 
-image::images/rpt1.png[Installation,384]
-image::images/rpt2.png[Installation,768]
-image::images/rpt3.png[Installation,768]
+* In AD FS Management, add a Relying Party Trust. (The next steps and values are given as example. Please adapt to your situation)
 
-* Configure the claims (Issuance Transform Rules)
+image::images/rpt-1.png[Installation]
+
+* On the "Welcome" page, choose "Claims aware" and click "Start".
+
+image::images/rpt-2.png[Installation]
+
+* On the "Select Data Source" page, click "Enter data about the relying party manually", and then click "Next".
+
+image::images/rpt-3.png[Installation]
+
+* On the "Specify Display Name" page, type a name in Display name, under Notes type a description for this relying party trust, and then click Next.
+
+image::images/rpt-4.png[Installation]
+
+* On the "Configure Certificate" page, click "Next".
+
+image::images/rpt-5.png[Installation]
+
+* On the "Configure URL" page, click Next (Don’t use SAML or WS)
+
+image::images/rpt-6.png[Installation]
+
+* On the "Configure Identifiers" page, specify an identifier for this relying party, click "Add" to add it to the list, and then click "Next".
+
+image::images/rpt-7.png[Installation]
+
+* On the "Choose Access Control Policy" select a policy and click Next. For more information about Access Control Policies, see link:https://docs.microsoft.com/en-us/windows-server/identity/ad-fs/operations/access-control-policies-in-ad-fs[Access Control Policies in AD FS]
+
+image::images/rpt-8.png[Installation]
+
+* On the "Ready to Add Trust" page, review the settings, and then click "Next" to save your relying party trust information
+
+image::images/rpt-9.png[Installation]
+
+* On the "Finish" page, click "Close". This action automatically displays the "Edit Claim Rules" dialog box
+
+image::images/rpt-10.png[Installation]
+
+# Claims (Issuance Transform Rules) configuration
 
 ** A window allowing you to define Issuance Transform Rules must have opened on the creation of the Relying party trust.
 Otherwise, select your created Relying Party Trust, and select the option "Edit Claim Issuance Policy..."
