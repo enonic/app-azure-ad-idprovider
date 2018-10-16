@@ -91,7 +91,7 @@ image::images/itr-4.png[Installation,768]
 ** The redirect URI to specify is "_/idprovider/<userstorename>" appended to your Enonic VHost mapping source (your site URL).
 
 ```
-Add-AdfsClient -RedirectUri "https://www.example.com/_/idprovider/adfs-userstore" -ClientId "5d51f771-b86a-419e-ad25-27696aafc02b" -Name "MyADFS4Client"
+Add-AdfsClient -RedirectUri "https://www.example.com/_/idprovider/adfs-userstore" -ClientId "5d51f771-b86a-419e-ad25-27696aafc02e" -Name "MyADFS4Client"
 ```
 
 
@@ -102,7 +102,7 @@ Add-AdfsClient -RedirectUri "https://www.example.com/_/idprovider/adfs-userstore
 ** ServerRoleIdentifier: Relying Party Trust identifier
 
 ```
-Grant-AdfsApplicationPermission -ClientRoleIdentifier "5d51f771-b86a-419e-ad25-27696aafc02b" -ServerRoleIdentifier "https://myadfs4app.local"
+Grant-AdfsApplicationPermission -ClientRoleIdentifier "5d51f771-b86a-419e-ad25-27696aafc02e" -ServerRoleIdentifier "https://rptidentifier.local"
 ```
 
 
