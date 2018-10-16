@@ -32,7 +32,7 @@ image::images/rpt-4.png[Installation]
 
 image::images/rpt-5.png[Installation]
 
-* On the "Configure URL" page, click Next (Don’t use SAML or WS)
+* On the "Configure URL" page, click Next (Do not use SAML or WS)
 
 image::images/rpt-6.png[Installation]
 
