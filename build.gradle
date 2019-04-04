@@ -20,7 +20,8 @@ dependencies {
     include "com.enonic.xp:lib-io:${xpVersion}"
     include "com.enonic.xp:lib-portal:${xpVersion}"
     include "com.enonic.xp:lib-thymeleaf:${xpVersion}"
-    include 'com.enonic.lib:lib-http-client:1.0.1'
+    include "com.enonic.xp:lib-node:${xpVersion}"
+    include 'com.enonic.lib:lib-http-client:1.0.6'
     include 'com.enonic.lib:text-encoding:1.1.0'
     include 'com.enonic.lib:util:1.1.1'
 }

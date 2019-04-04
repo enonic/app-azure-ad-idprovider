@@ -65,13 +65,26 @@
         </input>
 
       </items>
-    </item-set><!-- user -->
+    </item-set>    <!-- user -->
 
     <input name="createAndUpdateGroupsOnLogin" type="CheckBox">
       <label>Create and update groups from dn</label>
       <help-text>Create and update groups when a user is logged in based on the dn value</help-text>
       <occurrences minimum="0" maximum="1"/>
-    </input><!-- group -->
+    </input>    <!-- group -->
+
+    <input name="createAndUpdateGroupsOnLoginFromGraphApi" type="CheckBox">
+      <label>Create and update groups from graph api</label>
+      <help-text>Create and update groups when a user is logged in based on groups returned from graph api</help-text>
+      <occurrences minimum="0" maximum="1"/>
+    </input>
+
+    <input name="graphApiUrl" type="TextLine">
+      <label>Graph API url</label>
+      <help-text>https://graph.microsoft.com</help-text>
+      <occurrences minimum="1" maximum="1"/>
+      <default>https://graph.microsoft.com</default>
+    </input>    <!-- group from graph -->
 
     <item-set name="proxy">
       <label>Proxy</label>
@@ -91,7 +104,7 @@
           <occurrences minimum="0" maximum="1"/>
           <config>
             <regexp>^([0-9]{1,4}|[1-5][0-9]{4}|6[0-4][0-9]{3}|65[0-4][0-9]{2}|655[0-2][0-9]|6553[0-5])$
-            </regexp><!-- 0 to 65535 --><!-- Does not work -->
+            </regexp>            <!-- 0 to 65535 -->            <!-- Does not work -->
           </config>
         </input>
 
@@ -108,7 +121,7 @@
         </input>
 
       </items>
-    </item-set><!-- proxy -->
+    </item-set>    <!-- proxy -->
 
     <item-set name="profile">
       <label>Property to user profile from AD FS JWT Claim</label>
@@ -131,7 +144,7 @@
         </input>
 
       </items>
-    </item-set><!-- profile -->
+    </item-set>    <!-- profile -->
 
   </config>
 </id-provider>

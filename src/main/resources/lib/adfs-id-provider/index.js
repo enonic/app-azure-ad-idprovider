@@ -80,6 +80,7 @@ exports.handleIdProviderRequest = function (request) {
     }
 
     createAndUpdateGroupsFromJwt({
+        accessToken: json.access_token,
         jwt: jwt,
         user: user
     });
