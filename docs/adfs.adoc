@@ -89,10 +89,10 @@ image::images/itr-4.png[Installation,768]
 ** Choose a Client UD
 *** You can either come up with this or use a generator link:https://www.guidgenerator.com/online-guid-generator.aspx[Online GUID Generator]
 *** Keep this information as it will be required for the ID Provider configuration as "clientId"
-** The redirect URI to specify is "_/idprovider/<userstorename>" appended to your Enonic VHost mapping source (your site URL).
+** The redirect URI to specify is "_/idprovider/<idprovidername>" appended to your Enonic VHost mapping source (your site URL).
 
 ```
-Add-AdfsClient -RedirectUri "https://www.example.com/_/idprovider/adfs-userstore" -ClientId "5d51f771-b86a-419e-ad25-27696aafc02e" -Name "MyADFS4Client"
+Add-AdfsClient -RedirectUri "https://www.example.com/_/idprovider/adfs-idprovider" -ClientId "5d51f771-b86a-419e-ad25-27696aafc02e" -Name "MyADFS4Client"
 ```
 
 

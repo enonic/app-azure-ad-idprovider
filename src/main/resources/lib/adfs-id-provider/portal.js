@@ -17,7 +17,7 @@ var lib = {
 	},
 	xp: {
 		auth: require('/lib/xp/auth'),
-		httpClient: require('/lib/xp/http-client'),
+		httpClient: require('/lib/http-client'),
 		portal: require('/lib/xp/portal')
 	}
 };

@@ -1,3 +1,3 @@
 <application>
-  <description>AD FS ID provider app. Configure in userstore. Add app to site to logout automatically when access token expires.</description>
+  <description>AD FS ID provider app. Configure in ID provider. Add app to site to logout automatically when access token expires.</description>
 </application>
