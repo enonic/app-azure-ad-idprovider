@@ -52,14 +52,14 @@ var removeMembers = lib.xp.auth.removeMembers;
  * @param {string} params.name
  * @param {string} params.displayName
  * @param {string} params.description
- * @param {string} params.userStore
+ * @param {string} params.idProvider
  * @returns {user}
  */
 function createOrModify(params) {
     log.debug('createOrModify(' + toStr(params) + ')');
 
     var group = runAsAdmin(function () {
-        return getPrincipal('group:' + params.userStore + ':' + params.name);
+        return getPrincipal('group:' + params.idProvider + ':' + params.name);
     });
     //log.debug('getPrincipalResult:' + toStr(group));
 
@@ -186,7 +186,7 @@ exports.createAndUpdateGroupsFromJwt = function (params) {
                     description: JSON.stringify({
                         dn: Array.prototype.slice.call(dnArray).reverse().join(',') // NOTE: Operate on a copy since reverse modifies in place.
                     }),
-                    userStore: params.user.userStore
+                    idProvider: params.user.idProvider
                 }
                 log.debug('createOrModifyParams:' + toStr(createOrModifyParams));
 
@@ -229,8 +229,8 @@ exports.debugAllGroups = function () {
             //start: 0,
             //count: 10,
             type: 'group',
-            //userStore: 'adfs'
-            //userStore: 'system'
+            //idProvider: 'adfs'
+            //idProvider: 'system'
         });
     });
     //log.debug('findPrincipalsResult:' + toStr(findPrincipalsResult));

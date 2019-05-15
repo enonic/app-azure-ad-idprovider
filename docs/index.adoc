@@ -21,7 +21,7 @@ image::images/idprov.png[Installation,768]
     mapping.mysite.host = example.com
     mapping.mysite.source = /
     mapping.mysite.target = /portal/master/mysite
-    mapping.mysite.userStore = adfs-userstore
+    mapping.mysite.idProvider.adfs-idprovider = default
 
 == How to enable debug logging
    

@@ -16,7 +16,7 @@ var lib = {
 	},
 	enonic: {
 		util: {
-			data: require('/lib/enonic/util/data')
+			data: require('/lib/util/data')
 		}
 	},
 	xp: {
@@ -40,7 +40,7 @@ var getMemberships      = lib.xp.auth.getMemberships;
 var xpGetProfile        = lib.xp.auth.getProfile;
 var xpModifyProfile     = lib.xp.auth.modifyProfile;
 var modifyUser          = lib.xp.auth.modifyUser;
-var getUserStoreKey     = lib.xp.portal.getUserStoreKey;
+var getIdProviderKey     = lib.xp.portal.getIdProviderKey;
 
 
 //──────────────────────────────────────────────────────────────────────────────
@@ -52,7 +52,7 @@ var getUserStoreKey     = lib.xp.portal.getUserStoreKey;
  * @param {string} params.name
  * @param {string} params.displayName
  * @param {string} params.email
- * @param {string} params.userStore
+ * @param {string} params.idProvider
  * @returns {user}
  */
  // NOTE: The user content has a disabled parameter, that could be used for something.
@@ -62,7 +62,7 @@ function createOrModify(params) {
 	// NOTE: Could have used getUser() instead.
 	var findUsersParams = {
     	count: 1, // we check total, so just getting 1 is fine
-    	query: "userstorekey = '" + params.userStore + "' AND login = '" + params.name + "'"
+    	query: "userstorekey = '" + params.idProvider + "' AND login = '" + params.name + "'"
 	};
 	log.debug('findUsersParams:' + toStr(findUsersParams));
 	var findUsersResult = runAsAdmin(function() {
@@ -310,7 +310,7 @@ exports.createOrUpdateFromJwt = function(params) {
 		name:        userName,
 		displayName: userDisplayName,
 		email:       userEmail,
-		userStore:   getUserStoreKey()
+		idProvider:   getIdProviderKey()
 	});
 
 	enrichProfileFromJwt({
