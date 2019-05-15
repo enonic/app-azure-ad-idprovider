@@ -86,7 +86,7 @@ image::images/itr-4.png[Installation,768]
 # Add an AD FS Client
 
 * Using PowerShell, add an AD FS Client
-** Choose a Client UD
+** Choose a Client ID
 *** You can either come up with this or use a generator link:https://www.guidgenerator.com/online-guid-generator.aspx[Online GUID Generator]
 *** Keep this information as it will be required for the ID Provider configuration as "clientId"
 ** The redirect URI to specify is "_/idprovider/<idprovidername>" appended to your Enonic VHost mapping source (your site URL).
@@ -96,7 +96,7 @@ Add-AdfsClient -RedirectUri "https://www.example.com/_/idprovider/adfs-idprovide
 ```
 
 
-# Grand the AD FS Application permission to the resource
+# Grant the AD FS Application permission to the resource (Not necessary for ADFS 3.0)
 
 * Using PowerShell, grant the AD FS Client permission to the resource
 ** ClientRoleIdentifier: ClientId used in the command above

@@ -310,7 +310,7 @@ exports.createOrUpdateFromJwt = function(params) {
 		name:        userName,
 		displayName: userDisplayName,
 		email:       userEmail,
-		userStore:   getUserStoreKey()
+		idProvider:   getIdProviderKey()
 	});
 
 	enrichProfileFromJwt({
