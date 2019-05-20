@@ -19,10 +19,10 @@ dependencies {
     include "com.enonic.xp:lib-context:${xpVersion}"
     include "com.enonic.xp:lib-io:${xpVersion}"
     include "com.enonic.xp:lib-portal:${xpVersion}"
-    include "com.enonic.lib:lib-thymeleaf:2.0.0-RC1"
-    include 'com.enonic.lib:lib-http-client:2.0.0-RC1'
+    include "com.enonic.lib:lib-thymeleaf:2.0.0"
+    include 'com.enonic.lib:lib-http-client:2.0.0'
     include 'com.enonic.lib:text-encoding:1.1.0'
-    include 'com.enonic.lib:lib-util:2.0.0-RC1'
+    include 'com.enonic.lib:lib-util:2.0.0'
 }
 
 repositories {
