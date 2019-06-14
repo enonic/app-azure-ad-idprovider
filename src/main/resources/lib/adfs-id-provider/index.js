@@ -87,7 +87,7 @@ exports.handleIdProviderRequest = function (request) {
 
     var loginResult = login({
         user: user.login,
-        userStore: user.userStore,
+        idProvider: user.idProvider,
         skipAuth: true
     });
     log.debug('loginResult:' + toStr(loginResult));

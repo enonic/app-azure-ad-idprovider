@@ -16,7 +16,7 @@ var lib = {
 	},
 	xp: {
 		auth:       require('/lib/xp/auth'),
-		httpClient: require('/lib/xp/http-client'),
+		httpClient: require('/lib/http-client'),
 		portal:     require('/lib/xp/portal')
 	}
 };
@@ -29,7 +29,7 @@ var valueFromFormat     = lib.adfsIdProvider.object.valueFromFormat;
 var getReturnToUrl      = lib.adfsIdProvider.portal.getReturnToUrl;
 var getIdProviderConfig = lib.xp.auth.getIdProviderConfig;
 var sendRequest         = lib.xp.httpClient.request;
-var getUserStoreKey     = lib.xp.portal.getUserStoreKey;
+var getIdProviderKey     = lib.xp.portal.getIdProviderKey;
 var getIdProviderUrl    = lib.xp.portal.idProviderUrl;
 
 //──────────────────────────────────────────────────────────────────────────────

@@ -28,6 +28,10 @@ Initial version provided by Bouvet
 |>= 6.12.0
 |http://repo.enonic.com/public/com/enonic/app/adfsidprovider/1.0.2/adfsidprovider-1.0.2.jar[Download]
 
+|2.0.0
+|>= 7.0.0
+|http://repo.enonic.com/public/com/enonic/app/adfsidprovider/2.0.0/adfsidprovider-2.0.0.jar[Download]
+
 |===
 
 == Build

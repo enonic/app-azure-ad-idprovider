@@ -1,35 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <id-provider xmlns="urn:enonic:xp:model:1.0">
   <mode>MIXED</mode>
-  <config>
-
+  <form>
     <input name="authorizationUrl" type="TextLine">
       <label>authorizationUrl</label>
       <help-text>https://www.example.com/adfs/oauth2/authorize</help-text>
       <occurrences minimum="1" maximum="1"/>
       <default>https://www.example.com/adfs/oauth2/authorize</default>
     </input>
-
     <input name="tokenUrl" type="TextLine">
       <label>tokenUrl</label>
       <help-text>https://www.example.com/adfs/oauth2/token</help-text>
       <occurrences minimum="1" maximum="1"/>
       <default>https://www.example.com/adfs/oauth2/token</default>
     </input>
-
     <input name="logoutUrl" type="TextLine">
       <label>logoutUrl</label>
       <help-text>https://www.example.com/adfs/ls/?wa=wsignout1.0&amp;wreply=</help-text>
       <occurrences minimum="1" maximum="1"/>
       <default>https://www.example.com/adfs/ls/?wa=wsignout1.0&amp;wreply=</default>
     </input>
-
     <input name="clientId" type="TextLine">
       <label>clientId</label>
       <help-text>Specifies a client identifier for this OAuth 2.0 client in AD FS.</help-text>
       <occurrences minimum="1" maximum="1"/>
     </input>
-
     <input name="resource" type="TextLine">
       <label>resource</label>
       <help-text>The server resource server that the Client wants an access. By default the current protocol and hostname. Example:
@@ -37,33 +32,28 @@
       </help-text>
       <occurrences minimum="0" maximum="1"/>
     </input>
-
     <item-set name="user">
       <label>User mappings</label>
       <help-text>Configure how data from the jwt.payload shall be used to create and update users.</help-text>
       <occurrences minimum="0" maximum="1"/>
       <items>
-
         <input name="name" type="TextLine">
           <label>Name</label>
           <help-text>Needs to be unique.</help-text>
           <occurrences minimum="1" maximum="1"/>
           <default>${objectSid}</default>
         </input>
-
         <input name="displayName" type="TextLine">
           <label>Display name</label>
           <occurrences minimum="1" maximum="1"/>
           <default>${given_name} ${family_name} &lt;${upn}&gt;</default>
         </input>
-
         <input name="email" type="TextLine">
           <label>Email</label>
           <help-text>You probably want to use ${upn} or ${email}</help-text>
           <occurrences minimum="1" maximum="1"/>
           <default>${upn}</default>
         </input>
-
       </items>
     </item-set>    <!-- user -->
 
@@ -91,13 +81,11 @@
       <help-text>Configure a proxy to use when talking to AD FS (the Authorzation Server)</help-text>
       <occurrences minimum="0" maximum="1"/>
       <items>
-
         <input name="host" type="TextLine">
           <label>Host</label>
           <help-text>Proxy host name to use.</help-text>
           <occurrences minimum="1" maximum="1"/>
         </input>
-
         <input name="port" type="Long">
           <label>Port Number</label>
           <help-text>Proxy port to use. Between 0 and 65535.</help-text>
@@ -107,19 +95,16 @@
             </regexp>            <!-- 0 to 65535 -->            <!-- Does not work -->
           </config>
         </input>
-
         <input name="user" type="TextLine">
           <label>Username</label>
           <help-text>Username for proxy authentication.</help-text>
           <occurrences minimum="0" maximum="1"/>
         </input>
-
         <input name="password" type="TextLine">
           <label>Password</label>
           <help-text>Password for proxy authentication.</help-text>
           <occurrences minimum="0" maximum="1"/>
         </input>
-
       </items>
     </item-set>    <!-- proxy -->
 
@@ -128,23 +113,19 @@
       <help-text>Enrich user profile with data from AD FS.</help-text>
       <occurrences minimum="0" maximum="0"/>
       <items>
-
         <input name="from" type="TextLine">
           <label>From jtw path</label>
           <help-text>Example: ${given_name} ${family_name} &lt;${upn}&gt;</help-text>
           <occurrences minimum="1" maximum="1"/>
           <default></default>
         </input>
-
         <input name="to" type="TextLine">
           <label>To profile path</label>
           <help-text>Example: fullName</help-text>
           <occurrences minimum="1" maximum="1"/>
           <default></default>
         </input>
-
       </items>
-    </item-set>    <!-- profile -->
-
-  </config>
+    </item-set><!-- profile -->
+  </form>
 </id-provider>

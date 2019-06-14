@@ -1,7 +1,7 @@
 plugins {
-    id 'com.enonic.xp.app' version '1.1.0'
-    id 'com.enonic.defaults' version '1.0.3'
-    id 'maven'
+    id 'maven-publish'
+    id 'com.enonic.defaults' version '2.0.1'
+    id 'com.enonic.xp.app' version '2.0.0'
 }
 
 app {
@@ -19,15 +19,15 @@ dependencies {
     include "com.enonic.xp:lib-context:${xpVersion}"
     include "com.enonic.xp:lib-io:${xpVersion}"
     include "com.enonic.xp:lib-portal:${xpVersion}"
-    include "com.enonic.xp:lib-thymeleaf:${xpVersion}"
-    include "com.enonic.xp:lib-node:${xpVersion}"
-    include 'com.enonic.lib:lib-http-client:1.0.6'
+    include "com.enonic.lib:lib-thymeleaf:2.0.0"
+    include 'com.enonic.lib:lib-http-client:2.0.0'
     include 'com.enonic.lib:text-encoding:1.1.0'
-    include 'com.enonic.lib:util:1.1.1'
+    include 'com.enonic.lib:lib-util:2.0.0'
 }
 
 repositories {
     mavenLocal()
+    mavenCentral()
     jcenter()
     xp.enonicRepo()
 }

@@ -56,14 +56,14 @@ var connect = lib.xp.node.connect;
  * @param {string} params.name
  * @param {string} params.displayName
  * @param {string} params.description
- * @param {string} params.userStore
+ * @param {string} params.idProvider
  * @returns {user}
  */
 function createOrModify(params) {
     log.debug('createOrModify(' + toStr(params) + ')');
 
-    var group = runAsAdmin(function() {
-        return getPrincipal('group:' + params.userStore + ':' + params.name);
+    var group = runAsAdmin(function () {
+        return getPrincipal('group:' + params.idProvider + ':' + params.name);
     });
     //log.debug('getPrincipalResult:' + toStr(group));
 
@@ -299,45 +299,39 @@ function fromDn(params) {
 
     var dnArray = [];
     var pathArray = [];
-    dn.split(',')
-        .reverse()
-        .forEach(function(rdn) {
-            var rdnParts = rdn.split('=', 2);
-            log.debug('rdnParts:' + toStr(rdnParts));
+    dn.split(',').reverse().forEach(function (rdn) {
+        var rdnParts = rdn.split('=', 2);
+        log.debug('rdnParts:' + toStr(rdnParts));
 
-            var rdnName = rdnParts[0];
-            log.debug('rdnName:' + toStr(rdnName));
+        var rdnName = rdnParts[0];
+        log.debug('rdnName:' + toStr(rdnName));
 
-            var rdnValue = rdnParts[1]; // TODO: http://www.rlmueller.net/CharactersEscaped.htm
-            log.debug('rdnValue:' + toStr(rdnValue));
+        var rdnValue = rdnParts[1]; // TODO: http://www.rlmueller.net/CharactersEscaped.htm
+        log.debug('rdnValue:' + toStr(rdnValue));
 
-            if (rdnName !== 'CN') {
-                dnArray.push(rdn);
-                if (rdnName === 'OU') {
-                    // Not DC
-                    pathArray.push(rdnValue);
+        if (rdnName !== 'CN') {
+            dnArray.push(rdn);
+            if (rdnName === 'OU') { // Not DC
+                pathArray.push(rdnValue);
 
-                    var path = pathArray.join('/');
-                    var createOrModifyParams = {
-                        name: sanitizeName(path),
-                        displayName: path,
-                        description: JSON.stringify({
-                            dn: Array.prototype.slice
-                                .call(dnArray)
-                                .reverse()
-                                .join(',') // NOTE: Operate on a copy since reverse modifies in place.
-                        }),
-                        userStore: params.user.userStore
-                    };
-                    log.debug('createOrModifyParams:' + toStr(createOrModifyParams));
+                var path = pathArray.join('/');
+                var createOrModifyParams = {
+                    name: sanitizeName(path),
+                    displayName: path,
+                    description: JSON.stringify({
+                        dn: Array.prototype.slice.call(dnArray).reverse().join(',') // NOTE: Operate on a copy since reverse modifies in place.
+                    }),
+                    idProvider: params.user.idProvider
+                }
+                log.debug('createOrModifyParams:' + toStr(createOrModifyParams));
 
-                    // Process all groups in case the have changes.
-                    var group = createOrModify(createOrModifyParams);
+                // Process all groups in case the have changes.
+                var group = createOrModify(createOrModifyParams);
 
-                    groupKeysinAd.push(group.key);
-                } // if(rdnName !== 'CN')
-            }
-        });
+                groupKeysinAd.push(group.key);
+            } // if(rdnName !== 'CN')
+        }
+    });
     log.debug('groupKeysinAd:' + toStr(groupKeysinAd));
 
     var newGroupKeys = inFirstButNotInSecond(groupKeysinAd, groupKeysInXp);
@@ -367,9 +361,9 @@ exports.debugAllGroups = function() {
         return findPrincipals({
             //start: 0,
             //count: 10,
-            type: 'group'
-            //userStore: 'adfs'
-            //userStore: 'system'
+            type: 'group',
+            //idProvider: 'adfs'
+            //idProvider: 'system'
         });
     });
     //log.debug('findPrincipalsResult:' + toStr(findPrincipalsResult));
