@@ -76,6 +76,12 @@
       <default>https://graph.microsoft.com</default>
     </input>    <!-- group from graph -->
 
+    <input name="forceHttpsOnRedirectUri" type="CheckBox">
+      <label>Force the redirect uri to use https</label>
+      <help-text>If your enonic instance is running behind a SSL reverse proxy this might be necessary if you're not forwarding all http requests to https</help-text>
+      <occurrences minimum="0" maximum="1"/>
+    </input>
+
     <item-set name="proxy">
       <label>Proxy</label>
       <help-text>Configure a proxy to use when talking to AD FS (the Authorzation Server)</help-text>
