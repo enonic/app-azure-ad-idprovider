@@ -6,7 +6,8 @@ It is compatible with ADFS 3.0 (Windows Server 2012 R2) and ADFS 4.0 (Windows Se
 
 == Acknowledments
 
-Initial version provided by Bouvet
+- Initial version provided by Bouvet
+- 2.1.0 improvements by NAV (Graph API usage for groups and HTTPS
 
 == Compatibility
 
@@ -16,21 +17,25 @@ Initial version provided by Bouvet
 |XP Version
 |Download
 
-|1.0.0
-|>= 6.12.0
-|http://repo.enonic.com/public/com/enonic/app/adfsidprovider/1.0.0/adfsidprovider-1.0.0.jar[Download]
+|2.1.0
+|>= 7.0.0
+|http://repo.enonic.com/public/com/enonic/app/adfsidprovider/2.1.0/adfsidprovider-2.1.0.jar[Download]
 
-|1.0.1
-|>= 6.12.0
-|http://repo.enonic.com/public/com/enonic/app/adfsidprovider/1.0.1/adfsidprovider-1.0.1.jar[Download]
+|2.0.0
+|>= 7.0.0
+|http://repo.enonic.com/public/com/enonic/app/adfsidprovider/2.0.0/adfsidprovider-2.0.0.jar[Download]
 
 |1.0.2
 |>= 6.12.0
 |http://repo.enonic.com/public/com/enonic/app/adfsidprovider/1.0.2/adfsidprovider-1.0.2.jar[Download]
 
-|2.0.0
-|>= 7.0.0
-|http://repo.enonic.com/public/com/enonic/app/adfsidprovider/2.0.0/adfsidprovider-2.0.0.jar[Download]
+|1.0.1
+|>= 6.12.0
+|http://repo.enonic.com/public/com/enonic/app/adfsidprovider/1.0.1/adfsidprovider-1.0.1.jar[Download]
+
+|1.0.0
+|>= 6.12.0
+|http://repo.enonic.com/public/com/enonic/app/adfsidprovider/1.0.0/adfsidprovider-1.0.0.jar[Download]
 
 |===
 
