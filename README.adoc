@@ -7,7 +7,7 @@ It is compatible with ADFS 3.0 (Windows Server 2012 R2) and ADFS 4.0 (Windows Se
 == Acknowledments
 
 - Initial version provided by Bouvet
-- 2.1.0 improvements by NAV (Graph API usage for groups and HTTPS
+- 2.1.0 improvements by NAV (Graph API usage for group memberships and HTTPS redirection)
 
 == Compatibility
 
