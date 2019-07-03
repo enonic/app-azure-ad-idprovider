@@ -51,8 +51,14 @@ exports.redirectToAuthorizationUrl = function(request) {
 	var clientId = idProviderConfig.clientId;
 	var resource = idProviderConfig.resource || request.scheme + '://' + request.host + (request.port ? ':' + request.port : '');
 	var redirectUri = lib.xp.portal.idProviderUrl({type:'absolute'});
+	if (!!idProviderConfig.forceHttpsOnRedirectUri && redirectUri.indexOf('https://') === -1) {
+		redirectUri = redirectUri.replace('http://', 'https://');
+	}
     log.debug('redirectUri:' + redirectUri);
 	var returnToUrl = getReturnToUrl(request);
+	if (!!idProviderConfig.forceHttpsOnRedirectUri && returnToUrl.indexOf('https://') === -1) {
+		returnToUrl = returnToUrl.replace('http://', 'https://');
+	}
 	var location = new lib.node.uriJs(idProviderConfig.authorizationUrl);
 	location.addQuery('response_type', 'code');
 	location.addQuery('client_id', clientId);
@@ -91,6 +97,9 @@ exports.requestAccessToken = function(request) {
 	log.debug('idProviderConfig:' + toStr(idProviderConfig));
 
 	var idProviderUrl = getIdProviderUrl({type:'absolute'});
+	if (!!idProviderConfig.forceHttpsOnRedirectUri && idProviderUrl.indexOf('https://') === -1) {
+		idProviderUrl = idProviderUrl.replace('http://', 'https://');
+	}
 	log.debug('idProviderUrl:' + toStr(idProviderUrl));
 
 	var accessTokenRequest = {

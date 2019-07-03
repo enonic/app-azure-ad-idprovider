@@ -18,7 +18,8 @@ var lib = {
     },
     xp: {
         auth: require('/lib/xp/auth'),
-        portal: require('/lib/xp/portal')
+        portal: require('/lib/xp/portal'),
+        httpClient: require('/lib/http-client')
     }
 };
 
@@ -41,6 +42,7 @@ var getMembers = lib.xp.auth.getMembers;
 var getPrincipal = lib.xp.auth.getPrincipal;
 var modifyGroup = lib.xp.auth.modifyGroup;
 var removeMembers = lib.xp.auth.removeMembers;
+var sendRequest = lib.xp.httpClient.request;
 
 //──────────────────────────────────────────────────────────────────────────────
 // auth.group methods
@@ -58,7 +60,7 @@ var removeMembers = lib.xp.auth.removeMembers;
 function createOrModify(params) {
     log.debug('createOrModify(' + toStr(params) + ')');
 
-    var group = runAsAdmin(function () {
+    var group = runAsAdmin(function() {
         return getPrincipal('group:' + params.idProvider + ':' + params.name);
     });
     //log.debug('getPrincipalResult:' + toStr(group));
@@ -67,26 +69,27 @@ function createOrModify(params) {
         if (group.displayName === params.displayName && group.description === params.description) {
             log.debug('unchanged group:' + toStr(group));
         } else {
-            group = modifyGroup({
-                key: group._id,
-                editor: function (c) {
-                    c.displayName = params.displayName;
-                    c.description = params.description;
-                    return c;
-                }
+            group = runAsAdmin(function() {
+                return modifyGroup({
+                    key: group.key,
+                    editor: function(c) {
+                        c.displayName = params.displayName;
+                        c.description = params.description || '';
+                        return c;
+                    }
+                });
             });
             log.debug('modified group:' + toStr(group));
         }
     } else {
-        runAsAdmin(function () {
+        runAsAdmin(function() {
             group = createGroup(params);
         });
         log.debug('created group:' + toStr(group));
     }
     return group;
-}; // function createOrModify
+} // function createOrModify
 exports.createOrModify = createOrModify;
-
 
 /**
  * Adds a user to a group.
@@ -100,13 +103,12 @@ function addUser(params) {
     //getMembers(params.groupKey)
     //getMemberships(params.userKey)
 
-    var addMembersResult = runAsAdmin(function () {
+    var addMembersResult = runAsAdmin(function() {
         return addMembers(params.groupKey, [params.userKey]);
     });
     log.debug('addMembersResult:' + toStr(addMembersResult)); // In Enonic XP 6.9.2 return undefined even if group is unmodified
-};
+}
 exports.addUser = addUser;
-
 
 /**
  * Removed a user from a group.
@@ -117,13 +119,12 @@ exports.addUser = addUser;
  */
 function removeUser(params) {
     log.debug('removeUser(' + toStr(params) + ')');
-    var removeMembersResult = runAsAdmin(function () {
+    var removeMembersResult = runAsAdmin(function() {
         return removeMembers(params.groupKey, [params.userKey]);
     });
     log.debug('removeMembersResult:' + toStr(removeMembersResult));
-};
+}
 exports.removeUser = removeUser;
-
 
 /**
  * Creates and updates groups for a user based on the jwt.
@@ -132,17 +133,95 @@ exports.removeUser = removeUser;
  * @param {Object} params.user
  * @returns {}
  */
-exports.createAndUpdateGroupsFromJwt = function (params) {
-
+exports.createAndUpdateGroupsFromJwt = function(params) {
     var idProviderConfig = getIdProviderConfig();
     log.debug('idProviderConfig:' + toStr(idProviderConfig));
+
+    var createAndUpdateGroupsOnLoginFromGraphApi = !!idProviderConfig.createAndUpdateGroupsOnLoginFromGraphApi;
+    log.debug('createAndUpdateGroupsOnLoginFromGraphApi:' + toStr(createAndUpdateGroupsOnLoginFromGraphApi));
 
     var createAndUpdateGroupsOnLogin = !!idProviderConfig.createAndUpdateGroupsOnLogin;
     log.debug('createAndUpdateGroupsOnLogin:' + toStr(createAndUpdateGroupsOnLogin));
 
-    if (!createAndUpdateGroupsOnLogin) {
-        return;
+    if (createAndUpdateGroupsOnLogin) {
+        return fromDn(params);
     }
+
+    if (createAndUpdateGroupsOnLoginFromGraphApi) {
+        return fromGraph(params);
+    }
+}; // createAndUpdateGroupsFromJwt
+
+// get groups from graph api
+function fromGraph(params) {
+    var idProviderConfig = getIdProviderConfig();
+    // https://docs.microsoft.com/en-us/graph/api/user-list-memberof?view=graph-rest-1.0&tabs=cs
+    // https://developer.microsoft.com/en-us/graph/graph-explorer?request=me/memberOf&method=GET&version=v1.0&GraphUrl=https://graph.microsoft.com
+    var groupRequest = {
+        method: 'GET',
+        url: idProviderConfig.graphApiUrl + '/v1.0/users/' + params.jwt.payload.oid + '/memberOf',
+        headers: {
+            Accept: 'application/json',
+            Authorization: 'Bearer ' + params.accessToken
+        },
+        proxy: idProviderConfig.proxy
+    };
+    log.debug('createAndUpdateGroupsOnLoginFromGraphApi request: ' + toStr(groupRequest));
+
+    var groupResponse = sendRequest(groupRequest);
+    log.debug('createAndUpdateGroupsOnLoginFromGraphApi response: ' + toStr(groupResponse));
+
+    var body = JSON.parse(groupResponse.body);
+    if (body && body.value) {
+        // find users current ad groups
+        var groupKeysInXp = getGroups(params.user.key)
+            .filter(function(group) {
+                return group.key.startsWith('group:' + params.user.idProvider + ':azure-ad-'); // Only groups from AD
+            })
+            .map(function(group) {
+                return group.key;
+            });
+
+        // create or modify groups and add the user to the group
+        var groups = body.value;
+        var groupKeysinAd = [];
+        groups.forEach(function(adGroup) {
+            var xpGroup = createOrModify({
+                idProvider: params.user.idProvider,
+                name: sanitizeName('azure-ad-' + adGroup.id),
+                displayName: adGroup.displayName,
+                description: adGroup.description
+            });
+            groupKeysinAd.push(xpGroup.key);
+        });
+        log.debug('groupKeysinAd:' + toStr(groupKeysinAd));
+
+        var newGroupKeys = inFirstButNotInSecond(groupKeysinAd, groupKeysInXp);
+        log.debug('newGroupKeys:' + toStr(newGroupKeys));
+
+        var oldGroupKeys = inFirstButNotInSecond(groupKeysInXp, groupKeysinAd);
+        log.debug('oldGroupKeys:' + toStr(oldGroupKeys));
+
+        newGroupKeys.forEach(function(groupKey) {
+            addUser({
+                groupKey: groupKey,
+                userKey: params.user.key
+            });
+        });
+
+        oldGroupKeys.forEach(function(groupKey) {
+            removeUser({
+                groupKey: groupKey,
+                userKey: params.user.key
+            });
+        });
+    } else {
+        log.info('Could not load and create groups on login, turn on debug to see more infomation');
+    }
+}
+
+// get groups from dn param in access token
+function fromDn(params) {
     var dnFormat = '${dn}';
     var dn = valueFromFormat({
         format: dnFormat,
@@ -153,50 +232,57 @@ exports.createAndUpdateGroupsFromJwt = function (params) {
     }
     log.debug('dn:' + toStr(dn));
 
-    var groupKeysInXp = getGroups(params.user.key).filter(function (group) {
-        return group.description.startsWith('{"dn":'); // Only groups from AD
-    }).map(function (group) {
-        return group.key;
-    });
+    var groupKeysInXp = getGroups(params.user.key)
+        .filter(function(group) {
+            return group.description.startsWith('{"dn":'); // Only groups from AD
+        })
+        .map(function(group) {
+            return group.key;
+        });
     log.debug('groupKeysInXp:' + toStr(groupKeysInXp));
 
     var groupKeysinAd = [];
 
     var dnArray = [];
     var pathArray = [];
-    dn.split(',').reverse().forEach(function (rdn) {
-        var rdnParts = rdn.split('=', 2);
-        log.debug('rdnParts:' + toStr(rdnParts));
+    dn.split(',')
+        .reverse()
+        .forEach(function(rdn) {
+            var rdnParts = rdn.split('=', 2);
+            log.debug('rdnParts:' + toStr(rdnParts));
 
-        var rdnName = rdnParts[0];
-        log.debug('rdnName:' + toStr(rdnName));
+            var rdnName = rdnParts[0];
+            log.debug('rdnName:' + toStr(rdnName));
 
-        var rdnValue = rdnParts[1]; // TODO: http://www.rlmueller.net/CharactersEscaped.htm
-        log.debug('rdnValue:' + toStr(rdnValue));
+            var rdnValue = rdnParts[1]; // TODO: http://www.rlmueller.net/CharactersEscaped.htm
+            log.debug('rdnValue:' + toStr(rdnValue));
 
-        if (rdnName !== 'CN') {
-            dnArray.push(rdn);
-            if (rdnName === 'OU') { // Not DC
-                pathArray.push(rdnValue);
+            if (rdnName !== 'CN') {
+                dnArray.push(rdn);
+                if (rdnName === 'OU') { // Not DC
+                    pathArray.push(rdnValue);
 
-                var path = pathArray.join('/');
-                var createOrModifyParams = {
-                    name: sanitizeName(path),
-                    displayName: path,
-                    description: JSON.stringify({
-                        dn: Array.prototype.slice.call(dnArray).reverse().join(',') // NOTE: Operate on a copy since reverse modifies in place.
-                    }),
-                    idProvider: params.user.idProvider
-                }
-                log.debug('createOrModifyParams:' + toStr(createOrModifyParams));
+                    var path = pathArray.join('/');
+                    var createOrModifyParams = {
+                        name: sanitizeName(path),
+                        displayName: path,
+                        description: JSON.stringify({
+                            dn: Array.prototype.slice
+                                .call(dnArray)
+                                .reverse()
+                                .join(',') // NOTE: Operate on a copy since reverse modifies in place.
+                        }),
+                        idProvider: params.user.idProvider
+                    };
+                    log.debug('createOrModifyParams:' + toStr(createOrModifyParams));
 
-                // Process all groups in case the have changes.
-                var group = createOrModify(createOrModifyParams);
+                    // Process all groups in case the have changes.
+                    var group = createOrModify(createOrModifyParams);
 
-                groupKeysinAd.push(group.key);
-            } // if(rdnName !== 'CN')
-        }
-    });
+                    groupKeysinAd.push(group.key);
+                } // if(rdnName !== 'CN')
+            }
+        });
     log.debug('groupKeysinAd:' + toStr(groupKeysinAd));
 
     var newGroupKeys = inFirstButNotInSecond(groupKeysinAd, groupKeysInXp);
@@ -205,44 +291,42 @@ exports.createAndUpdateGroupsFromJwt = function (params) {
     var oldGroupKeys = inFirstButNotInSecond(groupKeysInXp, groupKeysinAd);
     log.debug('oldGroupKeys:' + toStr(oldGroupKeys));
 
-    newGroupKeys.forEach(function (groupKey) {
+    newGroupKeys.forEach(function(groupKey) {
         addUser({
             groupKey: groupKey,
             userKey: params.user.key
         });
     }); // newGroupKeys.forEach
 
-    oldGroupKeys.forEach(function (groupKey) {
+    oldGroupKeys.forEach(function(groupKey) {
         removeUser({
             groupKey: groupKey,
             userKey: params.user.key
         });
         // Group may become empty, if syncing implemented could check if group still in AD FS.
     });
+}
 
-}; // createAndUpdateGroupsFromJwt
-
-
-exports.debugAllGroups = function () {
-    var findPrincipalsResult = runAsAdmin(function () {
+exports.debugAllGroups = function() {
+    var findPrincipalsResult = runAsAdmin(function() {
         return findPrincipals({
             //start: 0,
             //count: 10,
-            type: 'group',
+            type: 'group'
             //idProvider: 'adfs'
             //idProvider: 'system'
         });
     });
     //log.debug('findPrincipalsResult:' + toStr(findPrincipalsResult));
 
-    findPrincipalsResult.hits.forEach(function (group) {
-        var getPrincipalResult = runAsAdmin(function () {
+    findPrincipalsResult.hits.forEach(function(group) {
+        var getPrincipalResult = runAsAdmin(function() {
             return getPrincipal(group.key);
         });
         //log.debug('getPrincipalResult:' + toStr(getPrincipalResult)); // Does not show members
 
-        var getMembersResult = runAsAdmin(function () {
-            return getMembers(group.key)
+        var getMembersResult = runAsAdmin(function() {
+            return getMembers(group.key);
         });
         log.debug('getMembers(' + group.key + ') --> ' + toStr(getMembersResult));
     });
