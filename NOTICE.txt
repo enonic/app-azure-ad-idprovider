@@ -1,7 +1,0 @@
-This software includes the following third party software:
-
-    urijs
-    MIT License
-    https://github.com/medialize/URI.js/blob/5e238954980476ba4921998199bccdfb50b833a8/LICENSE.txt
-
-    
