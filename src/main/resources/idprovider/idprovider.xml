@@ -4,15 +4,15 @@
   <form>
     <input name="authorizationUrl" type="TextLine">
       <label>authorizationUrl</label>
-      <help-text>https://www.example.com/adfs/oauth2/authorize</help-text>
+      <help-text>https://login.microsoftonline.com/${appId}/oauth2/v2.0/authorize</help-text>
       <occurrences minimum="1" maximum="1"/>
-      <default>https://www.example.com/adfs/oauth2/authorize</default>
+      <default>https://login.microsoftonline.com/${appId}/oauth2/v2.0/authorize</default>
     </input>
     <input name="tokenUrl" type="TextLine">
       <label>tokenUrl</label>
-      <help-text>https://www.example.com/adfs/oauth2/token</help-text>
+      <help-text>https://login.microsoftonline.com/${appId}/oauth2/v2.0/token</help-text>
       <occurrences minimum="1" maximum="1"/>
-      <default>https://www.example.com/adfs/oauth2/token</default>
+      <default>https://login.microsoftonline.com/${appId}/oauth2/v2.0/token</default>
     </input>
     <input name="logoutUrl" type="TextLine">
       <label>logoutUrl</label>
@@ -22,26 +22,24 @@
     </input>
     <input name="clientId" type="TextLine">
       <label>clientId</label>
-      <help-text>Specifies a client identifier for this OAuth 2.0 client in AD FS.</help-text>
+      <help-text>Specifies a client identifier for this OAuth 2.0 client in Azure AD.</help-text>
       <occurrences minimum="1" maximum="1"/>
     </input>
     <input name="resource" type="TextLine">
       <label>resource</label>
-      <help-text>The server resource server that the Client wants an access. By default the current protocol and hostname. Example:
-        https://www.example.com
-      </help-text>
+      <help-text>Resource identifier in your app in portal azure example: 00000003-0000-0000-c000-000000000000</help-text>
       <occurrences minimum="0" maximum="1"/>
     </input>
     <item-set name="user">
       <label>User mappings</label>
-      <help-text>Configure how data from the jwt.payload shall be used to create and update users.</help-text>
+      <help-text>Configure how data from the graph api shall be used to create and update users.</help-text>
       <occurrences minimum="0" maximum="1"/>
       <items>
         <input name="name" type="TextLine">
           <label>Name</label>
           <help-text>Needs to be unique.</help-text>
           <occurrences minimum="1" maximum="1"/>
-          <default>${objectSid}</default>
+          <default>${name}</default>
         </input>
         <input name="displayName" type="TextLine">
           <label>Display name</label>
@@ -50,18 +48,12 @@
         </input>
         <input name="email" type="TextLine">
           <label>Email</label>
-          <help-text>You probably want to use ${upn} or ${email}</help-text>
+          <help-text>You probably want to use ${upn}</help-text>
           <occurrences minimum="1" maximum="1"/>
           <default>${upn}</default>
         </input>
       </items>
     </item-set>    <!-- user -->
-
-    <input name="createAndUpdateGroupsOnLogin" type="CheckBox">
-      <label>Create and update groups from dn</label>
-      <help-text>Create and update groups when a user is logged in based on the dn value</help-text>
-      <occurrences minimum="0" maximum="1"/>
-    </input>    <!-- group -->
 
     <input name="createAndUpdateGroupsOnLoginFromGraphApi" type="CheckBox">
       <label>Create and update groups from graph api</label>
@@ -113,25 +105,5 @@
         </input>
       </items>
     </item-set>    <!-- proxy -->
-
-    <item-set name="profile">
-      <label>Property to user profile from AD FS JWT Claim</label>
-      <help-text>Enrich user profile with data from AD FS.</help-text>
-      <occurrences minimum="0" maximum="0"/>
-      <items>
-        <input name="from" type="TextLine">
-          <label>From jtw path</label>
-          <help-text>Example: ${given_name} ${family_name} &lt;${upn}&gt;</help-text>
-          <occurrences minimum="1" maximum="1"/>
-          <default></default>
-        </input>
-        <input name="to" type="TextLine">
-          <label>To profile path</label>
-          <help-text>Example: fullName</help-text>
-          <occurrences minimum="1" maximum="1"/>
-          <default></default>
-        </input>
-      </items>
-    </item-set><!-- profile -->
   </form>
 </id-provider>
