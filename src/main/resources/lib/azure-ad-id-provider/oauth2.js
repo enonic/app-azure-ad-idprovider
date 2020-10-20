@@ -11,9 +11,6 @@ var lib = {
 		object: require('/lib/azure-ad-id-provider/object'),
 		portal: require('/lib/azure-ad-id-provider/portal')
 	},
-	node: {
-		// uriJs: require('/lib/urijs/src/URI')
-	},
 	xp: {
 		auth:       require('/lib/xp/auth'),
 		httpClient: require('/lib/http-client'),
@@ -49,7 +46,6 @@ exports.redirectToAuthorizationUrl = function(request) {
 	log.debug('idProviderConfig:' + toStr(idProviderConfig));
 
 	var clientId = idProviderConfig.clientId;
-	var resource = idProviderConfig.resource || request.scheme + '://' + request.host + (request.port ? ':' + request.port : '');
 	var redirectUri = lib.xp.portal.idProviderUrl({type:'absolute'});
 	if (!!idProviderConfig.forceHttpsOnRedirectUri && redirectUri.indexOf('https://') === -1) {
 		redirectUri = redirectUri.replace('http://', 'https://');
@@ -59,17 +55,14 @@ exports.redirectToAuthorizationUrl = function(request) {
 	if (!!idProviderConfig.forceHttpsOnRedirectUri && returnToUrl.indexOf('https://') === -1) {
 		returnToUrl = returnToUrl.replace('http://', 'https://');
 	}
-	// var location = new lib.node.uriJs(idProviderConfig.authorizationUrl);
-	// location.addQuery('response_type', 'code');
-	// location.addQuery('client_id', clientId);
-	// location.addQuery('resource', resource);
-	// location.addQuery('redirect_uri', redirectUri);
+    log.debug('returnUrl:' + returnToUrl);
+	var authorizationUrl = `${idProviderConfig.authorizationUrl}?client_id=${clientId}&response_type=code&redirect_uri=${redirectUri}&scope=openid`
+    log.debug('authorizationUrl:' + authorizationUrl);
 	var response = {
 		body: '', // NOTE: Workaround for Safari so Content-Length header becomes 0 on /admin/tool
 		status: 307, // Temporary redirect // http://insanecoding.blogspot.no/2014/02/http-308-incompetence-expected.html
 		headers: {
-			'Location': '', //location.toString(),
-			//Referer: returnToUrl, // AD FS doesn't use this. We use a cookie instead.
+			'Location': authorizationUrl,
 		},
 		cookies: {
 			enonicXpReturnToUrl: {
@@ -102,6 +95,9 @@ exports.requestAccessToken = function(request) {
 	}
 	log.debug('idProviderUrl:' + toStr(idProviderUrl));
 
+	var clientSecret = idProviderConfig.clientSecret;
+	log.debug('clientSecret:' + toStr(clientSecret));
+
 	var accessTokenRequest = {
 		method: 'POST',
 		url: idProviderConfig.tokenUrl,
@@ -112,7 +108,9 @@ exports.requestAccessToken = function(request) {
 			grant_type: 'authorization_code',
 			client_id: idProviderConfig.clientId,
 			redirect_uri: idProviderUrl,
-			code: request.params.code
+			code: request.params.code,
+			scope: 'openid',
+			client_secret: clientSecret
 		},
 		proxy: idProviderConfig.proxy
 	};

@@ -22,13 +22,13 @@
     </input>
     <input name="clientId" type="TextLine">
       <label>clientId</label>
-      <help-text>Specifies a client identifier for this OAuth 2.0 client in Azure AD.</help-text>
+      <help-text>Client id for your application in Portal Azure</help-text>
       <occurrences minimum="1" maximum="1"/>
     </input>
-    <input name="resource" type="TextLine">
-      <label>resource</label>
-      <help-text>Resource identifier in your app in portal azure example: 00000003-0000-0000-c000-000000000000</help-text>
-      <occurrences minimum="0" maximum="1"/>
+    <input name="clientSecret" type="TextLine">
+      <label>clientSecret</label>
+      <help-text>Client Secret found in Portal Azure</help-text>
+      <occurrences minimum="1" maximum="1"/>
     </input>
     <item-set name="user">
       <label>User mappings</label>
