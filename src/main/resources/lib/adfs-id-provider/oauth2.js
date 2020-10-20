@@ -12,7 +12,7 @@ var lib = {
 		portal: require('/lib/adfs-id-provider/portal')
 	},
 	node: {
-		uriJs: require('/lib/urijs/src/URI')
+		// uriJs: require('/lib/urijs/src/URI')
 	},
 	xp: {
 		auth:       require('/lib/xp/auth'),
@@ -59,16 +59,16 @@ exports.redirectToAuthorizationUrl = function(request) {
 	if (!!idProviderConfig.forceHttpsOnRedirectUri && returnToUrl.indexOf('https://') === -1) {
 		returnToUrl = returnToUrl.replace('http://', 'https://');
 	}
-	var location = new lib.node.uriJs(idProviderConfig.authorizationUrl);
-	location.addQuery('response_type', 'code');
-	location.addQuery('client_id', clientId);
-	location.addQuery('resource', resource);
-	location.addQuery('redirect_uri', redirectUri);
+	// var location = new lib.node.uriJs(idProviderConfig.authorizationUrl);
+	// location.addQuery('response_type', 'code');
+	// location.addQuery('client_id', clientId);
+	// location.addQuery('resource', resource);
+	// location.addQuery('redirect_uri', redirectUri);
 	var response = {
 		body: '', // NOTE: Workaround for Safari so Content-Length header becomes 0 on /admin/tool
 		status: 307, // Temporary redirect // http://insanecoding.blogspot.no/2014/02/http-308-incompetence-expected.html
 		headers: {
-			'Location': location.toString(),
+			'Location': '', //location.toString(),
 			//Referer: returnToUrl, // AD FS doesn't use this. We use a cookie instead.
 		},
 		cookies: {

@@ -13,7 +13,7 @@ var lib = {
 		object: require('/lib/adfs-id-provider/object')
 	},
 	node: {
-		uriJs: require('/lib/urijs/src/URI')
+		// uriJs: require('/lib/urijs/src/URI')
 	},
 	xp: {
 		auth: require('/lib/xp/auth'),
@@ -78,7 +78,7 @@ exports.getAbsoluteSiteUrl = getAbsoluteSiteUrl;
  */
 function getAbsoluteUrlFromPath(params) {
 	//log.debug('getAbsoluteUrlFromPath(' + toStr(params) + ')');
-	var siteUri = new lib.node.uriJs(params.path, params.request ? params.request.url : getAbsoluteSiteUrl());
+	var siteUri = '' // new lib.node.uriJs(params.path, params.request ? params.request.url : getAbsoluteSiteUrl());
 	//log.debug('siteUri:' + toStr(siteUri));
 	var absoluteUrl = siteUri.normalizePath().toString();
 	log.debug('getAbsoluteUrlFromPath(' + toStr(params) + ') --> ' + toStr(absoluteUrl));

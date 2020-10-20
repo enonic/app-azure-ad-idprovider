@@ -1,23 +1,21 @@
 {
-  "name": "adfs-id-provider",
+  "name": "azure-ad-id-provider",
   "version": "1.0.2",
-  "description": "ADFS ID Provider",
+  "description": "Azure AD ID Provider",
   "license": "Apache-2.0",
-  "author": "Christian Westgaard <cwe@enonic.com>",
+  "author": "Øyvind Nordli <oyvind.nordli@item.no>",
   "repository": {
     "type": "git",
-    "url": "https://github.com/enonic/app-adfs-idprovider.git"
+    "url": "https://github.com/garlov/app-azure-ad-idprovider.git"
   },
   "scripts": {
-    "copyUriJs": "cd node_modules && find urijs -name '*.js' -o -name '*.json'| cpio -pdm ../build/resources/main/lib/;",
     "doctoc": "doctoc README.md --github",
     "generate-docs": "doctoc README.md --github && rm -r docs; node_modules/.bin/jsdoc -c jsdoc.json README.md"
   },
   "devDependencies": {
     "docdash": "0.4.0",
     "doctoc": "1.3.1",
-    "jsdoc": "3.5.5",
-    "urijs": "1.19.1"
+    "jsdoc": "3.5.5"
   },
   "private": "true"
 }
