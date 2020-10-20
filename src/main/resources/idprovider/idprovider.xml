@@ -2,28 +2,21 @@
 <id-provider xmlns="urn:enonic:xp:model:1.0">
   <mode>MIXED</mode>
   <form>
-    <input name="authorizationUrl" type="TextLine">
-      <label>authorizationUrl</label>
-      <help-text>https://login.microsoftonline.com/${appId}/oauth2/v2.0/authorize</help-text>
+    <input name="tenantId" type="TextLine">
+      <label>tenantId</label>
+      <help-text>Directory (tenant) ID found in Portal Azure</help-text>
       <occurrences minimum="1" maximum="1"/>
-      <default>https://login.microsoftonline.com/${appId}/oauth2/v2.0/authorize</default>
     </input>
-    <input name="tokenUrl" type="TextLine">
-      <label>tokenUrl</label>
-      <help-text>https://login.microsoftonline.com/${appId}/oauth2/v2.0/token</help-text>
+    <input name="clientId" type="TextLine">
+      <label>clientId</label>
+      <help-text>Application (client) ID for your application in Portal Azure</help-text>
       <occurrences minimum="1" maximum="1"/>
-      <default>https://login.microsoftonline.com/${appId}/oauth2/v2.0/token</default>
     </input>
     <input name="logoutUrl" type="TextLine">
       <label>logoutUrl</label>
       <help-text>https://www.example.com/adfs/ls/?wa=wsignout1.0&amp;wreply=</help-text>
       <occurrences minimum="1" maximum="1"/>
       <default>https://www.example.com/adfs/ls/?wa=wsignout1.0&amp;wreply=</default>
-    </input>
-    <input name="clientId" type="TextLine">
-      <label>clientId</label>
-      <help-text>Client id for your application in Portal Azure</help-text>
-      <occurrences minimum="1" maximum="1"/>
     </input>
     <input name="clientSecret" type="TextLine">
       <label>clientSecret</label>

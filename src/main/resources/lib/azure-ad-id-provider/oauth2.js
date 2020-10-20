@@ -56,7 +56,7 @@ exports.redirectToAuthorizationUrl = function(request) {
 		returnToUrl = returnToUrl.replace('http://', 'https://');
 	}
     log.debug('returnUrl:' + returnToUrl);
-	var authorizationUrl = `${idProviderConfig.authorizationUrl}?client_id=${clientId}&response_type=code&redirect_uri=${redirectUri}&scope=openid`
+	var authorizationUrl = `https://login.microsoftonline.com/${idProviderConfig.tenantId}/oauth2/v2.0/authorize?client_id=${clientId}&response_type=code&redirect_uri=${redirectUri}&scope=openid`
     log.debug('authorizationUrl:' + authorizationUrl);
 	var response = {
 		body: '', // NOTE: Workaround for Safari so Content-Length header becomes 0 on /admin/tool
@@ -100,7 +100,7 @@ exports.requestAccessToken = function(request) {
 
 	var accessTokenRequest = {
 		method: 'POST',
-		url: idProviderConfig.tokenUrl,
+		url: `https://login.microsoftonline.com/${idProviderConfig.tenantId}/oauth2/v2.0/token`,
 		headers: {
 			Accept: 'appication/json'
 		},
