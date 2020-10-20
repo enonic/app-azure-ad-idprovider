@@ -28,7 +28,6 @@ var createOrUpdateFromJwt = exports.auth.user.createOrUpdateFromJwt;
 var modifyProfile = exports.auth.user.modifyProfile;
 var jwtFromAccessToken = exports.jwt.fromAccessToken;
 var requestAccessToken = exports.oauth2.requestAccessToken;
-var isSet = exports.object.isSet;
 var toStr = exports.object.toStr;
 var valueFromFormat = exports.object.valueFromFormat;
 var getIdProviderConfig = lib.xp.auth.getIdProviderConfig;

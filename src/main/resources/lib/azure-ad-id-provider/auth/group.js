@@ -18,7 +18,6 @@ var lib = {
     },
     xp: {
         auth: require('/lib/xp/auth'),
-        portal: require('/lib/xp/portal'),
         httpClient: require('/lib/http-client')
     }
 };
@@ -28,17 +27,12 @@ var lib = {
 //──────────────────────────────────────────────────────────────────────────────
 var inFirstButNotInSecond = lib.azureAdIdProvider.array.inFirstButNotInSecond;
 var runAsAdmin = lib.azureAdIdProvider.context.runAsAdmin;
-var isSet = lib.azureAdIdProvider.object.isSet;
 var toStr = lib.azureAdIdProvider.object.toStr;
-var valueFromFormat = lib.azureAdIdProvider.object.valueFromFormat;
 var sanitizeName = lib.azureAdIdProvider.auth.sanitizeName.sanitizeName;
 var getGroups = lib.azureAdIdProvider.auth.user.getGroups;
 var addMembers = lib.xp.auth.addMembers;
 var createGroup = lib.xp.auth.createGroup;
-var findPrincipals = lib.xp.auth.findPrincipals;
 var getIdProviderConfig = lib.xp.auth.getIdProviderConfig;
-var getMembers = lib.xp.auth.getMembers;
-//var getMemberships        = lib.xp.auth.getMemberships;
 var getPrincipal = lib.xp.auth.getPrincipal;
 var modifyGroup = lib.xp.auth.modifyGroup;
 var removeMembers = lib.xp.auth.removeMembers;
@@ -99,10 +93,6 @@ exports.createOrModify = createOrModify;
  * @returns {undefined}
  */
 function addUser(params) {
-    log.debug('addUser(' + toStr(params) + ')');
-    //getMembers(params.groupKey)
-    //getMemberships(params.userKey)
-
     var addMembersResult = runAsAdmin(function() {
         return addMembers(params.groupKey, [params.userKey]);
     });
@@ -139,13 +129,6 @@ exports.createAndUpdateGroupsFromJwt = function(params) {
 
     var createAndUpdateGroupsOnLoginFromGraphApi = !!idProviderConfig.createAndUpdateGroupsOnLoginFromGraphApi;
     log.debug('createAndUpdateGroupsOnLoginFromGraphApi:' + toStr(createAndUpdateGroupsOnLoginFromGraphApi));
-
-    var createAndUpdateGroupsOnLogin = !!idProviderConfig.createAndUpdateGroupsOnLogin;
-    log.debug('createAndUpdateGroupsOnLogin:' + toStr(createAndUpdateGroupsOnLogin));
-
-    if (createAndUpdateGroupsOnLogin) {
-        return fromDn(params);
-    }
 
     if (createAndUpdateGroupsOnLoginFromGraphApi) {
         return fromGraph(params);
@@ -219,115 +202,3 @@ function fromGraph(params) {
         log.info('Could not load and create groups on login, turn on debug to see more infomation');
     }
 }
-
-// get groups from dn param in access token
-function fromDn(params) {
-    var dnFormat = '${dn}';
-    var dn = valueFromFormat({
-        format: dnFormat,
-        data: params.jwt.payload
-    });
-    if (!dn) {
-        throw new Error('Could not generate dn from mapping:' + dnFormat);
-    }
-    log.debug('dn:' + toStr(dn));
-
-    var groupKeysInXp = getGroups(params.user.key)
-        .filter(function(group) {
-            return group.description.startsWith('{"dn":'); // Only groups from AD
-        })
-        .map(function(group) {
-            return group.key;
-        });
-    log.debug('groupKeysInXp:' + toStr(groupKeysInXp));
-
-    var groupKeysinAd = [];
-
-    var dnArray = [];
-    var pathArray = [];
-    dn.split(',')
-        .reverse()
-        .forEach(function(rdn) {
-            var rdnParts = rdn.split('=', 2);
-            log.debug('rdnParts:' + toStr(rdnParts));
-
-            var rdnName = rdnParts[0];
-            log.debug('rdnName:' + toStr(rdnName));
-
-            var rdnValue = rdnParts[1]; // TODO: http://www.rlmueller.net/CharactersEscaped.htm
-            log.debug('rdnValue:' + toStr(rdnValue));
-
-            if (rdnName !== 'CN') {
-                dnArray.push(rdn);
-                if (rdnName === 'OU') { // Not DC
-                    pathArray.push(rdnValue);
-
-                    var path = pathArray.join('/');
-                    var createOrModifyParams = {
-                        name: sanitizeName(path),
-                        displayName: path,
-                        description: JSON.stringify({
-                            dn: Array.prototype.slice
-                                .call(dnArray)
-                                .reverse()
-                                .join(',') // NOTE: Operate on a copy since reverse modifies in place.
-                        }),
-                        idProvider: params.user.idProvider
-                    };
-                    log.debug('createOrModifyParams:' + toStr(createOrModifyParams));
-
-                    // Process all groups in case the have changes.
-                    var group = createOrModify(createOrModifyParams);
-
-                    groupKeysinAd.push(group.key);
-                } // if(rdnName !== 'CN')
-            }
-        });
-    log.debug('groupKeysinAd:' + toStr(groupKeysinAd));
-
-    var newGroupKeys = inFirstButNotInSecond(groupKeysinAd, groupKeysInXp);
-    log.debug('newGroupKeys:' + toStr(newGroupKeys));
-
-    var oldGroupKeys = inFirstButNotInSecond(groupKeysInXp, groupKeysinAd);
-    log.debug('oldGroupKeys:' + toStr(oldGroupKeys));
-
-    newGroupKeys.forEach(function(groupKey) {
-        addUser({
-            groupKey: groupKey,
-            userKey: params.user.key
-        });
-    }); // newGroupKeys.forEach
-
-    oldGroupKeys.forEach(function(groupKey) {
-        removeUser({
-            groupKey: groupKey,
-            userKey: params.user.key
-        });
-        // Group may become empty, if syncing implemented could check if group still in AD FS.
-    });
-}
-
-exports.debugAllGroups = function() {
-    var findPrincipalsResult = runAsAdmin(function() {
-        return findPrincipals({
-            //start: 0,
-            //count: 10,
-            type: 'group'
-            //idProvider: 'adfs'
-            //idProvider: 'system'
-        });
-    });
-    //log.debug('findPrincipalsResult:' + toStr(findPrincipalsResult));
-
-    findPrincipalsResult.hits.forEach(function(group) {
-        var getPrincipalResult = runAsAdmin(function() {
-            return getPrincipal(group.key);
-        });
-        //log.debug('getPrincipalResult:' + toStr(getPrincipalResult)); // Does not show members
-
-        var getMembersResult = runAsAdmin(function() {
-            return getMembers(group.key);
-        });
-        log.debug('getMembers(' + group.key + ') --> ' + toStr(getMembersResult));
-    });
-};

@@ -20,17 +20,6 @@ exports.toStr = toStr;
 
 
 /**
- * Checks whether something is NOT null NOR undefined.
- * @param {*} value
- * @returns {Boolean} true or false
- */
-function isSet(v) {
-	return v !== null && typeof v !== 'undefined';
-};
-exports.isSet = isSet;
-
-
-/**
  * Checks whether something is null or undefined.
  * @param {*} value
  * @returns {Boolean} true or false
@@ -38,7 +27,6 @@ exports.isSet = isSet;
 function isNotSet(v) {
 	return v === null || typeof v === 'undefined';
 };
-exports.isSet = isNotSet;
 
 
 /**
