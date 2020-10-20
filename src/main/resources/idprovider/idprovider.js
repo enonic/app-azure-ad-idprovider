@@ -6,12 +6,12 @@
 //──────────────────────────────────────────────────────────────────────────────
 // Require libs
 //──────────────────────────────────────────────────────────────────────────────
-var adfsIdProviderLib = require('/lib/adfs-id-provider');
+var azureAdIdProviderLib = require('/lib/azure-ad-id-provider');
 
 //──────────────────────────────────────────────────────────────────────────────
 // Alias functions from libs
 //──────────────────────────────────────────────────────────────────────────────
-var toStr = adfsIdProviderLib.object.toStr;
+var toStr = azureAdIdProviderLib.object.toStr;
 
 //──────────────────────────────────────────────────────────────────────────────
 // Implement id provider API
@@ -40,7 +40,7 @@ var toStr = adfsIdProviderLib.object.toStr;
  */
 exports.get = function(request) { // portal.idProviderUrl
 	log.debug('get(' + toStr(request) + ')');
-	return adfsIdProviderLib.handleIdProviderRequest(request);
+	return azureAdIdProviderLib.handleIdProviderRequest(request);
 };
 
 
@@ -52,7 +52,7 @@ exports.get = function(request) { // portal.idProviderUrl
  */
 exports.handle401 = function(request) {
 	log.debug('handle401(' + toStr(request) + ')');
-	return adfsIdProviderLib.oauth2.redirectToAuthorizationUrl(request);
+	return azureAdIdProviderLib.oauth2.redirectToAuthorizationUrl(request);
 };
 
 
@@ -64,7 +64,7 @@ exports.handle401 = function(request) {
  */
 exports.login = function(request) {
 	log.debug('login(' + toStr(request) + ')');
-	return adfsIdProviderLib.oauth2.redirectToAuthorizationUrl(request);
+	return azureAdIdProviderLib.oauth2.redirectToAuthorizationUrl(request);
 };
 
 
@@ -76,7 +76,7 @@ exports.login = function(request) {
  */
 exports.logout = function(request) {
 	log.debug('logout(' + toStr(request) + ')');
-	return adfsIdProviderLib.auth.handleLogoutRequest(request)
+	return azureAdIdProviderLib.auth.handleLogoutRequest(request)
 };
 
 
@@ -89,5 +89,5 @@ exports.logout = function(request) {
  */
 exports.post = function(request) {
 	log.debug('post(' + toStr(request) + ')');
-	return adfsIdProviderLib.handleIdProviderRequest(request);
+	return azureAdIdProviderLib.handleIdProviderRequest(request);
 };

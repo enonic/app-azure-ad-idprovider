@@ -2,15 +2,15 @@
 
 /**
  * portal module.
- * @module lib/adfs-id-provider/portal
+ * @module lib/azure-ad-id-provider/portal
  */
 
 //──────────────────────────────────────────────────────────────────────────────
 // Require libs
 //──────────────────────────────────────────────────────────────────────────────
 var lib = {
-	adfsIdProvider: {
-		object: require('/lib/adfs-id-provider/object')
+	azureAdIdProvider: {
+		object: require('/lib/azure-ad-id-provider/object')
 	},
 	node: {
 		// uriJs: require('/lib/urijs/src/URI')
@@ -25,7 +25,7 @@ var lib = {
 //──────────────────────────────────────────────────────────────────────────────
 // Alias functions from libs
 //──────────────────────────────────────────────────────────────────────────────
-var toStr   = lib.adfsIdProvider.object.toStr;
+var toStr   = lib.azureAdIdProvider.object.toStr;
 var getSite = lib.xp.portal.getSite;
 var pageUrl = lib.xp.portal.pageUrl;
 

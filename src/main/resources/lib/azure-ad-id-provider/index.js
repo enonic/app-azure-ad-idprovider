@@ -1,6 +1,6 @@
 /**
- * adfs-id-provider module.
- * @module lib/adfs-id-provider
+ * azure-ad-id-provider module.
+ * @module lib/azure-ad-id-provider
  */
 
 //──────────────────────────────────────────────────────────────────────────────

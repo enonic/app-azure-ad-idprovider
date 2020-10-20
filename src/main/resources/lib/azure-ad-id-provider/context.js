@@ -1,6 +1,6 @@
 /**
  * context module.
- * @module lib/adfs-id-provider/context
+ * @module lib/azure-ad-id-provider/context
  */
 
 var contextLib = require('/lib/xp/context');

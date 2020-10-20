@@ -1,6 +1,6 @@
 /**
  * Jwt module.
- * @module lib/adfs-id-provider/jwt
+ * @module lib/azure-ad-id-provider/jwt
  */
 
  // oid:         Object ID. Contains a unique identifier of an object in Azure AD. This value is immutable and cannot be reassigned or reused. Use the object ID to identify an object in queries to Azure AD.

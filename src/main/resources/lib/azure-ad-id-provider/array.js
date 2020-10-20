@@ -1,6 +1,6 @@
 /**
  * array module.
- * @module lib/adfs-id-provider/array
+ * @module lib/azure-ad-id-provider/array
  */
 
 /**

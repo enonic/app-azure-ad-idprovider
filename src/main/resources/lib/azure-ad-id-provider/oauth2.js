@@ -1,15 +1,15 @@
 /**
  * oauth2 module.
- * @module lib/adfs-id-provider/oauth2
+ * @module lib/azure-ad-id-provider/oauth2
  */
 
 //──────────────────────────────────────────────────────────────────────────────
 // Require libs
 //──────────────────────────────────────────────────────────────────────────────
 var lib = {
-	adfsIdProvider: {
-		object: require('/lib/adfs-id-provider/object'),
-		portal: require('/lib/adfs-id-provider/portal')
+	azureAdIdProvider: {
+		object: require('/lib/azure-ad-id-provider/object'),
+		portal: require('/lib/azure-ad-id-provider/portal')
 	},
 	node: {
 		// uriJs: require('/lib/urijs/src/URI')
@@ -24,9 +24,9 @@ var lib = {
 //──────────────────────────────────────────────────────────────────────────────
 // Alias functions from libs
 //──────────────────────────────────────────────────────────────────────────────
-var toStr               = lib.adfsIdProvider.object.toStr;
-var valueFromFormat     = lib.adfsIdProvider.object.valueFromFormat;
-var getReturnToUrl      = lib.adfsIdProvider.portal.getReturnToUrl;
+var toStr               = lib.azureAdIdProvider.object.toStr;
+var valueFromFormat     = lib.azureAdIdProvider.object.valueFromFormat;
+var getReturnToUrl      = lib.azureAdIdProvider.portal.getReturnToUrl;
 var getIdProviderConfig = lib.xp.auth.getIdProviderConfig;
 var sendRequest         = lib.xp.httpClient.request;
 var getIdProviderKey     = lib.xp.portal.getIdProviderKey;

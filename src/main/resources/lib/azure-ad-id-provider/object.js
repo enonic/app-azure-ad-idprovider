@@ -1,6 +1,6 @@
 /**
  * object module.
- * @module lib/adfs-id-provider/object
+ * @module lib/azure-ad-id-provider/object
  */
 
 

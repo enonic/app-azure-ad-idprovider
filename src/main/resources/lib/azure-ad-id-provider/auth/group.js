@@ -1,20 +1,20 @@
 /**
  * auth.group module.
- * @module lib/adfs-id-provider/auth/group
+ * @module lib/azure-ad-id-provider/auth/group
  */
 
 //──────────────────────────────────────────────────────────────────────────────
 // Require libs
 //──────────────────────────────────────────────────────────────────────────────
 var lib = {
-    adfsIdProvider: {
-        array: require('/lib/adfs-id-provider/array'),
+    azureAdIdProvider: {
+        array: require('/lib/azure-ad-id-provider/array'),
         auth: {
-            sanitizeName: require('/lib/adfs-id-provider/auth/sanitizeName'),
-            user: require('/lib/adfs-id-provider/auth/user')
+            sanitizeName: require('/lib/azure-ad-id-provider/auth/sanitizeName'),
+            user: require('/lib/azure-ad-id-provider/auth/user')
         },
-        context: require('/lib/adfs-id-provider/context'),
-        object: require('/lib/adfs-id-provider/object')
+        context: require('/lib/azure-ad-id-provider/context'),
+        object: require('/lib/azure-ad-id-provider/object')
     },
     xp: {
         auth: require('/lib/xp/auth'),
@@ -26,13 +26,13 @@ var lib = {
 //──────────────────────────────────────────────────────────────────────────────
 // Alias functions from libs
 //──────────────────────────────────────────────────────────────────────────────
-var inFirstButNotInSecond = lib.adfsIdProvider.array.inFirstButNotInSecond;
-var runAsAdmin = lib.adfsIdProvider.context.runAsAdmin;
-var isSet = lib.adfsIdProvider.object.isSet;
-var toStr = lib.adfsIdProvider.object.toStr;
-var valueFromFormat = lib.adfsIdProvider.object.valueFromFormat;
-var sanitizeName = lib.adfsIdProvider.auth.sanitizeName.sanitizeName;
-var getGroups = lib.adfsIdProvider.auth.user.getGroups;
+var inFirstButNotInSecond = lib.azureAdIdProvider.array.inFirstButNotInSecond;
+var runAsAdmin = lib.azureAdIdProvider.context.runAsAdmin;
+var isSet = lib.azureAdIdProvider.object.isSet;
+var toStr = lib.azureAdIdProvider.object.toStr;
+var valueFromFormat = lib.azureAdIdProvider.object.valueFromFormat;
+var sanitizeName = lib.azureAdIdProvider.auth.sanitizeName.sanitizeName;
+var getGroups = lib.azureAdIdProvider.auth.user.getGroups;
 var addMembers = lib.xp.auth.addMembers;
 var createGroup = lib.xp.auth.createGroup;
 var findPrincipals = lib.xp.auth.findPrincipals;

@@ -1,18 +1,18 @@
 /**
  * auth.user module.
- * @module lib/adfs-id-provider/auth/user
+ * @module lib/azure-ad-id-provider/auth/user
  */
 
 //──────────────────────────────────────────────────────────────────────────────
 // Require libs
 //──────────────────────────────────────────────────────────────────────────────
 var lib = {
-	adfsIdProvider: {
+	azureAdIdProvider: {
 		auth: {
-			sanitizeName: require('/lib/adfs-id-provider/auth/sanitizeName'),
+			sanitizeName: require('/lib/azure-ad-id-provider/auth/sanitizeName'),
 		},
-		context: require('/lib/adfs-id-provider/context'),
-		object:  require('/lib/adfs-id-provider/object')
+		context: require('/lib/azure-ad-id-provider/context'),
+		object:  require('/lib/azure-ad-id-provider/object')
 	},
 	enonic: {
 		util: {
@@ -28,10 +28,10 @@ var lib = {
 //──────────────────────────────────────────────────────────────────────────────
 // Alias functions from libs
 //──────────────────────────────────────────────────────────────────────────────
-var sanitizeName        = lib.adfsIdProvider.auth.sanitizeName.sanitizeName;
-var runAsAdmin          = lib.adfsIdProvider.context.runAsAdmin;
-var toStr               = lib.adfsIdProvider.object.toStr;
-var valueFromFormat     = lib.adfsIdProvider.object.valueFromFormat;
+var sanitizeName        = lib.azureAdIdProvider.auth.sanitizeName.sanitizeName;
+var runAsAdmin          = lib.azureAdIdProvider.context.runAsAdmin;
+var toStr               = lib.azureAdIdProvider.object.toStr;
+var valueFromFormat     = lib.azureAdIdProvider.object.valueFromFormat;
 var forceArray          = lib.enonic.util.data.forceArray;
 var createUser          = lib.xp.auth.createUser;
 var findUsers           = lib.xp.auth.findUsers

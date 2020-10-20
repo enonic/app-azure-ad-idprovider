@@ -1,6 +1,6 @@
 /**
  * auth module.
- * @module lib/adfs-id-provider/auth
+ * @module lib/azure-ad-id-provider/auth
  */
 
 //──────────────────────────────────────────────────────────────────────────────
@@ -11,9 +11,9 @@ exports.sanitizeName  = require('./sanitizeName');
 exports.user          = require('./user');
 
 var lib = {
-	adfsIdProvider: {
-		context: require('/lib/adfs-id-provider/context'),
-		object: require('/lib/adfs-id-provider/object')
+	azureAdIdProvider: {
+		context: require('/lib/azure-ad-id-provider/context'),
+		object: require('/lib/azure-ad-id-provider/object')
 	},
 	xp: {
 		auth: require('/lib/xp/auth'),
@@ -24,8 +24,8 @@ var lib = {
 //──────────────────────────────────────────────────────────────────────────────
 // Alias functions from libs
 //──────────────────────────────────────────────────────────────────────────────
-var runAsAdmin          = lib.adfsIdProvider.context.runAsAdmin;
-var toStr               = lib.adfsIdProvider.object.toStr;
+var runAsAdmin          = lib.azureAdIdProvider.context.runAsAdmin;
+var toStr               = lib.azureAdIdProvider.object.toStr;
 var getIdProviderConfig = lib.xp.auth.getIdProviderConfig;
 var logout              = lib.xp.auth.logout;
 var getSite             = lib.xp.portal.getSite;
