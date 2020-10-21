@@ -142,7 +142,7 @@ function fromGraph(params) {
     // https://developer.microsoft.com/en-us/graph/graph-explorer?request=me/memberOf&method=GET&version=v1.0&GraphUrl=https://graph.microsoft.com
     var groupRequest = {
         method: 'GET',
-        url: idProviderConfig.graphApiUrl + '/v1.0/users/' + params.jwt.payload.oid + '/memberOf',
+        url: 'https://graph.microsoft.com/v1.0/users/' + params.jwt.payload.oid + '/memberOf',
         headers: {
             Accept: 'application/json',
             Authorization: 'Bearer ' + params.accessToken
