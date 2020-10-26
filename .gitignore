@@ -91,3 +91,7 @@ crashlytics-build.properties
 node_modules/
 package-lock.json
 .enonic
+.classpath
+.project
+.settings/org.eclipse.buildship.core.prefs
+bin/*

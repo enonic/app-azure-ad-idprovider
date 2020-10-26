@@ -1,7 +1,7 @@
 plugins {
     id 'maven-publish'
-    id 'com.enonic.defaults' version '2.0.1'
     id 'com.enonic.xp.app' version '2.0.0'
+    id 'com.jfrog.bintray' version '1.8.4'
 }
 
 app {
@@ -30,6 +30,35 @@ repositories {
     mavenCentral()
     jcenter()
     xp.enonicRepo()
+}
+
+publishing {
+  publications {
+    mavenJava(MavenPublication) {
+      from components.java
+      groupId group
+      artifactId projectName
+      version version
+    }
+  }
+}
+
+bintray {
+	user = System.getenv('BINTRAY_USER')
+	key = System.getenv('BINTRAY_KEY')
+	publications = ['mavenJava']
+
+	pkg {
+		repo = 'public'
+		name = 'com.gravitondigital.app.azureadidprovider'
+		userOrg = 'gravitondigital'
+		licenses = ['MIT']
+		vcsUrl = 'https://github.com/GravitonDigital/app-azure-ad-idprovider'
+		version {
+			name = version
+			released  = new Date()
+		}
+	}
 }
 
 //──────────────────────────────────────────────────────────────────────────────
