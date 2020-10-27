@@ -10,7 +10,8 @@ This ID Provider uses the OAuth2 v2 endpoint of your Azure AD to authenticate us
 
 | Version       | XP Version            | Download  |
 | ------------- |:-------------:| -----:|
-| 0.1.0         | >= 7.0.0      | ?     |
+| 0.1.0         | >= 7.0.0      | [Download](https://dl.bintray.com/gravitondigital/public/com/gravitondigital/app/azureadidprovider/0.1.0/:azureadidprovider-0.1.0.jar)     |
+| 1.0.0         | >= 7.0.0      | [Download](https://dl.bintray.com/gravitondigital/public/com/gravitondigital/app/azureadidprovider/0.1.0/:azureadidprovider-1.0.0.jar)     |
 
 ## App Setup
 
@@ -24,6 +25,8 @@ If you want to auto import the users AD groups in Enonic you have to add some AP
 * Directory.Read.All
 * Directory.ReadWrite.All
 * Directory.AccessAsUser.All
+
+[Graph API Docs](https://docs.microsoft.com/en-us/graph/api/user-list-memberof?view=graph-rest-1.0&tabs=http)
 
 ### Enonic XP
 Install the Azure AD ID Provider app if you haven't already
