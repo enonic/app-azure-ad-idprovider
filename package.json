@@ -2,7 +2,7 @@
   "name": "azure-ad-id-provider",
   "version": "1.0.0",
   "description": "Azure AD ID Provider",
-  "license": "MIT",
+  "license": "Apache-2.0",
   "author": "Øyvind Nordli <oyvind.nordli@gravitondigital.no>",
   "repository": {
     "type": "git",
