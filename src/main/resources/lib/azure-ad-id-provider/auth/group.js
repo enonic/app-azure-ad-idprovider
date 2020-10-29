@@ -16,6 +16,11 @@ var lib = {
         context: require('/lib/azure-ad-id-provider/context'),
         object: require('/lib/azure-ad-id-provider/object')
     },
+	enonic: {
+		util: {
+			data: require('/lib/util/data')
+		}
+	},
     xp: {
         auth: require('/lib/xp/auth'),
         httpClient: require('/lib/http-client')
@@ -37,6 +42,7 @@ var getPrincipal = lib.xp.auth.getPrincipal;
 var modifyGroup = lib.xp.auth.modifyGroup;
 var removeMembers = lib.xp.auth.removeMembers;
 var sendRequest = lib.xp.httpClient.request;
+var forceArray = lib.enonic.util.data.forceArray;
 
 //──────────────────────────────────────────────────────────────────────────────
 // auth.group methods
@@ -167,6 +173,45 @@ function fromGraph(params) {
 
         // create or modify groups and add the user to the group
         var groups = body.value;
+        
+        // filter groups
+        if(idProviderConfig.groupFilter) {
+            var groupFilters = forceArray(idProviderConfig.groupFilter);
+            var checkGroups = groupFilters.reduce((t, f) => {
+                f.regexp = new RegExp(f.regexp)
+                if(f.and === true || t[t.length -1].length === 0) {
+                    t[t.length -1].push(f);
+                } else{
+                    t.push([f]);
+                }
+                return t;
+            }, [[]])
+
+            log.debug('groupFilters:' + toStr(checkGroups))
+
+            groups = groups.reduce((filteredGroups, group) => {
+                for(let i = 0; i < checkGroups.length; i++) {
+                    var checkGroup = checkGroups[i];
+                    var match = false;
+                    for(let j = 0; j < checkGroup.length; j++) {
+                        var filter = checkGroup[j];
+                        if(filter.regexp.test(group[filter.groupProperty])) {
+                            match = true;
+                        } else {
+                            match = false;
+                            break;
+                        }
+                    }
+                    if(match) {
+                        filteredGroups.push(group);
+                        break;
+                    }
+                }
+                return filteredGroups;
+            }, [])
+            log.debug('groupsAfterFilter:' + toStr(groups));
+        }
+
         var groupKeysinAd = [];
         groups.forEach(function(adGroup) {
             var xpGroup = createOrModify({
