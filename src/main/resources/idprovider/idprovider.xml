@@ -54,6 +54,28 @@
       <occurrences minimum="0" maximum="1"/>
     </input>
 
+    <item-set name="groupFilter">
+      <label>Group Filter</label>
+      <occurrences minimum="0" maximum="0"/>
+      <items>
+        <input name="groupProperty" type="TextLine">
+          <label>Property</label>
+          <help-text>The property on the group returned from the graph api you want to test against</help-text>
+          <occurrences minimum="1" maximum="1"/>
+        </input>
+        <input name="regexp" type="TextLine">
+          <label>Regexp</label>
+          <help-text>Regular Expression to check with</help-text>
+          <occurrences minimum="1" maximum="1"/>
+        </input>
+        <input name="and" type="CheckBox">
+          <label>AND</label>
+          <help-text></help-text>
+          <occurrences minimum="0" maximum="1"/>
+        </input>
+      </items>
+    </item-set>
+
     <input name="forceHttpsOnRedirectUri" type="CheckBox">
       <label>Force the redirect uri to use https</label>
       <help-text>If your enonic instance is running behind a SSL reverse proxy this might be necessary if you're not forwarding all http requests to https</help-text>
