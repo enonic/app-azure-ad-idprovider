@@ -42,6 +42,34 @@ Add the Azure AD ID Provider to the `Application` field and press the small penc
 * Remember to add the API permissions listed above if you want to create and update groups in Enonic XP based on the groups in Azure AD.
 * If your Enonic XP server instance is hosted on https, you'll most likely need to check the `Force the redirect uri to use https`, since XP itself doesn't know that it is using https if it's behind a reverse proxy of some sort.
 
+### Group Filtering
+If you don't want to import all the users groups from Azure AD, it's possible to use group filters to accomplish this.
+
+You can add multiple filters. Each filter takes 3 parameters:
+`property`: This is the property that comes from the MemberOf graphApi for each group. [List of properties](https://docs.microsoft.com/en-us/graph/api/resources/group?view=graph-rest-1.0#properties)  
+`regexp`: Which Regular Expression to run on the property  
+`and`: If you want to AND this with the previous filter.  
+
+Example:  
+`property`: description  
+`regexp`: \\\$XP\\\$  
+`and`: false  
+
+`property`: displayName  
+`regexp`: ^XP  
+`and`: false  
+
+`property`: id  
+`regexp`: 12345-12345-12345-12345  
+`and`: false  
+
+`property`: visibility  
+`regexp`: Public
+`and`: true
+
+This will then include groups with descriptions marked with `$XP$`, or groups with a display name starting with `XP`, or the group with id `12345-12345-12345-12345  ` where visibility is `Public`. So it's divided into 3 checks: 1 OR 2 OR (3 AND 4)
+
+
 ## Build
 
 To build this project, execute the following:
