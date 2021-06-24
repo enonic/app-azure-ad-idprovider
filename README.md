@@ -37,7 +37,7 @@ Open up the User manage interface and add a new Id Provider. Give this Id Provid
 Add the Azure AD ID Provider to the `Application` field and press the small pencil to open up the settings.  
 * Tentant ID can be found in the overview page on your app in Azure as `Directory (tenant) ID`.
 * Client ID can be found in the overview page on your app in Azure as `Application (client) ID`.
-* Logout url is where you want to send the user if they press the logout button in XP.
+* Logout url is where you want to send the user if they press the logout button in XP. For Azure AD you'd most likely send them to the azure ad logout url, with your redirect url as a param. Remember to url encode the redirect url https://login.microsoftonline.com/common/oauth2/v2.0/logout?post_logout_redirect_uri=http%3A%2F%2Flocalhost%3A8080%2F or see https://docs.microsoft.com/en-us/azure/active-directory/develop/v2-protocols-oidc#send-a-sign-out-request for more info. You can also omit the post_logout_redirect_uri, and the app will try to make an educated guess, but this in not recommended.
 * Client Secret has to be made in the `Certificates & secrets` section under your application in Azure.
 * If you want to change the Azure AD -> Enonic XP user mapping, do so in the User Mappings (most likely not necessary).
 * Remember to add the API permissions listed above if you want to create and update groups in Enonic XP based on the groups in Azure AD.

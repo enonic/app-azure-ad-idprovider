@@ -47,7 +47,7 @@ var pageUrl             = lib.xp.portal.pageUrl;
  * @returns {url}
  */
 function getRedirectAfterLogoutUrl(request) {
-	var redirectAfterLogoutUrl = function(request) {
+	var redirectAfterLogoutUrl = function() {
 		if(request && request.validTicket && request.params && request.params.redirect) {
 			return request.params.redirect;
 		}
@@ -76,10 +76,17 @@ exports.handleLogoutRequest = function(request) {
 	var idProviderConfig = getIdProviderConfig();
 	log.debug('idProviderConfig:' + toStr(idProviderConfig));
 
+	var location = idProviderConfig.logoutUrl
+	var POST_LOGOUT_PARAM = '?post_logout_redirect_uri='
+	if(location.indexOf(POST_LOGOUT_PARAM) === -1) {
+		location += POST_LOGOUT_PARAM + redirectAfterLogoutUrl
+	}
+	log.debug('logoutLocation:' + location)
+
 	var redirectResponse = {
 		status: 307, // Temporary redirect // http://insanecoding.blogspot.no/2014/02/http-308-incompetence-expected.html
 		headers: {
-			'Location': idProviderConfig.logoutUrl + redirectAfterLogoutUrl
+			'Location': location
 		},
 		postProcess: false,
 		applyFilters: false
