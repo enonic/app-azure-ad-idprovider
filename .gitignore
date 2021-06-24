@@ -95,3 +95,4 @@ package-lock.json
 .project
 .settings/org.eclipse.buildship.core.prefs
 bin/*
+.vscode/settings.json

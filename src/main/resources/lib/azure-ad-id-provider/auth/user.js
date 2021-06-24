@@ -21,7 +21,8 @@ var lib = {
 	},
 	xp: {
 		auth:   require('/lib/xp/auth'),
-		portal: require('/lib/xp/portal')
+		portal: require('/lib/xp/portal'),
+		common: require('/lib/xp/common')
 	}
 };
 
@@ -284,7 +285,10 @@ exports.createOrUpdateFromJwt = function(params) {
 	if(!userName) {
 		throw new Error('Could not generate username from mapping:' + userNameFormat);
 	}
-	userName = sanitizeName(userName);
+
+	//Keep first sanitization to improve backward compatibility rate
+    userName = sanitizeName(userName);
+    userName = lib.xp.common.sanitize(userName);
 
 	var userDisplayNameFormat = idProviderConfig.user && idProviderConfig.user.displayName || '${given_name} ${family_name} <${upn}>';
 	var userDisplayName = valueFromFormat({
