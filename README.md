@@ -14,6 +14,7 @@ This ID Provider uses the OAuth2 v2 endpoint of your Azure AD to authenticate us
 | 1.0.0         | >= 7.0.0      | [Download](https://dl.bintray.com/gravitondigital/public/com/gravitondigital/app/azureadidprovider/1.0.0/azureadidprovider-1.0.0.jar)     |
 | 1.1.0         | >= 7.0.0      | [Download](https://repo1.maven.org/maven2/com/gravitondigital/app/azureadidprovider/1.1.0/azureadidprovider-1.1.0.jar)     |
 | 1.2.0         | >= 7.0.0      | [Download](https://repo1.maven.org/maven2/com/gravitondigital/app/azureadidprovider/1.2.0/azureadidprovider-1.2.0.jar)     |
+| 1.2.1-RC1         | >= 7.7.4-RC1      | [Download](https://repo1.maven.org/maven2/com/gravitondigital/app/azureadidprovider/1.2.1-RC1/azureadidprovider-1.2.1-RC1.jar)     |
 
 ## App Setup
 
