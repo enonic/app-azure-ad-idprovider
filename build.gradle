@@ -1,44 +1,55 @@
 plugins {
-    id 'maven-publish'
-    id 'com.enonic.xp.app' version '3.1.0'
-    id "com.vanniktech.maven.publish" version "0.13.0"
+  id 'maven-publish'
+  id 'com.enonic.xp.app' version '3.1.0'
 }
 
+sourceCompatibility = JavaVersion.VERSION_11
+targetCompatibility = JavaVersion.VERSION_11
+
 app {
-    name = "${appName}"
-    displayName = "${appDisplayName}"
-    vendorName = "${vendorName}"
-    vendorUrl = "${vendorUrl}"
-    systemVersion = "${xpVersion}"
+  name = "${appName}"
+  displayName = "${appDisplayName}"
+  vendorName = "${vendorName}"
+  vendorUrl = "${vendorUrl}"
+  systemVersion = "${xpVersion}"
 }
 
 dependencies {
-    compile "com.enonic.xp:core-api:${xpVersion}"
-    compile "com.enonic.xp:portal-api:${xpVersion}"
-    include "com.enonic.xp:lib-auth:${xpVersion}"
-    include "com.enonic.xp:lib-context:${xpVersion}"
-    include "com.enonic.xp:lib-io:${xpVersion}"
-    include "com.enonic.xp:lib-portal:${xpVersion}"
-    include "com.enonic.xp:lib-common:${xpVersion}"
-    include "com.enonic.lib:lib-thymeleaf:2.0.0"
-    include 'com.enonic.lib:lib-http-client:2.0.0'
-    include 'com.enonic.lib:text-encoding:1.1.0'
-    include 'com.enonic.lib:lib-util:2.0.0'
+  compile "com.enonic.xp:core-api:${xpVersion}"
+  compile "com.enonic.xp:portal-api:${xpVersion}"
+  include "com.enonic.xp:lib-auth:${xpVersion}"
+  include "com.enonic.xp:lib-context:${xpVersion}"
+  include "com.enonic.xp:lib-io:${xpVersion}"
+  include "com.enonic.xp:lib-portal:${xpVersion}"
+  include "com.enonic.xp:lib-common:${xpVersion}"
+  include "com.enonic.lib:lib-thymeleaf:2.0.1"
+  include 'com.enonic.lib:lib-http-client:2.4.0'
+  include 'com.enonic.lib:text-encoding:1.1.0'
+  include 'com.enonic.lib:lib-util:2.0.0'
 }
 
 repositories {
-    mavenLocal()
-    mavenCentral()
-    jcenter()
-    xp.enonicRepo()
+  mavenLocal()
+  mavenCentral()
+  xp.enonicRepo()
 }
 
 //──────────────────────────────────────────────────────────────────────────────
 // Generate documentation
 //──────────────────────────────────────────────────────────────────────────────
-task generate_docs( type: Exec ) {
-    executable 'npm'
-    args = ['run', 'generate-docs']
-    mustRunAfter 'build'
+task generate_docs(type: Exec) {
+  executable 'npm'
+  args = ['run', 'generate-docs']
+  mustRunAfter 'build'
 }
 
+publishing {
+  publications {
+    mavenJava(MavenPublication) {
+      from components.java
+      groupId group
+      artifactId projectName
+      version version
+    }
+  }
+}
