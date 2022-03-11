@@ -15,7 +15,8 @@ exports.object = require('./object');
 var lib = {
     xp: {
         auth: require('/lib/xp/auth'),
-        portal: require('/lib/xp/portal')
+        portal: require('/lib/xp/portal'),
+        event: require('/lib/xp/event')
     }
 };
 
@@ -90,6 +91,13 @@ exports.handleIdProviderRequest = function (request) {
         skipAuth: true
     });
     log.debug('loginResult:' + toStr(loginResult));
+
+    // Fire event that a user is logged in
+    lib.xp.event.send({
+      type: "azure.user.login",
+      distributed: true,
+      data: user
+    });
 
     var location = request.cookies && request.cookies.enonicXpReturnToUrl ? request.cookies.enonicXpReturnToUrl : '/';
 

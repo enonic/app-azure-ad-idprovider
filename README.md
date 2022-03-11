@@ -73,6 +73,35 @@ Example:
 
 This will then include groups with descriptions marked with `$XP$`, or groups with a display name starting with `XP`, or the group with id `12345-12345-12345-12345  ` where visibility is `Public`. So it's divided into 3 checks: 1 OR 2 OR (3 AND 4)
 
+## Events
+
+The following events can be listed after using event library:
+
+| Event type                |      Description       |
+|---------------------------|:----------------------:|
+| `custom.azure.user.login` |      User logs in      |
+| `custom.azure.user.modify`| Local user is modified |
+| `custom.azure.user.create`| Local user is created  |
+
+**All** of the events passes an object as parameter with the following fields:
+
+ - `idProvider`
+ - `name`
+ - `displayName`
+ - `email`
+
+_Example:_
+
+```javascript
+const eventLib = require("/lib/xp/event")
+
+eventLib.listener({
+  type: "custom.azure.user.login",
+  callback: function(event) {
+    log.info(event.data.email);
+  }
+})
+```
 
 ## Build
 
