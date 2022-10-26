@@ -146,15 +146,19 @@ function fromGraph(params) {
     var idProviderConfig = getIdProviderConfig();
     // https://docs.microsoft.com/en-us/graph/api/user-list-memberof?view=graph-rest-1.0&tabs=cs
     // https://developer.microsoft.com/en-us/graph/graph-explorer?request=me/memberOf&method=GET&version=v1.0&GraphUrl=https://graph.microsoft.com
+
+    var pageSize = idProviderConfig.pageSize ? '?$top=' + idProviderConfig.pageSize : '';
+
     var groupRequest = {
         method: 'GET',
-        url: 'https://graph.microsoft.com/v1.0/users/' + params.jwt.payload.oid + '/memberOf?$top=' + idProviderConfig.pageSize,
+        url: 'https://graph.microsoft.com/v1.0/users/' + params.jwt.payload.oid + '/memberOf' + pageSize,
         headers: {
             Accept: 'application/json',
             Authorization: 'Bearer ' + params.accessToken
         },
         proxy: idProviderConfig.proxy
     };
+
     log.debug('createAndUpdateGroupsOnLoginFromGraphApi request: ' + toStr(groupRequest));
 
     var groupResponse = sendRequest(groupRequest);
