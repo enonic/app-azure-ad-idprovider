@@ -83,7 +83,17 @@ The following events can be listed after using event library:
 | `custom.azure.user.modify`| Local user is modified |
 | `custom.azure.user.create`| Local user is created  |
 
-**All** of the events passes an object as parameter with the following fields:
+The *Login* event passes an object as parameter describing the user with these fields:
+
+ - `type`
+ - `key`
+ - `displayName`
+ - `disabled`
+ - `email`
+ - `login`
+ - `idProvider`
+
+The **Create** event passes an object as parameter with the following fields:
 
  - `idProvider`
  - `name`
