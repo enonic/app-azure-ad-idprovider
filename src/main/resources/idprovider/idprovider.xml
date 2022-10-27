@@ -54,6 +54,13 @@
       <occurrences minimum="0" maximum="1"/>
     </input>
 
+    <input name="pageSize" type="Long">
+      <label>The page return size from graph api</label>
+      <default>1</default>
+      <help-text>If the result contains more than the page size, graph api will return an @odata.nextLink property similar to the following along with the first page of users.</help-text>
+      <occurrences minimum="0" maximum="1"/>
+    </input>
+
     <item-set name="groupFilter">
       <label>Group Filter</label>
       <occurrences minimum="0" maximum="0"/>
