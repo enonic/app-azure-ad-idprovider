@@ -3,6 +3,8 @@
 Authenticate your users using Azure Active Directory
 This ID Provider uses the OAuth2 v2 endpoint of your Azure AD to authenticate users.
 
+[![](https://jitpack.io/v/no.item/app-azure-ad-idprovider.svg)](https://jitpack.io/#no.item/app-azure-ad-idprovider)
+
 ## Acknowledgement
 - Based on [ADFS Id Provider](https://github.com/enonic/app-adfs-idprovider)
 - Developed by [Øyvind Nordli](https://github.com/Garlov)
