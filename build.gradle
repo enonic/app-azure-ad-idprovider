@@ -1,6 +1,7 @@
 plugins {
   id 'maven-publish'
-  id 'com.enonic.xp.app' version '3.1.0'
+  id 'com.enonic.xp.app' version '3.2.0'
+  id "com.github.node-gradle.node" version "3.5.0"
 }
 
 sourceCompatibility = JavaVersion.VERSION_11
@@ -15,23 +16,42 @@ app {
 }
 
 dependencies {
-  compile "com.enonic.xp:core-api:${xpVersion}"
-  compile "com.enonic.xp:portal-api:${xpVersion}"
+  implementation "com.enonic.xp:core-api:${xpVersion}"
+  implementation "com.enonic.xp:portal-api:${xpVersion}"
   include "com.enonic.xp:lib-event:${xpVersion}"
   include "com.enonic.xp:lib-auth:${xpVersion}"
   include "com.enonic.xp:lib-context:${xpVersion}"
   include "com.enonic.xp:lib-io:${xpVersion}"
   include "com.enonic.xp:lib-portal:${xpVersion}"
   include "com.enonic.xp:lib-common:${xpVersion}"
-  include 'com.enonic.lib:lib-http-client:2.4.1'
-  include 'com.enonic.lib:text-encoding:1.1.0'
-  include 'com.enonic.lib:lib-util:2.0.0'
+  include 'com.enonic.lib:lib-http-client:3.2.1'
+  include 'com.enonic.lib:lib-text-encoding:2.1.0'
+  include 'com.enonic.lib:lib-util:3.0.0'
 }
 
 repositories {
   mavenLocal()
   mavenCentral()
   xp.enonicRepo()
+}
+
+// Added node so it is easy to find a version which works
+node {
+  // Version of node to use.
+  version = '16.14.2'
+
+  // Version of npm to use.
+  npmVersion = '8.5.0'
+
+  // If true, it will download node using above parameters.
+  // If false, it will try to use globally installed node.
+  download = true
+}
+
+// Added wrapper so it is easy to see which version is used in the project
+wrapper {
+  gradleVersion = '6.9.1'
+  distributionType = Wrapper.DistributionType.BIN
 }
 
 //──────────────────────────────────────────────────────────────────────────────
