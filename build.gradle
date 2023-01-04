@@ -27,6 +27,8 @@ dependencies {
   include 'com.enonic.lib:lib-http-client:3.2.1'
   include 'com.enonic.lib:lib-text-encoding:2.1.0'
   include 'com.enonic.lib:lib-util:3.0.0'
+
+  testImplementation "com.enonic.xp:testing:${xpVersion}"
 }
 
 repositories {
