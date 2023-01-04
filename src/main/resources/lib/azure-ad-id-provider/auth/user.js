@@ -24,7 +24,8 @@ var lib = {
 		portal: require('/lib/xp/portal'),
 		common: require('/lib/xp/common'),
     event: require('/lib/xp/event')
-	}
+	},
+  config: require('/lib/azure-ad-id-provider/config')
 };
 
 //──────────────────────────────────────────────────────────────────────────────
@@ -37,7 +38,7 @@ var valueFromFormat     = lib.azureAdIdProvider.object.valueFromFormat;
 var forceArray          = lib.enonic.util.data.forceArray;
 var createUser          = lib.xp.auth.createUser;
 var findUsers           = lib.xp.auth.findUsers
-var getIdProviderConfig = lib.xp.auth.getIdProviderConfig;
+var getIdProviderConfig = lib.config.getIdProviderConfig;
 var getMemberships      = lib.xp.auth.getMemberships;
 var xpGetProfile        = lib.xp.auth.getProfile;
 var xpModifyProfile     = lib.xp.auth.modifyProfile;

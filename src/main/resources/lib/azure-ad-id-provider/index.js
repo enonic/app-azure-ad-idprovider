@@ -17,7 +17,8 @@ var lib = {
         auth: require('/lib/xp/auth'),
         portal: require('/lib/xp/portal'),
         event: require('/lib/xp/event')
-    }
+    },
+    config: require('/lib/azure-ad-id-provider/config')
 };
 
 //──────────────────────────────────────────────────────────────────────────────
@@ -31,7 +32,7 @@ var jwtFromAccessToken = exports.jwt.fromAccessToken;
 var requestAccessToken = exports.oauth2.requestAccessToken;
 var toStr = exports.object.toStr;
 var valueFromFormat = exports.object.valueFromFormat;
-var getIdProviderConfig = lib.xp.auth.getIdProviderConfig;
+var getIdProviderConfig = lib.config.getIdProviderConfig;
 var login = lib.xp.auth.login;
 
 //──────────────────────────────────────────────────────────────────────────────
