@@ -5,10 +5,8 @@ const test = require('/lib/xp/testing');
 
 const mocks = {};
 
-const replaceMocks = (targetMocks, newMocks) => {
-  Object.keys(targetMocks).forEach( key => {
-    delete targetMocks[key];
-  });
+const updateMocks = (libPath, newMocks) => {
+  const targetMocks = mocks[libPath];
   Object.keys(newMocks).forEach( key => {
     targetMocks[key] = newMocks[key];
   })
@@ -17,10 +15,15 @@ const replaceMocks = (targetMocks, newMocks) => {
 
 // This replaces the test.mock function, and returns a function that updates the relevant mocks, hence allowing mutation/replacment mocking:
 exports.mockAndGetUpdaterFunc = (libPath, mockObj) => {
-  test.mock(libPath, mockObj || {});
   mocks[libPath] = {};
 
-  return newMocks => replaceMocks(mocks[libPath], newMocks);
+  Object.keys(mockObj).forEach( key => {
+    mocks[libPath][key] = mockObj[key]
+  });
+
+  test.mock(libPath, mocks[libPath]);
+
+  return (newMocks => updateMocks(libPath, newMocks));
   // TODO: Add support for restoring actual lib functions when running the replacer func with fewer keys than before
 };
 
