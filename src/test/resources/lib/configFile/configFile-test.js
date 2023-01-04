@@ -1,23 +1,19 @@
 const test = require('/lib/xp/testing');
+const testUtils = require('/testUtils');
 
 
-
-
-//////////////////////////// Mock workaround (test.mock only works once)
-
-// Mutable config for returning a mock object
-const mockConfig = [];
-const setMockConfig = (configToReturn) => {
-    mockConfig[0]=configToReturn;
-}
-
-test.mock("/lib/configFile/services/getConfig.js", {
-    getConfigOrEmpty: () => {
-        return mockConfig[0]
-    }
+const updateGetConfigMock = testUtils.mockAndGetUpdaterFunc(
+  "/lib/configFile/services/getConfig.js",
+  {
+    getConfigOrEmpty: null
+  }
+);
+const setMockReturn = (configToReturn) => updateGetConfigMock({
+  getConfigOrEmpty: () => configToReturn
 });
 
-// Require configFile after mocking the getConfig service it uses:
+
+// Require the lib under test after mocking what it uses:
 const lib = require('./configFile');
 
 
@@ -27,7 +23,7 @@ const lib = require('./configFile');
 /////////////////////////
 
 exports.test_configFile_shouldAutoInit_trueBool = () => {
-    setMockConfig({
+    setMockReturn({
         autoinit: true,
         somethingElse: "1"
     });
@@ -35,7 +31,7 @@ exports.test_configFile_shouldAutoInit_trueBool = () => {
 }
 
 exports.test_configFile_shouldAutoInit_trueString = () => {
-    setMockConfig({
+    setMockReturn({
         autoinit: "true",
         somethingElse: "2"
     });
@@ -43,7 +39,7 @@ exports.test_configFile_shouldAutoInit_trueString = () => {
 }
 
 exports.test_configFile_shouldAutoInit_falseBool = () => {
-    setMockConfig({
+    setMockReturn({
         autoinit: false,
         somethingElse: "3"
     });
@@ -51,7 +47,7 @@ exports.test_configFile_shouldAutoInit_falseBool = () => {
 }
 
 exports.test_configFile_shouldAutoInit_falseString = () => {
-    setMockConfig({
+    setMockReturn({
         autoinit: "false",
         somethingElse: "4"
     });
@@ -59,14 +55,14 @@ exports.test_configFile_shouldAutoInit_falseString = () => {
 }
 
 exports.test_configFile_shouldAutoInit_falseMissing = () => {
-    setMockConfig({
+    setMockReturn({
         somethingElse: "5"
     });
     test.assertFalse(lib.shouldAutoInit());
 }
 
 exports.test_configFile_shouldAutoInit_falseEmpty = () => {
-    setMockConfig({});
+    setMockReturn({});
     test.assertFalse(lib.shouldAutoInit());
 }
 
@@ -76,7 +72,7 @@ exports.test_configFile_shouldAutoInit_falseEmpty = () => {
 
 exports.test_configFile_getAllIdProviderNames_some = () => {
 
-    setMockConfig({
+    setMockReturn({
         // myidp1 will be ignored b/c wrong 'idprovider' namespace
         'irrelevant.myidp1.field': 'someValue',
 
@@ -98,7 +94,7 @@ exports.test_configFile_getAllIdProviderNames_some = () => {
 
 exports.test_configFile_getAllIdProviderNames_none = () => {
 
-    setMockConfig({
+    setMockReturn({
         // All keys are outside of idprovider namespace, so they are ignored
         autoinit: true,
         'irrelevant.myidp1': 'someValue',
@@ -119,7 +115,7 @@ exports.test_configFile_getAllIdProviderNames_none = () => {
 
 exports.test_configFile_getFileConfigSubTree_actualKey = () => {
 
-    setMockConfig({
+    setMockReturn({
         autoinit: true,
 
         'something.target.subkey': 'targetValue',  // <-- Target this value
@@ -146,7 +142,7 @@ exports.test_configFile_getFileConfigSubTree_actualKey = () => {
 
 exports.test_configFile_getFileConfigSubTree_actualKeyEmpty = () => {
 
-    setMockConfig({
+    setMockReturn({
         autoinit: true,
 
         'something.target.subkey': '',  // <-- Target this value
@@ -173,7 +169,7 @@ exports.test_configFile_getFileConfigSubTree_actualKeyEmpty = () => {
 
 
 exports.test_configFile_getFileConfigSubTree_simpleSubkey = () => {
-    setMockConfig({
+    setMockReturn({
         autoinit: true,
 
         'something.target.subkey': 'targetValue',  // <-- Target something.target, expect an object: {subkey: targetValue}
@@ -201,7 +197,7 @@ exports.test_configFile_getFileConfigSubTree_simpleSubkey = () => {
 
 exports.test_configFile_getFileConfigSubTree_nestedSubkey = () => {
 
-    setMockConfig({
+    setMockReturn({
         autoinit: true,
 
         'something.target.subkey': 'targetValue',  // <-- Target 'something', expect an object: {target: {subkey: targetValue}}
@@ -230,7 +226,7 @@ exports.test_configFile_getFileConfigSubTree_nestedSubkey = () => {
 
 exports.test_configFile_getFileConfigSubTree_nestedSubTree = () => {
 
-    setMockConfig({
+    setMockReturn({
         autoinit: true,
 
         // Target 'something.target' and everything below it
@@ -278,7 +274,7 @@ exports.test_configFile_getFileConfigSubTree_nestedSubTree = () => {
 
 exports.test_configFile_getFileConfigSubTree_unmatching = () => {
 
-    setMockConfig({
+    setMockReturn({
         autoinit: true,
 
         'something.target.subkey': 'targetValue',  // <-- NOT targeted. Nothing is matched.
@@ -306,7 +302,7 @@ exports.test_configFile_getFileConfigSubTree_unmatching = () => {
 }
 
 exports.test_configFile_getFileConfigSubTree_emptyConfig = () => {
-    setMockConfig({});
+    setMockReturn({});
 
     const allConfigKeys = [];
     const currentKey = '';
@@ -322,7 +318,7 @@ exports.test_configFile_getFileConfigSubTree_emptyConfig = () => {
 
 exports.test_configFile_getFileConfigSubTree_errAmbiguous1 = () => {
 
-    setMockConfig({
+    setMockReturn({
         irrelevant1: "yes",
 
         'something.target.subkey': 'eclipsedValue',
@@ -356,7 +352,7 @@ exports.test_configFile_getFileConfigSubTree_errAmbiguous1 = () => {
 
 exports.test_configFile_getFileConfigSubTree_errAmbiguous2 = () => {
 
-    setMockConfig({
+    setMockReturn({
         irrelevant1: "yes",
 
         'something.target': 'overlaps with .subkey',
@@ -391,7 +387,7 @@ exports.test_configFile_getFileConfigSubTree_errAmbiguous2 = () => {
 
 exports.test_configFile_getFileConfigSubTree_errBadKey = () => {
 
-    setMockConfig({
+    setMockReturn({
         irrelevant1: "yes",
 
         'something.target.': 'targetValue',  // Key ends with dot
@@ -424,7 +420,7 @@ exports.test_configFile_getFileConfigSubTree_errBadKey = () => {
 
 exports.test_configFile_getFileConfigSubTree_parsingCallback = () => {
 
-    setMockConfig({
+    setMockReturn({
         irrelephant: "yes",
         'something.target.subkey': 'targetValue',  // <-- Target and parse/change this value
     });
@@ -447,7 +443,7 @@ exports.test_configFile_getFileConfigSubTree_parsingCallback = () => {
 
 exports.test_configFile_getFileConfigSubTree_onlySpecificCallback = () => {
 
-    setMockConfig({
+    setMockReturn({
         irrelephant: "yes",
         'something.target.subkey': 'targetValue',  // <-- Target and parse/change this value
     });
@@ -475,7 +471,7 @@ exports.test_configFile_getFileConfigSubTree_onlySpecificCallback = () => {
 
 exports.test_configFile_getConfigForIdProvider_getMatchingConfigObject = () => {
 
-    setMockConfig({
+    setMockReturn({
         autoinit: true,
 
         // Target 'idprovider.target' and everything below it
@@ -519,7 +515,7 @@ exports.test_configFile_getConfigForIdProvider_getMatchingConfigObject = () => {
 
 exports.test_configFile_getConfigForIdProvider_getNullOnNomatch = () => {
 
-    setMockConfig({
+    setMockReturn({
         autoinit: true,
 
         // Ingore all keys since they don't match 'nonexistingtarget':
