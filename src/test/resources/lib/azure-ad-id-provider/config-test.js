@@ -32,7 +32,7 @@ const updateConfigFileMocks = testUtils.mockAndGetUpdaterFunc(
 const lib = require('./config');
 
 
-exports.test_getIdProviderConfig_fromFile_whenConfigFileReturnsSomething = () => {
+exports.test_config_getIdProviderConfig_fromFile_whenConfigFileReturnsSomething = () => {
   getIdProviderConfigWasRun = false;
   updateConfigFileMocks({
     getConfigForIdProvider: () => ({
@@ -49,7 +49,7 @@ exports.test_getIdProviderConfig_fromFile_whenConfigFileReturnsSomething = () =>
 
 
 
-exports.test_getIdProviderConfig_fromDataLayer_whenConfigFileReturnsNull = () => {
+exports.test_config_getIdProviderConfig_fromDataLayer_whenConfigFileReturnsNull = () => {
   getIdProviderConfigWasRun = false;
   updateConfigFileMocks({
     getConfigForIdProvider: () => null
@@ -64,7 +64,7 @@ exports.test_getIdProviderConfig_fromDataLayer_whenConfigFileReturnsNull = () =>
 
 
 
-exports.test_getIdProviderConfig_fromDataLayer_whenConfigFileReturnsUndefined = () => {
+exports.test_config_getIdProviderConfig_fromDataLayer_whenConfigFileReturnsUndefined = () => {
   getIdProviderConfigWasRun = false;
   updateConfigFileMocks({
     getConfigForIdProvider: () => undefined

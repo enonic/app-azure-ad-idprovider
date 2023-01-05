@@ -546,3 +546,214 @@ exports.test_configFile_getConfigForIdProvider_getNullOnNomatch = () => {
     // Expected: null when target idprovider was not found
     test.assertEquals(null, result);
 }
+
+
+
+///////////////////////////
+
+
+exports.test_arrayOrObject_arr_arrayAsObject = () => {
+  const arrayAsObject = {
+    0: "a",
+    1: "b",
+    2: "c"
+  }
+  const nowAnArray = lib.arrayOrObject(arrayAsObject);
+
+  test.assertEquals("object", typeof nowAnArray);
+  test.assertTrue(Array.isArray(nowAnArray));
+}
+
+exports.test_arrayOrObject_obj_simpleObject = () => {
+  const simpleObject = {
+    a: "a",
+    b: "b",
+    c: "c"
+  }
+  const stillAnObject = lib.arrayOrObject(simpleObject);
+
+  test.assertEquals("object", typeof stillAnObject);
+  test.assertFalse(Array.isArray(stillAnObject));
+}
+
+exports.test_arrayOrObject_obj_mixedObject = () => {
+  const mixedObject = {
+    1: "a",
+    b: "b",
+    3: "c"
+  }
+  const stillAnObject = lib.arrayOrObject(mixedObject);
+
+  test.assertEquals("object", typeof stillAnObject);
+  test.assertFalse(Array.isArray(stillAnObject));
+}
+
+exports.test_arrayOrObject_obj_nonSequentialIndices = () => {
+  const brokenArray = {
+    0: "a",
+    1: "b",
+    3: "c"
+  }
+  const stillAnObject = lib.arrayOrObject(brokenArray);
+
+  test.assertEquals("object", typeof stillAnObject);
+  test.assertFalse(Array.isArray(stillAnObject));
+}
+
+exports.test_arrayOrObject_obj_nonZeroIndices = () => {
+  const brokenArray = {
+    1: "a",
+    2: "b",
+    3: "c"
+  }
+  const stillAnObject = lib.arrayOrObject(brokenArray);
+
+  test.assertEquals("object", typeof stillAnObject);
+  test.assertFalse(Array.isArray(stillAnObject));
+}
+
+
+exports.test_arrayOrObject_obj_subZeroIndices = () => {
+  const brokenArray = {
+    1: "a",
+    2: "b",
+    "-1": "c"
+  }
+  const stillAnObject = lib.arrayOrObject(brokenArray);
+
+  test.assertEquals("object", typeof stillAnObject);
+  test.assertFalse(Array.isArray(stillAnObject));
+}
+
+
+exports.test_arrayOrObject_obj_repeatIndices = () => {
+  const brokenArray = {
+    "1": "a",
+    "2 ": "b",
+    " 2": "c"
+  }
+  const stillAnObject = lib.arrayOrObject(brokenArray);
+
+  test.assertEquals("object", typeof stillAnObject);
+  test.assertFalse(Array.isArray(stillAnObject));
+}
+
+
+
+
+exports.test_arrayOrObject_obj_trueTree = () => {
+  const trueTree = {
+    a: "a",
+    b: ["b", "c", "d"],
+    e: {f: "g", h: "i", j:"k"}
+  }
+  const stillAnObject = lib.arrayOrObject(trueTree);
+
+  test.assertEquals("object", typeof stillAnObject);
+  test.assertFalse(Array.isArray(stillAnObject));
+
+  test.assertEquals("a", stillAnObject.a)
+
+  test.assertEquals("object", typeof stillAnObject.b);
+  test.assertTrue(Array.isArray(stillAnObject.b));
+  test.assertEquals("c", stillAnObject.b[1])
+
+  test.assertEquals("object", typeof stillAnObject.e);
+  test.assertFalse(Array.isArray(stillAnObject.e));
+  test.assertEquals("i", stillAnObject.e.h);
+}
+
+
+exports.test_arrayOrObject_obj_arrayTree = () => {
+  const arrayTree = {
+    0: "a",
+    1: ["b", "c", "d"],
+    2: {f: "g", h: "i", j:"k"}
+  }
+  const nestedArray = lib.arrayOrObject(arrayTree);
+
+
+  test.assertEquals("object", typeof nestedArray);
+  test.assertTrue(Array.isArray(nestedArray));
+
+  test.assertEquals("a", nestedArray[0])
+
+  test.assertEquals("object", typeof nestedArray[1]);
+  test.assertTrue(Array.isArray(nestedArray[1]));
+  test.assertEquals("c", nestedArray[1][1])
+
+  test.assertEquals("object", typeof nestedArray[2]);
+  test.assertFalse(Array.isArray(nestedArray[2]));
+  test.assertEquals("i", nestedArray[2].h);
+}
+
+
+
+
+///////////////////////////  Test all at once:
+
+
+exports.test_configFile_testEverythingComplex = () => {
+
+  setMockReturn({
+    autoinit: true,
+
+    'idprovider.complex.firstkey':            'targetValue1',
+    'idprovider.complex.secondkey.0.one':     'targetValue2.0.1',
+    'idprovider.complex.secondkey.1.one.one': 'targetValue2.1.1.1',
+    'idprovider.complex.secondkey.1.one.two': 'targetValue2.1.1.2',
+    'idprovider.complex.secondkey.1.two':     'targetValue2.1.2',
+    'idprovider.complex.secondkey.2.three.0': 'targetValue2.2.3.0',
+    'idprovider.complex.secondkey.2.three.1': 'targetValue2.2.3.1',
+    'idprovider.complex.thirdkey.0.1':        'targetValue3.0.1',
+    'idprovider.complex.thirdkey.one.0.1':    'targetValue3.1.0.1',
+    'idprovider.complex.thirdkey.one.0.2':    'targetValue3.1.0.2',
+    'idprovider.complex.thirdkey.one.2':      'targetValue3.1.2',
+    'idprovider.complex.thirdkey.2.0':        'targetValue3.2.0',
+    'idprovider.complex.thirdkey.2.1':        'targetValue3.2.1',
+  });
+
+  const result = lib.getConfigForIdProvider('complex');
+
+  test.assertEquals(`{
+  "firstkey": "targetValue1",
+  "secondkey": [` +                                        //<-- Array, since secondkey only has subkeys 0, 1 and 2 (consecutive numbers starting with 0).
+`
+    {
+      "one": "targetValue2.0.1"
+    },
+    {
+      "one": {
+        "one": "targetValue2.1.1.1",
+        "two": "targetValue2.1.1.2"
+      },
+      "two": "targetValue2.1.2"
+    },
+    {
+      "three": [` +                                        // <-- Array, since secondkey.2.three only has subkeys 0 and 1.
+`
+        "targetValue2.2.3.0",
+        "targetValue2.2.3.1"
+      ]
+    }
+  ],
+  "thirdkey": {
+    "0": {
+      "1": "targetValue3.0.1"
+    },
+    "2": [` +                                              // <-- Array, since thirdkey.2 only has subkeys 0 and 1.
+`
+      "targetValue3.2.0",
+      "targetValue3.2.1"
+    ],
+    "one": {
+      "0": {
+        "1": "targetValue3.1.0.1",
+        "2": "targetValue3.1.0.2"
+      },
+      "2": "targetValue3.1.2"
+    }
+  }
+}`, JSON.stringify(result, null, 2));
+}
+
