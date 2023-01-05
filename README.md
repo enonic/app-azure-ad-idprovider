@@ -21,6 +21,7 @@ This ID Provider uses the OAuth2 v2 endpoint of your Azure AD to authenticate us
 | 1.2.2   |     >= 7.7.4      |                                [Download](https://jitpack.io/no/item/app-azure-ad-idprovider/1.2.2/app-azure-ad-idprovider-1.2.2.jar) |
 | 1.2.3   |     >= 7.7.4      |                                [Download](https://jitpack.io/no/item/app-azure-ad-idprovider/1.2.3/app-azure-ad-idprovider-1.2.3.jar) |
 | 1.2.4   |     >= 7.7.4      |                                [Download](https://jitpack.io/no/item/app-azure-ad-idprovider/1.2.4/app-azure-ad-idprovider-1.2.4.jar) |
+| 1.3.0   |     >= 7.7.4      |                                [Download](https://jitpack.io/no/item/app-azure-ad-idprovider/1.3.0/app-azure-ad-idprovider-1.3.0.jar) |
 
 ## App Setup
 
@@ -77,6 +78,31 @@ Example:
 `and`: true
 
 This will then include groups with descriptions marked with `$XP$`, or groups with a display name starting with `XP`, or the group with id `12345-12345-12345-12345  ` where visibility is `Public`. So it's divided into 3 checks: 1 OR 2 OR (3 AND 4)
+
+### Configuration from .cfg file
+
+As of v1.3.0 it's possible to override the settings entered in the form in the users app and instead configure the id provider with a CFG file:
+
+- If _<enonic-home>/config/com.gravitondigital.app.azureadidprovider.cfg_ exists and contains settings under the .cfg key(s) `idprovider.<idprovidername>.*` (even just one key like that), then the data-layer configs from the form defined in _src/main/resources/idprovider/idprovider.xml_ will be ignored and the settings defined in _com.gravitondigital.app.azureadidprovider.cfg_ will be used instead.
+
+- Keys in the .cfg file correspond to the names (`<input name="*"`) in _idprovider.xml_, but with a prefix: `idprovider.<idprovidername>.` So for example, when the _idprovider.xml_ defines the name `forceHttpsOnRedirectUri`, an ID provider ("userstore") named `myidp` can define that value in _com.gravitondigital.app.azureadidprovider.cfg_ like this: `idprovider.myidp.forceHttpsOnRedirectUri=true`.
+
+- Nested data structures are supported as a dot-separated syntax after the IDP name in the keys. The structure from the form/data layer should be mirrored exactly when setting up the .cfg file. For example, the input `port` under the item-set `proxy` would be defined as `idprovider.myidp.proxy.port=7000`. 
+
+- Arrays of items are also supported, defined by adding index numbers (consecutive starting from 0) to the path below the parent. For example, the item-set `groupFilter` has `occurrences minimum="0" maximum="0"`, so many sub-items can be added below that. Each sub-item must have the fields `groupProperty` and `regexp`. Define an array of groupFilter subitems in the .cfg like this:
+
+```
+idprovider.myidp.groupFilter.0.groupProperty=foo
+idprovider.myidp.groupFilter.0.regexp=^foo$
+idprovider.myidp.groupFilter.1.groupProperty=bar
+idprovider.myidp.groupFilter.1.regexp=^bar$
+```
+...etc
+
+- Since values containing placeholders on the syntax`${}` can cause unwanted behavior in .cfg files, replace the `$` with a double `@`. For example, `idprovider.myidp.user.displayName=@@{given_name} @@{family_name} &lt;@@{upn}&gt;`
+
+- If _com.gravitondigital.app.azureadidprovider.cfg_ contains `autoinit=true`, the app will look all idprovider names declared in the file on startup and create them if they don't already exist, with the declared .cfg settings.For example, `idprovider.myfirstidp.someKey=someValue` and `idprovider.anotheridp.anotherKey=anotherValue` will declare two idproviders named `myfirstidp` and `anotheridp`.
+
 
 ## Events
 
