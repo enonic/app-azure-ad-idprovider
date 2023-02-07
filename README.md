@@ -83,11 +83,11 @@ This will then include groups with descriptions marked with `$XP$`, or groups wi
 
 As of v1.3.0 it's possible to override the settings entered in the form in the users app and instead configure the id provider with a CFG file:
 
-- If _<enonic-home>/config/com.gravitondigital.app.azureadidprovider.cfg_ exists and contains settings under the .cfg key(s) `idprovider.<idprovidername>.*` (even just one key like that), then the data-layer configs from the form defined in _src/main/resources/idprovider/idprovider.xml_ will be ignored and the settings defined in _com.gravitondigital.app.azureadidprovider.cfg_ will be used instead.
+- If _<enonic-home>/config/com.enonic.app.azureadidprovider.cfg_ exists and contains settings under the .cfg key(s) `idprovider.<idprovidername>.*` (even just one key like that), then the data-layer configs from the form defined in _src/main/resources/idprovider/idprovider.xml_ will be ignored and the settings defined in _com.gravitondigital.app.azureadidprovider.cfg_ will be used instead.
 
 - Keys in the .cfg file correspond to the names (`<input name="*"`) in _idprovider.xml_, but with a prefix: `idprovider.<idprovidername>.` So for example, when the _idprovider.xml_ defines the name `forceHttpsOnRedirectUri`, an ID provider ("userstore") named `myidp` can define that value in _com.gravitondigital.app.azureadidprovider.cfg_ like this: `idprovider.myidp.forceHttpsOnRedirectUri=true`.
 
-- Nested data structures are supported as a dot-separated syntax after the IDP name in the keys. The structure from the form/data layer should be mirrored exactly when setting up the .cfg file. For example, the input `port` under the item-set `proxy` would be defined as `idprovider.myidp.proxy.port=7000`. 
+- Nested data structures are supported as a dot-separated syntax after the IDP name in the keys. The structure from the form/data layer should be mirrored exactly when setting up the .cfg file. For example, the input `port` under the item-set `proxy` would be defined as `idprovider.myidp.proxy.port=7000`.
 
 - Arrays of items are also supported, defined by adding index numbers (consecutive starting from 0) to the path below the parent. For example, the item-set `groupFilter` has `occurrences minimum="0" maximum="0"`, so many sub-items can be added below that. Each sub-item must have the fields `groupProperty` and `regexp`. Define an array of groupFilter subitems in the .cfg like this:
 

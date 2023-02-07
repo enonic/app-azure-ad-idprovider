@@ -1,4 +1,4 @@
-package com.gravitondigital.app.azureadidprovider.lib.configFile;
+package com.enonic.app.azureadidprovider.lib.configFile;
 
 import com.enonic.xp.script.serializer.MapGenerator;
 import com.enonic.xp.script.serializer.MapSerializable;

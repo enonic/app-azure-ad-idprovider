@@ -1,4 +1,4 @@
-package com.gravitondigital.app.azureadidprovider.lib.azureAdIdProvider;
+package com.enonic.app.azureadidprovider.lib.azureAdIdProvider;
 
 import com.enonic.xp.testing.ScriptRunnerSupport;
 

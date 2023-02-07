@@ -24,7 +24,7 @@ function nullOrValue(value) {
  * @param {object} [params.permissions] Id provider permissions.
  */
 exports.createIdProvider = (params) => {
-    var bean = __.newBean('com.gravitondigital.app.azureadidprovider.lib.configFile.CreateIdProviderHandler');
+    var bean = __.newBean('com.enonic.app.azureadidprovider.lib.configFile.CreateIdProviderHandler');
 
     bean.name = required(params, 'name');
     bean.displayName = nullOrValue(params.displayName);
@@ -41,6 +41,6 @@ exports.createIdProvider = (params) => {
  * @returns {object[]} Array of id providers in system repo.
  */
 exports.getIdProviders = () => {
-    var bean = __.newBean('com.gravitondigital.app.azureadidprovider.lib.configFile.GetIdProvidersHandler');
+    var bean = __.newBean('com.enonic.app.azureadidprovider.lib.configFile.GetIdProvidersHandler');
     return __.toNativeObject(bean.getIdProviders());
 };
