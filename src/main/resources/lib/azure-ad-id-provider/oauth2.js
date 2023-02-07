@@ -11,8 +11,8 @@ var lib = {
 		object: require('/lib/azure-ad-id-provider/object'),
 		portal: require('/lib/azure-ad-id-provider/portal')
 	},
+  config: require('/lib/azure-ad-id-provider/config'),
 	xp: {
-		auth:       require('/lib/xp/auth'),
 		httpClient: require('/lib/http-client'),
 		portal:     require('/lib/xp/portal')
 	}
@@ -24,7 +24,7 @@ var lib = {
 var toStr               = lib.azureAdIdProvider.object.toStr;
 var valueFromFormat     = lib.azureAdIdProvider.object.valueFromFormat;
 var getReturnToUrl      = lib.azureAdIdProvider.portal.getReturnToUrl;
-var getIdProviderConfig = lib.xp.auth.getIdProviderConfig;
+var getIdProviderConfig = lib.config.getIdProviderConfig;
 var sendRequest         = lib.xp.httpClient.request;
 var getIdProviderKey     = lib.xp.portal.getIdProviderKey;
 var getIdProviderUrl    = lib.xp.portal.idProviderUrl;

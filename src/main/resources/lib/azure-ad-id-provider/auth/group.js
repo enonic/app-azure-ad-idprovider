@@ -21,10 +21,11 @@ var lib = {
 			data: require('/lib/util/data')
 		}
 	},
-    xp: {
-        auth: require('/lib/xp/auth'),
-        httpClient: require('/lib/http-client')
-    }
+  xp: {
+      auth: require('/lib/xp/auth'),
+      httpClient: require('/lib/http-client')
+  },
+  config: require('/lib/azure-ad-id-provider/config')
 };
 
 //──────────────────────────────────────────────────────────────────────────────
@@ -37,7 +38,7 @@ var sanitizeName = lib.azureAdIdProvider.auth.sanitizeName.sanitizeName;
 var getGroups = lib.azureAdIdProvider.auth.user.getGroups;
 var addMembers = lib.xp.auth.addMembers;
 var createGroup = lib.xp.auth.createGroup;
-var getIdProviderConfig = lib.xp.auth.getIdProviderConfig;
+var getIdProviderConfig = lib.config.getIdProviderConfig;
 var getPrincipal = lib.xp.auth.getPrincipal;
 var modifyGroup = lib.xp.auth.modifyGroup;
 var removeMembers = lib.xp.auth.removeMembers;

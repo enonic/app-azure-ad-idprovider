@@ -18,7 +18,8 @@ var lib = {
 	xp: {
 		auth: require('/lib/xp/auth'),
 		portal: require('/lib/xp/portal')
-	}
+	},
+  config: require('/lib/azure-ad-id-provider/config')
 };
 
 //──────────────────────────────────────────────────────────────────────────────
@@ -26,7 +27,7 @@ var lib = {
 //──────────────────────────────────────────────────────────────────────────────
 var runAsAdmin          = lib.azureAdIdProvider.context.runAsAdmin;
 var toStr               = lib.azureAdIdProvider.object.toStr;
-var getIdProviderConfig = lib.xp.auth.getIdProviderConfig;
+var getIdProviderConfig = lib.config.getIdProviderConfig;
 var logout              = lib.xp.auth.logout;
 var getSite             = lib.xp.portal.getSite;
 var loginUrl            = lib.xp.portal.loginUrl;
