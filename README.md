@@ -80,11 +80,13 @@ Example:
 This will then include groups with descriptions marked with `$XP$`, or groups with a display name starting with `XP`, or the group with id `12345-12345-12345-12345  ` where visibility is `Public`. So it's divided into 3 checks: 1 OR 2 OR (3 AND 4)
 
 
-### Migration from 1.x, and configuration from .cfg file
+## Configuration (and migration from v1.x)
 
 As of v2.0.0, the form in the users app (_idprovider.xml_) has been removed. The settings to configure the id provider must instead be entered entered in a [.CFG file](https://developer.enonic.com/docs/xp/stable/deployment/config): _com.enonic.app.azureadidprovider.cfg_.
 
-#### Config key names
+A [full overview](#full-config-overview) is listed below the syntax description.
+
+### Config key names
 
 The config keys in the .cfg file are the same as they were in the form, but uses dot-separation to place them below `idprovider.<idprovidername>.*`. The `*` corresponds to the input names (`<input name="*" ...>` previously found in the form.
 
@@ -92,13 +94,13 @@ The structure from the form/data layer should be mirrored exactly like this, whe
 
 For example: previously, the `tenantId` config value for an ID provider named `myidp` would be set by editing `myidp` in the Users manager in XP, and editing the textLine with the name `tenantId` in the form (eg. giving it the value `12345`). Now, this is set in the .cfg like this: `idprovider.myidp.tenantId=12345`.
 
-See the [full list of keys](#full-config-overview) below.
-
-#### Nested keys and arrays
+### Nested keys
 
 Nested data structures are defined with the same dot-separated syntax after the IDP name in the keys.
 
 For example, the input `port` under the item-set `proxy` would be defined as `idprovider.myidp.proxy.port=7000`.
+
+### Arrays
 
 Arrays of items are also supported, defined by adding index numbers to the path below the parent (must be consecutive numbers, starting from 0).
 
@@ -112,7 +114,7 @@ idprovider.myidp.groupFilter.1.regexp=^bar$
 ```
 ...etc
 
-#### Placeholders in values
+### Placeholders in values
 
 Previously, values with placeholders could be entered in the form, which would be the basis for actual values later. For example the `displayName` textline under the `users` item-set could be given the value `${given_name} ${family_name} &lt;${upn}&gt;`, to define a pattern for prettily naming users in XP based on values from the Azure user objects.
 
@@ -120,17 +122,21 @@ Now, since values containing placeholders on the syntax`${}` can cause unwanted 
 
 For example: `idprovider.myidp.user.displayName=@@{given_name} @@{family_name} &lt;@@{upn}&gt;`
 
-#### Automatic initialization
+### Automatic initialization
 
 If _com.enonic.app.azureadidprovider.cfg_ contains `autoinit=true`, during startup this app will look all idprovider names declared in the file and create them if they don't already exist, with those settings.
 
 For example, `idprovider.myfirstidp.someKey=someValue` and `idprovider.anotheridp.anotherKey=anotherValue` will declare two idproviders named `myfirstidp` and `anotheridp`.
 
-#### Full config overview
+### Full config overview
 
-In addition to `autoinit`, which can be true, false or omitted, the following settings are available for using in the .cfg, below the `idprovider.<idprovidername>.` prefix (displayed label in the old form, and type, in parenthesis):
+The following settings are available for using in the .cfg, most of them below the `idprovider.<idprovidername>.` prefix as described [above](#config-key-names). Displayed label in the old form, and type, in parenthesis.
+
+For more details, including the explanatory help texts, see [the original form definition, idprovider.xml](https://github.com/enonic/app-azure-ad-idprovider/blob/1.2.4/src/main/resources/idprovider/idprovider.xml).
 
 ```
+autoinit                  (true or false, optional)
+
 idprovider.<idprovidername>...
     .tenantId             ("tenantId": text, required)
     .clientId             ("clientId": text, required)
@@ -160,6 +166,7 @@ idprovider.<idprovidername>...
     .forceHttpsOnRedirectUri
                           ("Force the redirect uri to use https", true or false, optional)
 ```
+
 
 ## Events
 
