@@ -84,7 +84,47 @@ This will then include groups with descriptions marked with `$XP$`, or groups wi
 
 As of v2.0.0, the form in the users app (_idprovider.xml_) has been removed. The settings to configure the id provider must instead be entered entered in a [.CFG file](https://developer.enonic.com/docs/xp/stable/deployment/config): _com.enonic.app.azureadidprovider.cfg_.
 
-A [full overview](#full-config-overview) is listed below the syntax description.
+Below the overview, the syntax of this config is explained.
+
+For even more details including the explanatory help texts, see [the original form definition, idprovider.xml](https://github.com/enonic/app-azure-ad-idprovider/blob/1.2.4/src/main/resources/idprovider/idprovider.xml).
+
+### Full config overview
+
+The following settings are available for using in the .cfg, most of them below the `idprovider.<idprovidername>.` prefix as described [later](#config-key-names). Displayed label in the old form, and type, in parenthesis.
+
+```
+autoinit                  (true or false, optional)
+
+idprovider.<idprovidername>...
+    .tenantId             ("tenantId": text, required)
+    .clientId             ("clientId": text, required)
+    .logoutUrl            ("logoutUrl": text, required)
+    .clientSecret         ("clientSecret": text, required)
+
+    .user...              ("User mappings": optional, with nested keys below)
+        .name             ("Name": text, required)
+        .displayName      ("Name": text, required)
+        .email            ("Email": text, required)
+
+    .pageSize             ("The page return size from graph api": number, optional)
+
+    .groupFilter...       ("Group Filter": optional, with ARRAY counting items from 0 and up, and nested keys below each item)
+        .0.groupProperty  ("Property": text, required)
+        .0.regexp         ("Regexp": text, required)
+        .0.and            ("AND": true or false, optional)
+
+    .proxy...             ("Proxy": optional, with nested keys below)
+        .host             ("Host": text, required)
+        .port             ("Port Number": number, optional)
+        .user             ("Username": text, optional)
+        .password         ("Password": text, optional)
+
+    .createAndUpdateGroupsOnLoginFromGraphApi
+                          ("Create and update groups from graph api", true or false, optional)
+    .forceHttpsOnRedirectUri
+                          ("Force the redirect uri to use https", true or false, optional)
+```
+
 
 ### Config key names
 
@@ -127,45 +167,6 @@ For example: `idprovider.myidp.user.displayName=@@{given_name} @@{family_name} &
 If _com.enonic.app.azureadidprovider.cfg_ contains `autoinit=true`, during startup this app will look all idprovider names declared in the file and create them if they don't already exist, with those settings.
 
 For example, `idprovider.myfirstidp.someKey=someValue` and `idprovider.anotheridp.anotherKey=anotherValue` will declare two idproviders named `myfirstidp` and `anotheridp`.
-
-### Full config overview
-
-The following settings are available for using in the .cfg, most of them below the `idprovider.<idprovidername>.` prefix as described [above](#config-key-names). Displayed label in the old form, and type, in parenthesis.
-
-For more details, including the explanatory help texts, see [the original form definition, idprovider.xml](https://github.com/enonic/app-azure-ad-idprovider/blob/1.2.4/src/main/resources/idprovider/idprovider.xml).
-
-```
-autoinit                  (true or false, optional)
-
-idprovider.<idprovidername>...
-    .tenantId             ("tenantId": text, required)
-    .clientId             ("clientId": text, required)
-    .logoutUrl            ("logoutUrl": text, required)
-    .clientSecret         ("clientSecret": text, required)
-
-    .user...              ("User mappings": optional, with nested keys below)
-        .name             ("Name": text, required)
-        .displayName      ("Name": text, required)
-        .email            ("Email": text, required)
-
-    .pageSize             ("The page return size from graph api": number, optional)
-
-    .groupFilter...       ("Group Filter": optional, with ARRAY counting items from 0 and up, and nested keys below each item)
-        .0.groupProperty  ("Property": text, required)
-        .0.regexp         ("Regexp": text, required)
-        .0.and            ("AND": true or false, optional)
-
-    .proxy...             ("Proxy": optional, with nested keys below)
-        .host             ("Host": text, required)
-        .port             ("Port Number": number, optional)
-        .user             ("Username": text, optional)
-        .password         ("Password": text, optional)
-
-    .createAndUpdateGroupsOnLoginFromGraphApi
-                          ("Create and update groups from graph api", true or false, optional)
-    .forceHttpsOnRedirectUri
-                          ("Force the redirect uri to use https", true or false, optional)
-```
 
 
 ## Events
