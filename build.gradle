@@ -1,12 +1,8 @@
 plugins {
   id 'maven-publish'
-  id 'com.enonic.defaults' version '2.1.2'
   id 'com.enonic.xp.app' version '3.2.0'
   id "com.github.node-gradle.node" version "3.5.0"
 }
-
-sourceCompatibility = JavaVersion.VERSION_11
-targetCompatibility = JavaVersion.VERSION_11
 
 app {
   name = "${appName}"
@@ -65,15 +61,4 @@ task generate_docs(type: Exec) {
   executable 'npm'
   args = ['run', 'generate-docs']
   mustRunAfter 'build'
-}
-
-publishing {
-  publications {
-    mavenJava(MavenPublication) {
-      from components.java
-      groupId group
-      artifactId projectName
-      version version
-    }
-  }
 }
