@@ -79,17 +79,72 @@ Example:
 
 This will then include groups with descriptions marked with `$XP$`, or groups with a display name starting with `XP`, or the group with id `12345-12345-12345-12345  ` where visibility is `Public`. So it's divided into 3 checks: 1 OR 2 OR (3 AND 4)
 
-### Configuration from .cfg file
 
-As of v1.3.0 it's possible to override the settings entered in the form in the users app and instead configure the id provider with a CFG file:
+## Configuration (and migration from v1.x)
 
-- If _<enonic-home>/config/com.gravitondigital.app.azureadidprovider.cfg_ exists and contains settings under the .cfg key(s) `idprovider.<idprovidername>.*` (even just one key like that), then the data-layer configs from the form defined in _src/main/resources/idprovider/idprovider.xml_ will be ignored and the settings defined in _com.gravitondigital.app.azureadidprovider.cfg_ will be used instead.
+As of v2.0.0, the form in the users app (_idprovider.xml_) has been removed. The settings to configure the id provider must instead be entered entered in a [.CFG file](https://developer.enonic.com/docs/xp/stable/deployment/config): _com.enonic.app.azureadidprovider.cfg_.
 
-- Keys in the .cfg file correspond to the names (`<input name="*"`) in _idprovider.xml_, but with a prefix: `idprovider.<idprovidername>.` So for example, when the _idprovider.xml_ defines the name `forceHttpsOnRedirectUri`, an ID provider ("userstore") named `myidp` can define that value in _com.gravitondigital.app.azureadidprovider.cfg_ like this: `idprovider.myidp.forceHttpsOnRedirectUri=true`.
+Below the overview, the syntax of this config is explained.
 
-- Nested data structures are supported as a dot-separated syntax after the IDP name in the keys. The structure from the form/data layer should be mirrored exactly when setting up the .cfg file. For example, the input `port` under the item-set `proxy` would be defined as `idprovider.myidp.proxy.port=7000`. 
+For even more details including the explanatory help texts, see [the original form definition, idprovider.xml](https://github.com/enonic/app-azure-ad-idprovider/blob/1.2.4/src/main/resources/idprovider/idprovider.xml).
 
-- Arrays of items are also supported, defined by adding index numbers (consecutive starting from 0) to the path below the parent. For example, the item-set `groupFilter` has `occurrences minimum="0" maximum="0"`, so many sub-items can be added below that. Each sub-item must have the fields `groupProperty` and `regexp`. Define an array of groupFilter subitems in the .cfg like this:
+### Full config overview
+
+The following settings are available for using in the .cfg, most of them below the `idprovider.<idprovidername>.` prefix as described [later](#config-key-names). Displayed label in the old form, and type, in parenthesis.
+
+```
+autoinit                  (true or false, optional)
+
+idprovider.<idprovidername>...
+    .tenantId             ("tenantId": text, required)
+    .clientId             ("clientId": text, required)
+    .logoutUrl            ("logoutUrl": text, required)
+    .clientSecret         ("clientSecret": text, required)
+
+    .user...              ("User mappings": optional, with nested keys below)
+        .name             ("Name": text, required)
+        .displayName      ("Name": text, required)
+        .email            ("Email": text, required)
+
+    .pageSize             ("The page return size from graph api": number, optional)
+
+    .groupFilter...       ("Group Filter": optional, with ARRAY counting items from 0 and up, and nested keys below each item)
+        .0.groupProperty  ("Property": text, required)
+        .0.regexp         ("Regexp": text, required)
+        .0.and            ("AND": true or false, optional)
+
+    .proxy...             ("Proxy": optional, with nested keys below)
+        .host             ("Host": text, required)
+        .port             ("Port Number": number, optional)
+        .user             ("Username": text, optional)
+        .password         ("Password": text, optional)
+
+    .createAndUpdateGroupsOnLoginFromGraphApi
+                          ("Create and update groups from graph api", true or false, optional)
+    .forceHttpsOnRedirectUri
+                          ("Force the redirect uri to use https", true or false, optional)
+```
+
+
+### Config key names
+
+The config keys in the .cfg file are the same as they were in the form, but uses dot-separation to place them below `idprovider.<idprovidername>.*`. The `*` corresponds to the input names (`<input name="*" ...>` previously found in the form.
+
+The structure from the form/data layer should be mirrored exactly like this, when setting up the .cfg file.
+
+For example: previously, the `tenantId` config value for an ID provider named `myidp` would be set by editing `myidp` in the Users manager in XP, and editing the textLine with the name `tenantId` in the form (eg. giving it the value `12345`). Now, this is set in the .cfg like this: `idprovider.myidp.tenantId=12345`.
+
+### Nested keys
+
+Nested data structures are defined with the same dot-separated syntax after the IDP name in the keys.
+
+For example, the input `port` under the item-set `proxy` would be defined as `idprovider.myidp.proxy.port=7000`.
+
+### Arrays
+
+Arrays of items are also supported, defined by adding index numbers to the path below the parent (must be consecutive numbers, starting from 0).
+
+For example, the item-set `groupFilter` has `occurrences minimum="0" maximum="0"`, so many sub-items can be added below that. Each sub-item must have the fields `groupProperty` and `regexp`. Define an array of groupFilter subitems in the .cfg like this:
 
 ```
 idprovider.myidp.groupFilter.0.groupProperty=foo
@@ -99,9 +154,19 @@ idprovider.myidp.groupFilter.1.regexp=^bar$
 ```
 ...etc
 
-- Since values containing placeholders on the syntax`${}` can cause unwanted behavior in .cfg files, replace the `$` with a double `@`. For example, `idprovider.myidp.user.displayName=@@{given_name} @@{family_name} &lt;@@{upn}&gt;`
+### Placeholders in values
 
-- If _com.gravitondigital.app.azureadidprovider.cfg_ contains `autoinit=true`, the app will look all idprovider names declared in the file on startup and create them if they don't already exist, with the declared .cfg settings.For example, `idprovider.myfirstidp.someKey=someValue` and `idprovider.anotheridp.anotherKey=anotherValue` will declare two idproviders named `myfirstidp` and `anotheridp`.
+Previously, values with placeholders could be entered in the form, which would be the basis for actual values later. For example the `displayName` textline under the `users` item-set could be given the value `${given_name} ${family_name} &lt;${upn}&gt;`, to define a pattern for prettily naming users in XP based on values from the Azure user objects.
+
+Now, since values containing placeholders on the syntax`${}` can cause unwanted behavior in .cfg files, replace the `$` in the values with a double `@`.
+
+For example: `idprovider.myidp.user.displayName=@@{given_name} @@{family_name} &lt;@@{upn}&gt;`
+
+### Automatic initialization
+
+If _com.enonic.app.azureadidprovider.cfg_ contains `autoinit=true`, during startup this app will look all idprovider names declared in the file and create them if they don't already exist, with those settings.
+
+For example, `idprovider.myfirstidp.someKey=someValue` and `idprovider.anotheridp.anotherKey=anotherValue` will declare two idproviders named `myfirstidp` and `anotheridp`.
 
 
 ## Events

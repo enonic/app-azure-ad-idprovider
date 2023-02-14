@@ -6,7 +6,7 @@
   "author": "Tom Arild Jakobsen <tajakobsen@gmail.com>",
   "repository": {
     "type": "git",
-    "url": "https://github.com/ItemConsulting/app-azure-ad-idprovider.git"
+    "url": "https://github.com/enonic/app-azure-ad-idprovider.git"
   },
   "scripts": {
     "doctoc": "doctoc README.md --github",

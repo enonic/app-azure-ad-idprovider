@@ -1,15 +1,15 @@
-package com.gravitondigital.app.azureadidprovider.lib.configFile;
-
-import java.util.List;
-import java.util.Objects;
-import java.util.function.Function;
-import java.util.stream.Collectors;
+package com.enonic.app.azureadidprovider.lib.configFile;
 
 import com.enonic.xp.script.ScriptValue;
 import com.enonic.xp.security.PrincipalKey;
 import com.enonic.xp.security.acl.IdProviderAccess;
 import com.enonic.xp.security.acl.IdProviderAccessControlEntry;
 import com.enonic.xp.security.acl.IdProviderAccessControlList;
+
+import java.util.List;
+import java.util.Objects;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 public final class ScriptValueToIdProviderAccessControlListTranslator
 {

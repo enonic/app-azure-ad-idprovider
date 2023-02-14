@@ -1,6 +1,4 @@
-package com.gravitondigital.app.azureadidprovider.lib.configFile;
-
-import java.util.List;
+package com.enonic.app.azureadidprovider.lib.configFile;
 
 import com.enonic.xp.app.ApplicationKey;
 import com.enonic.xp.data.PropertySet;
@@ -11,6 +9,8 @@ import com.enonic.xp.data.ValueType;
 import com.enonic.xp.data.ValueTypes;
 import com.enonic.xp.script.ScriptValue;
 import com.enonic.xp.security.IdProviderConfig;
+
+import java.util.List;
 
 public final class ScriptValueToIdProviderConfigTranslator
 {
