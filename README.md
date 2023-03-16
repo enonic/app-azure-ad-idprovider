@@ -1,13 +1,8 @@
 # Azure ID Provider
 
-Authenticate your users using Azure Active Directory
+**Authenticate your users using Azure Active Directory.**
 This ID Provider uses the OAuth2 v2 endpoint of your Azure AD to authenticate users.
 
-[![](https://jitpack.io/v/no.item/app-azure-ad-idprovider.svg)](https://jitpack.io/#no.item/app-azure-ad-idprovider)
-
-## Acknowledgement
-- Based on [ADFS Id Provider](https://github.com/enonic/app-adfs-idprovider)
-- Developed by [Øyvind Nordli](https://github.com/Garlov)
 
 ## Compatibility
 
@@ -243,3 +238,6 @@ To build this project, execute the following:
 ./gradlew clean build
 ```
 
+
+## Acknowledgements
+- Based on [ADFS Id Provider](https://github.com/enonic/app-adfs-idprovider), versions 1.x have been developed by [Øyvind Nordli](https://github.com/Garlov) until version 2.0 when Enonic took over the project again.
