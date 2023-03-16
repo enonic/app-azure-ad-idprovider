@@ -1,7 +1,7 @@
 {
   "name": "azure-ad-id-provider",
   "version": "1.2.2",
-  "description": "Azure AD ID Provider",
+  "description": "Azure ID Provider",
   "license": "Apache-2.0",
   "author": "Tom Arild Jakobsen <tajakobsen@gmail.com>",
   "repository": {
