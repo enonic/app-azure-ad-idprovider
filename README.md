@@ -23,13 +23,15 @@ This ID Provider uses the OAuth2 v2 endpoint of your Azure AD to authenticate us
 | 1.2.4   |     >= 7.7.4      |                                [Download](https://jitpack.io/no/item/app-azure-ad-idprovider/1.2.4/app-azure-ad-idprovider-1.2.4.jar) |
 | 2.0.0   |     >= 7.7.4      |                                [Download](https://jitpack.io/no/item/app-azure-ad-idprovider/2.0.0/app-azure-ad-idprovider-2.0.0.jar) |
 
-## App Setup
+## Setup
 
 ### Azure Application
 Go to Portal Azure, and either create an app or use an existing one.
 Can be found in Azure `Active Directory` -> `App registrations` -> `New registration`
 
 You'll then need to add the redirect URI for your enonic XP instance to your Azure application. This can be found in the `Authentication` section of your app. Add a new Web platform and then add your url there, the url will most likely look something like `https://${domain}/admin/tool/_/idprovider/${nameOfIdProvider}`. You can add multiple redirect URIs if necessary.
+
+<a id="api-permissions"></a>
 
 If you want to auto import the users AD groups in Enonic you have to add some API permissions as well:
 * Directory.Read.All
@@ -38,31 +40,27 @@ If you want to auto import the users AD groups in Enonic you have to add some AP
 
 [Graph API Docs](https://docs.microsoft.com/en-us/graph/api/user-list-memberof?view=graph-rest-1.0&tabs=http)
 
-### Enonic XP
-Install the Azure ID Provider app if you haven't already.
-
-Open up the User manage interface and add a new Id Provider. Give this Id Provider a name, and check that the path name of the Id Provider is the same as the last part of the redirect URI added to your application in Azure.
-
-Add the Azure ID Provider to the `Application` field and press the small pencil to open up the settings.
-* Tentant ID can be found in the overview page on your app in Azure as `Directory (tenant) ID`.
-* Client ID can be found in the overview page on your app in Azure as `Application (client) ID`.
-* Logout url is where you want to send the user if they press the logout button in XP. For Azure AD you'd most likely send them to the azure ad logout url, with your redirect url as a param. Remember to url encode the redirect url https://login.microsoftonline.com/common/oauth2/v2.0/logout?post_logout_redirect_uri=http%3A%2F%2Flocalhost%3A8080%2F or see https://docs.microsoft.com/en-us/azure/active-directory/develop/v2-protocols-oidc#send-a-sign-out-request for more info. You can also omit the post_logout_redirect_uri, and the app will try to make an educated guess, but this in not recommended.
-* Client Secret has to be made in the `Certificates & secrets` section under your application in Azure.
-* If you want to change the Azure AD -> Enonic XP user mapping, do so in the User Mappings (most likely not necessary).
-* Remember to add the API permissions listed above if you want to create and update groups in Enonic XP based on the groups in Azure AD.
-* If your Enonic XP server instance is hosted on https, you'll most likely need to check the `Force the redirect uri to use https`, since XP itself doesn't know that it is using https if it's behind a reverse proxy of some sort.
-
-<br />
 <br />
 
-## Configuration
+### App installation in Enonic XP
+Install the _Azure ID Provider_ app if you haven't already. Note that these docs don't apply to older versions of the app. Versions 1.x are deprecated, and are named _Azure **AD** ID provider_. Most likely you'll want the more **recent version**, without "AD" in the name, and this updated logo:
 
-**As of v2.0.0, the config form in the users app (_idprovider.xml_) has been removed.** The settings to configure the id provider must instead be entered in a [.CFG file](https://developer.enonic.com/docs/xp/stable/deployment/config): _com.enonic.app.azureadidprovider.cfg_.
+<img id="azure-id-provider-logo" src="src/main/resources/application.svg" height="70" width="70" />
+
+Open up the User manage interface, add a new ID provider and [give it a name](#users-app). Verify that the path name of the Id Provider is the same as the last part of the redirect URI added to your application in Azure.
+
+Connect the ID provider to this app, by choosing `Azure ID provider` in the Application. Also remember to configure the app.
+
+<br />
+
+### Configuration
+
+As of v2.0.0, the [config form in the users app](#users-app) (_idprovider.xml_) has been removed. The settings to configure the id provider must instead be entered in a [.CFG file](https://developer.enonic.com/docs/xp/stable/deployment/config): _**com.enonic.app.azureadidprovider.cfg**_.
 
 In this .cfg file, all ID providers that use this app are configured. Each ID provider gets a `idprovider.<idprovidername>` namespace, which prefixes the config fields. The [ID provider name](#users-app) is set in the Users app in XP. For example, setting the `pageSize` config field with a value of 10 for an ID provider named `azure`, will look like this:  `idprovider.azure.pageSize=10`.
 
 
-### Overview
+#### Overview
 
 The following settings are available for using in **com.enonic.app.azureadidprovider.cfg**. [More details](#fields-in-the-config) follow below.
 
@@ -80,6 +78,7 @@ idprovider.<idprovidername>.pageSize=  (number, optional)
 
 # Optional deeper namespaces: 'user', 'proxy' and 'groupFilter'.
 # If used, they have more fields/array items below them, which be required or optional.
+# The array under `groupFilter` may of course have more items (`1`, `2`, etc).
 
 idprovider.<idprovidername>.user.name=  (string, required)
 idprovider.<idprovidername>.user.displayName=  (string, required)
@@ -93,74 +92,69 @@ idprovider.<idprovidername>.proxy.password=  (string, optional)
 idprovider.<idprovidername>.groupFilter.0.groupProperty=  (string, required)
 idprovider.<idprovidername>.groupFilter.0.regexp=  (string, required)
 idprovider.<idprovidername>.groupFilter.0.and=  (true or false, optional)
-
-# The '0' in the 'groupFilter' namespace is syntax for the first item in an array.
-# For another item, just use '1', and so on:
-# idprovider.<idprovidername>.groupFilter.1.groupProperty   ...etc
 ```
 
 
-### Fields in the config
+#### Fields in the config
 
 - `autoinit`: Automatic initialization. If _com.enonic.app.azureadidprovider.cfg_ contains `autoinit=true`, then during startup this app will look all idprovider names declared in the file and create them (if the app names don't already exist) with those settings. For example, `idprovider.myfirstidp.someKey=someValue` and `idprovider.anotheridp.anotherKey=anotherValue` will declare two idproviders named `myfirstidp` and `anotheridp`.
+
 <br />
+
+- `...tenantId`: Tenant ID, the directory (tenant) ID found in Portal Azure - in the overview page on your app in Azure as `Directory (tenant) ID`.
+- `...clientId`: Client ID, the application (client) ID for your application in Portal Azure - in the overview page on your app in Azure as `Application (client) ID`.
+- `...logoutUrl`: Logout URL. This is where you want to send the user if they press the logout button in XP. For Azure AD you'd most likely send them to the azure AD logout url, with your redirect url as a param. Remember to url encode the redirect url. See also the [oauth2 docs](https://login.microsoftonline.com/common/oauth2/v2.0/logout?post_logout_redirect_uri=http%3A%2F%2Flocalhost%3A8080%2F) or the [OIDC protocol docs](https://docs.microsoft.com/en-us/azure/active-directory/develop/v2-protocols-oidc#send-a-sign-out-request) for more info. You can also omit the post_logout_redirect_uri, and the app will try to make an educated guess - but this is not recommended.
+- `...clientSecret`: Client Secret found/made in Portal Azure - in the _Certificates & secrets_ section under your application in Azure.
+
 <br />
-- `...tenantId`: Tenant ID, the directory (tenant) ID found in Portal Azure
-- `...clientId`: Client ID, the application (client) ID for your application in Portal Azure
-- `...logoutUrl`: Logout URL, see the [OIDC protocol docs](https://docs.microsoft.com/en-us/azure/active-directory/develop/v2-protocols-oidc#send-a-sign-out-request)
-- `...clientSecret`: Client Secret found in Portal Azure
+
+- `...createAndUpdateGroupsOnLoginFromGraphApi`: Create and update groups from graph api. Create and update groups when a user is logged in based on groups returned from Azure's graph api. Remember to add the [API permissions](#api-permissions) if you want to create and update groups in Enonic XP based on the groups in Azure AD.
+- `...forceHttpsOnRedirectUri`: Force the redirect uri to use https. If your enonic instance is running behind a SSL reverse proxy / hosted on https, this might be necessary if you're not forwarding all http requests to https, since XP itself doesn't know that it is using https if it's behind a reverse proxy of some sort.
+- `...pageSize`: The page return size from graph api. If the result contains more than the page size, graph api will return an _@odata.nextLink_ property similar to the following along with the first page of users.
+
 <br />
-<br />
-- `...createAndUpdateGroupsOnLoginFromGraphApi`: Create and update groups from graph api. Create and update groups when a user is logged in based on groups returned from graph api
-- `...forceHttpsOnRedirectUri`: Force the redirect uri to use https. If your enonic instance is running behind a SSL reverse proxy this might be necessary if you're not forwarding all http requests to https
-- `...pageSize`: The page return size from graph api. If the result contains more than the page size, graph api will return an __@odata.nextLink__ property similar to the following along with the first page of users.
-<br />
-<br />
-- `...user` (`idprovider.<idprovidername>.user...` namespace): User mappings. These fields provide placeholders and patterns for how Azure's user objects will be used to populate user data in XP. Note: The placeholders use a `@@` syntax in the .cfg file (in the config form in previous versions of the app, placeholders looked like `${placeholder}`. But the syntax`${}` can cause unwanted behavior in .cfg files, so the `$` is changed to `@@`). **Replace any `$` in the values with a double `@`**!
+
+- `...user` (`idprovider.<idprovidername>.user...` namespace): User mappings, Azure AD -> Enonic XP. These fields provide placeholders and patterns for how Azure's user objects will be used to populate user data in XP. Note: The placeholders use a `@@` syntax in the .cfg file (in the config form in previous versions of the app, placeholders looked like `${placeholder}`. But the syntax`${}` can cause unwanted behavior in .cfg files, so the `$` is changed to `@@`). **Replace any `$` in the values with a double `@`**!
   - `...name`: Unique user name. Eg.: `@@{name}`
   - `...displayName`: Display name. Eg.: `@@{given_name} @@{family_name} &lt;@@{upn}&gt;`
   - `...email`: Email. Recommended: `@@{upn}`
+
 <br />
-<br />
+
 - `...proxy` (`idprovider.<idprovidername>.proxy...` namespace): Proxy. Used to configure a proxy to use when talking to Azure AD:
   - `...host`: Host. Proxy host name to use.
   - `...port`: Port Number. Proxy port to use.
-  - `...user`: Username for proxy authentication
-  - `...password`: Password for proxy authentication
+  - `...user`: Username for proxy authentication.
+  - `...password`: Password for proxy authentication.
+
 <br />
-<br />
-- `...groupFilter` (`idprovider.<idprovidername>.groupFilter...` namespace): Group Filter - see [details below](#group-filtering). This namespace requires **an array** immediately below it, counting from 0, with required and optional fields below each item in the array. Each array item adds a rule for filtering groups:
-  - `...groupProperty`: Property on the group returned from the graph API you want to test against.
-  - `...regexp`: Regexp: Regular Expression to check with
-  - `...and`: AND combination rule with other items in the array
 
+- `...groupFilter` (`idprovider.<idprovidername>.groupFilter...` namespace): Group Filter. If you don't want to import all the users groups from Azure AD, it's possible to use group filters to accomplish this. This groupFilter namespace _requires an array_ immediately below it, with two required fields and one optional (`and`) below each item in the array. Each item in the array adds a rule for filtering groups. Array starts counting on 0, so for example, `idprovider.<idprovidername>.groupFilter.0.groupProperty` sets the `groupProperty` for the first item, while `idprovider.<idprovidername>.groupFilter.1.regexp` sets `regexp` for the second one, etc.
+  - `...groupProperty`: Property on the group returned from the graph API you want to test against; a property that comes from the `MemberOf` graphApi for each group. [List of properties](https://docs.microsoft.com/en-us/graph/api/resources/group?view=graph-rest-1.0#properties), eg. `description`, `displayName`, `id`, `visibility` etc.
+  - `...regexp`: Regexp: Regular Expression to run on the property.
+  - `...and`: AND combination rule with the previous filter in the array.
 
-### Group Filtering
-If you don't want to import all the users groups from Azure AD, it's possible to use group filters to accomplish this.
+##### Group filter example
 
-You can add multiple filters. Each filter takes 3 parameters:
-`property`: This is the property that comes from the MemberOf graphApi for each group. [List of properties](https://docs.microsoft.com/en-us/graph/api/resources/group?view=graph-rest-1.0#properties)
-`regexp`: Which Regular Expression to run on the property
-`and`: If you want to AND this with the previous filter.
+The following filtering will include groups with descriptions marked with `$XP$`, _or_ groups with a display name starting with `XP`, _or_ the group with id `12345-12345-12345-12345` where visibility is `Public` - in sum divided into 3 checks: items 0 OR 1 OR (2 AND 3):
 
-Example:
-`property`: description
-`regexp`: \\\$XP\\\$
-`and`: false
+```ini
+idprovider.myidp.groupFilter.0.groupProperty=description
+idprovider.myidp.groupFilter.0.regexp=\\\$XP\\\$
+idprovider.myidp.groupFilter.0.and=false
 
-`property`: displayName
-`regexp`: ^XP
-`and`: false
+idprovider.myidp.groupFilter.1.groupProperty=displayName
+idprovider.myidp.groupFilter.1.regexp=^XP
+idprovider.myidp.groupFilter.1.and=false
 
-`property`: id
-`regexp`: 12345-12345-12345-12345
-`and`: false
+idprovider.myidp.groupFilter.2.groupProperty=id
+idprovider.myidp.groupFilter.2.regexp=12345-12345-12345-12345
+idprovider.myidp.groupFilter.2.and=false
 
-`property`: visibility
-`regexp`: Public
-`and`: true
-
-This will then include groups with descriptions marked with `$XP$`, or groups with a display name starting with `XP`, or the group with id `12345-12345-12345-12345  ` where visibility is `Public`. So it's divided into 3 checks: 1 OR 2 OR (3 AND 4)
+idprovider.myidp.groupFilter.3.groupProperty=visibility
+idprovider.myidp.groupFilter.3.regexp=Public
+idprovider.myidp.groupFilter.3.and=true
+```
 
 <br />
 <br />
@@ -169,9 +163,7 @@ This will then include groups with descriptions marked with `$XP$`, or groups wi
 
 Version 2.x of this app introduces two breaking changes:
 - As detailed above, [all configuration now happens in com.enonic.app.azureadidprovider.cfg](#configuration) instead of editing a form in the Users app. So no configuration will be stored in / read from the data layer anymore.
-- The app name and key has changed. After Enonic formally took over this project, the app key is now `com.enonic.app.azureadidprovider` (previously __com.gravitondigital.app.azureadidprovider__), and for clarity, the displayName of the app has shortened to __Azure ID provider__ (removing "AD" from the previous __Azure AD ID provider__). Also, the logo has been updated to clarify the difference:
-
-<img id="azure-id-provider-logo" src="src/main/resources/application.svg" height="70" width="70" />
+- The app name and key has changed. After Enonic formally took over this project, the app key is now `com.enonic.app.azureadidprovider` (previously _com.gravitondigital.app.azureadidprovider_), and for clarity, the displayName of the app has shortened to _Azure ID provider_ (removing "AD" from the previous _Azure AD ID provider_).
 
 The following upgrade descriptions use information you can find by editing your 1.x ID provider app in XP:
 
@@ -179,29 +171,19 @@ The following upgrade descriptions use information you can find by editing your 
 
 ### 1. Migrate the configuration
 
-Create _com.enonic.app.azureadidprovider.cfg_ in your /config folder. Then in XP, enter the Users app and edit the ID provider. Note the ID provider name (without the leading slash), and click the edit-form icon to view the configuration entered in the old app. Transfer the values into the .cfg file, [the way it's specified above](#configuration)
-
-(The order of the fields in the form is slightly different from [the description above](#fields-in-the-config))
+Create _com.enonic.app.azureadidprovider.cfg_ in your /config folder. Then in XP, enter the Users app and edit the ID provider. Note the ID provider name (without the leading slash), and click the edit-form icon to view the configuration entered in the old app. Transfer the values into the .cfg file, [the way it's specified above](#configuration) (the order may vary).
 
 ### 2. Change the app
 
-__After__ migrating the configuration as above, a few more steps are needed:
+_After_ migrating the configuration as above, a few more steps are needed:
 - Open the Application manager in XP. The app cannot simply be version-upgraded here (because of the app key change). First, install the new version of the app: _Azure ID provider_. Don't uninstall the old one yet.
-- Existing ID provider(s) must be re-pointed to the new app instead of the old. Edit it (/them) in the Users app: under Applications, select the new __Azure IP provider__ and remove the old __Azure AD ID provider__. Save and close.
-- Any added customization (hardcoded references etc) in your apps/environments that refers to the old app key `com.gravitondigital.app.azureadidprovider` must be updated to `com.enonic.app.azureadidprovider`.
-- Finally, back in the Application manager in XP, the old app __Azure **AD** ID provider__ can be uninstalled.
-
-#################################################################
+- Existing ID provider(s) must be re-pointed to the new app instead of the old. Edit it (/them) in the Users app: under Applications, select the new _Azure IP provider_ and remove the old _Azure AD ID provider_. Save and close.
+- If there are any added customizations (hardcoded references etc) in your apps/environments that refer to the old app key `com.gravitondigital.app.azureadidprovider`, they must be updated to `com.enonic.app.azureadidprovider`.
+- Finally, back in the Application manager in XP, the old app _Azure **AD** ID provider_ can be uninstalled.
 
 
-The config keys in the .cfg file are the same as they were in the form, but uses dot-separation to place them below `idprovider.<idprovidername>.*`. The `*` corresponds to the input names (`<input name="*" ...>` previously found in the form.
-
-The structure from the form/data layer should be mirrored exactly like this, when setting up the .cfg file.
-
-For example: previously, the `tenantId` config value for an ID provider named `myidp` would be set by editing `myidp` in the Users manager in XP, and editing the textLine with the name `tenantId` in the form (eg. giving it the value `12345`). Now, this is set in the .cfg like this: `idprovider.myidp.tenantId=12345`.
-
-
-
+<br />
+<br />
 
 ## Events
 
@@ -213,7 +195,9 @@ The following events can be listed after using event library:
 | `custom.azure.user.modify`| Local user is modified |
 | `custom.azure.user.create`| Local user is created  |
 
-The *Login* event passes an object as parameter describing the user with these fields:
+### Login
+
+The `...login` event passes an object as parameter describing the user with these fields:
 
  - `type`
  - `key`
@@ -223,14 +207,7 @@ The *Login* event passes an object as parameter describing the user with these f
  - `login`
  - `idProvider`
 
-The **Create** event passes an object as parameter with the following fields:
-
- - `idProvider`
- - `name`
- - `displayName`
- - `email`
-
-_Example:_
+**Example:**
 
 ```javascript
 const eventLib = require("/lib/xp/event")
@@ -243,7 +220,22 @@ eventLib.listener({
 })
 ```
 
-## Build
+### Create
+
+The `...create` event passes an object as parameter with the following fields:
+
+ - `idProvider`
+ - `name`
+ - `displayName`
+ - `email`
+
+
+<br />
+<br />
+
+## Development
+
+### Build
 
 To build this project, execute the following:
 
@@ -251,7 +243,7 @@ To build this project, execute the following:
 ./gradlew clean build
 ```
 
-## Deploy to Jitpack
+### Deploy to Jitpack
 
 Go to the [Jitpack page for app-azure-ad-idprovider](https://jitpack.io/#no.item/app-azure-ad-idprovider) to deploy from
 Github (after [creating a new versioned release](https://github.com/ItemConsulting/app-azure-ad-idprovider/releases)).
