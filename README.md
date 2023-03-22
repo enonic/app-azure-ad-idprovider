@@ -162,7 +162,7 @@ Version 2.x of this app introduces two breaking changes:
 
 The following upgrade descriptions use information you can find by editing your 1.x ID provider app in XP:
 
-<img id="users-app" src="media/user-app.png" width="300" height="140" />
+<img id="users-app" src="media/user-app.png" alt="When editing an ID provider in the Users app, the ID provider name is found (or edited) directly below the displayName field, and in previous versions of this app the configuration form was opened by clicking the pencil icon on the ID provider app." title="When editing an ID provider in the Users app, the ID provider name is found (or edited) directly below the displayName field, and in previous versions of this app the configuration form was opened by clicking the pencil icon on the ID provider app." width="300" height="140" />
 
 ### 1. Migrate the configuration
 
