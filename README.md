@@ -107,9 +107,9 @@ idprovider.<idprovidername>.groupFilter.0.and=  (true or false, optional)
 - `...forceHttpsOnRedirectUri`: Force the redirect uri to use https. If your enonic instance is running behind a SSL reverse proxy / hosted on https, this might be necessary if you're not forwarding all http requests to https, since XP itself doesn't know that it is using https if it's behind a reverse proxy of some sort.
 - `...pageSize`: The page return size from graph api. If the result contains more than the page size, graph api will return an _@odata.nextLink_ property similar to the following along with the first page of users.
 
-<br />
+<br id="user-mapping-syntax" />
 
-- `...user` (`idprovider.<idprovidername>.user...` namespace): User mappings, Azure AD -> Enonic XP. These fields provide placeholders and patterns for how Azure's user objects will be used to populate user data in XP. Note: The placeholders use a `@@` syntax in the .cfg file (in the config form in previous versions of the app, placeholders looked like `${placeholder}`. But the syntax`${}` can cause unwanted behavior in .cfg files, so the `$` is changed to `@@`). **Replace any `$` in the values with a double `@`**!
+- `...user` (`idprovider.<idprovidername>.user...` namespace): User mappings, Azure AD -> Enonic XP. These fields provide placeholders and patterns for how Azure's user objects will be used to populate user data in XP. Note: **The placeholders use a `@@` syntax in the .cfg file**: in the config form in previous versions of the app, placeholders looked like `${placeholder}`. But the syntax`${}` can cause unwanted behavior in .cfg files, so the `$` is changed to `@@`.
   - `...name`: Unique user name. Eg.: `@@{name}`
   - `...displayName`: Display name. Eg.: `@@{given_name} @@{family_name} &lt;@@{upn}&gt;`
   - `...email`: Email. Recommended: `@@{upn}`
@@ -167,6 +167,8 @@ The following upgrade descriptions use information you can find by editing your 
 ### 1. Migrate the configuration
 
 Create _com.enonic.app.azureadidprovider.cfg_ in your /config folder. Then in XP, enter the Users app and edit the ID provider. Note the ID provider name (without the leading slash), and click the edit-form icon to view the configuration entered in the old app. Transfer the values into the .cfg file, [the way it's specified above](#configuration) (the order may vary).
+
+For user mapping config (`idprovider.<idprovidername>.user.*`), remember the `@@` [syntax for the placeholders](#user-mapping-syntax). **Replace any `${` in the values with `@@{`**!
 
 ### 2. Change the app
 
