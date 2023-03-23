@@ -1,5 +1,6 @@
 const parsingLib = require('/lib/configFile/parsingCallbacks');
 const getConfigService = require('/lib/configFile/services/getConfig.js');
+const defaultsLib = require("./defaults");
 
 const AUTOINIT="autoinit"
 
@@ -209,7 +210,7 @@ exports.getConfigForIdProvider = function (idProviderName) {
 
     if (Object.keys(config).length) {
       logStateOnce(KIND_FILE, `Found config for '${idProviderKeyBase}' in ${app.name}.cfg. Using that instead of node-stored config from authLib.`);
-      return config;
+      return defaultsLib.withDefaults(config);
 
     } else {
       logStateOnce(KIND_NODE, `No config for '${idProviderKeyBase}' was found in ${app.name}.cfg. Using old node-stored config from authLib.`);
