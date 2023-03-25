@@ -8,9 +8,21 @@ const updateGetConfigMock = testUtils.mockAndGetUpdaterFunc(
     getConfigOrEmpty: null
   }
 );
-const setMockReturn = (configToReturn) => updateGetConfigMock({
+const setMockConfigReturn = (configToReturn) => updateGetConfigMock({
   getConfigOrEmpty: () => configToReturn
 });
+
+
+testUtils.mockAndGetUpdaterFunc(
+  "/lib/configFile/defaults.js",
+  {
+    getDefaults: () => ({
+      defaults: "Mock added",
+    })
+  }
+);
+
+
 
 
 // Require the lib under test after mocking what it uses:
@@ -19,11 +31,10 @@ const lib = require('./configFile');
 
 
 
-
 /////////////////////////
 
 exports.test_configFile_shouldAutoInit_trueBool = () => {
-    setMockReturn({
+    setMockConfigReturn({
         autoinit: true,
         somethingElse: "1"
     });
@@ -31,7 +42,7 @@ exports.test_configFile_shouldAutoInit_trueBool = () => {
 }
 
 exports.test_configFile_shouldAutoInit_trueString = () => {
-    setMockReturn({
+    setMockConfigReturn({
         autoinit: "true",
         somethingElse: "2"
     });
@@ -39,7 +50,7 @@ exports.test_configFile_shouldAutoInit_trueString = () => {
 }
 
 exports.test_configFile_shouldAutoInit_falseBool = () => {
-    setMockReturn({
+    setMockConfigReturn({
         autoinit: false,
         somethingElse: "3"
     });
@@ -47,7 +58,7 @@ exports.test_configFile_shouldAutoInit_falseBool = () => {
 }
 
 exports.test_configFile_shouldAutoInit_falseString = () => {
-    setMockReturn({
+    setMockConfigReturn({
         autoinit: "false",
         somethingElse: "4"
     });
@@ -55,14 +66,14 @@ exports.test_configFile_shouldAutoInit_falseString = () => {
 }
 
 exports.test_configFile_shouldAutoInit_falseMissing = () => {
-    setMockReturn({
+    setMockConfigReturn({
         somethingElse: "5"
     });
     test.assertFalse(lib.shouldAutoInit());
 }
 
 exports.test_configFile_shouldAutoInit_falseEmpty = () => {
-    setMockReturn({});
+    setMockConfigReturn({});
     test.assertFalse(lib.shouldAutoInit());
 }
 
@@ -72,7 +83,7 @@ exports.test_configFile_shouldAutoInit_falseEmpty = () => {
 
 exports.test_configFile_getAllIdProviderNames_some = () => {
 
-    setMockReturn({
+    setMockConfigReturn({
         // myidp1 will be ignored b/c wrong 'idprovider' namespace
         'irrelevant.myidp1.field': 'someValue',
 
@@ -94,7 +105,7 @@ exports.test_configFile_getAllIdProviderNames_some = () => {
 
 exports.test_configFile_getAllIdProviderNames_none = () => {
 
-    setMockReturn({
+    setMockConfigReturn({
         // All keys are outside of idprovider namespace, so they are ignored
         autoinit: true,
         'irrelevant.myidp1': 'someValue',
@@ -115,7 +126,7 @@ exports.test_configFile_getAllIdProviderNames_none = () => {
 
 exports.test_configFile_getFileConfigSubTree_actualKey = () => {
 
-    setMockReturn({
+    setMockConfigReturn({
         autoinit: true,
 
         'something.target.subkey': 'targetValue',  // <-- Target this value
@@ -142,7 +153,7 @@ exports.test_configFile_getFileConfigSubTree_actualKey = () => {
 
 exports.test_configFile_getFileConfigSubTree_actualKeyEmpty = () => {
 
-    setMockReturn({
+    setMockConfigReturn({
         autoinit: true,
 
         'something.target.subkey': '',  // <-- Target this value
@@ -169,7 +180,7 @@ exports.test_configFile_getFileConfigSubTree_actualKeyEmpty = () => {
 
 
 exports.test_configFile_getFileConfigSubTree_simpleSubkey = () => {
-    setMockReturn({
+    setMockConfigReturn({
         autoinit: true,
 
         'something.target.subkey': 'targetValue',  // <-- Target something.target, expect an object: {subkey: targetValue}
@@ -197,7 +208,7 @@ exports.test_configFile_getFileConfigSubTree_simpleSubkey = () => {
 
 exports.test_configFile_getFileConfigSubTree_nestedSubkey = () => {
 
-    setMockReturn({
+    setMockConfigReturn({
         autoinit: true,
 
         'something.target.subkey': 'targetValue',  // <-- Target 'something', expect an object: {target: {subkey: targetValue}}
@@ -226,7 +237,7 @@ exports.test_configFile_getFileConfigSubTree_nestedSubkey = () => {
 
 exports.test_configFile_getFileConfigSubTree_nestedSubTree = () => {
 
-    setMockReturn({
+    setMockConfigReturn({
         autoinit: true,
 
         // Target 'something.target' and everything below it
@@ -274,7 +285,7 @@ exports.test_configFile_getFileConfigSubTree_nestedSubTree = () => {
 
 exports.test_configFile_getFileConfigSubTree_unmatching = () => {
 
-    setMockReturn({
+    setMockConfigReturn({
         autoinit: true,
 
         'something.target.subkey': 'targetValue',  // <-- NOT targeted. Nothing is matched.
@@ -302,7 +313,7 @@ exports.test_configFile_getFileConfigSubTree_unmatching = () => {
 }
 
 exports.test_configFile_getFileConfigSubTree_emptyConfig = () => {
-    setMockReturn({});
+    setMockConfigReturn({});
 
     const allConfigKeys = [];
     const currentKey = '';
@@ -318,7 +329,7 @@ exports.test_configFile_getFileConfigSubTree_emptyConfig = () => {
 
 exports.test_configFile_getFileConfigSubTree_errAmbiguous1 = () => {
 
-    setMockReturn({
+    setMockConfigReturn({
         irrelevant1: "yes",
 
         'something.target.subkey': 'eclipsedValue',
@@ -352,7 +363,7 @@ exports.test_configFile_getFileConfigSubTree_errAmbiguous1 = () => {
 
 exports.test_configFile_getFileConfigSubTree_errAmbiguous2 = () => {
 
-    setMockReturn({
+    setMockConfigReturn({
         irrelevant1: "yes",
 
         'something.target': 'overlaps with .subkey',
@@ -387,7 +398,7 @@ exports.test_configFile_getFileConfigSubTree_errAmbiguous2 = () => {
 
 exports.test_configFile_getFileConfigSubTree_errBadKey = () => {
 
-    setMockReturn({
+    setMockConfigReturn({
         irrelevant1: "yes",
 
         'something.target.': 'targetValue',  // Key ends with dot
@@ -420,7 +431,7 @@ exports.test_configFile_getFileConfigSubTree_errBadKey = () => {
 
 exports.test_configFile_getFileConfigSubTree_parsingCallback = () => {
 
-    setMockReturn({
+    setMockConfigReturn({
         irrelephant: "yes",
         'something.target.subkey': 'targetValue',  // <-- Target and parse/change this value
     });
@@ -443,7 +454,7 @@ exports.test_configFile_getFileConfigSubTree_parsingCallback = () => {
 
 exports.test_configFile_getFileConfigSubTree_onlySpecificCallback = () => {
 
-    setMockReturn({
+    setMockConfigReturn({
         irrelephant: "yes",
         'something.target.subkey': 'targetValue',  // <-- Target and parse/change this value
     });
@@ -471,42 +482,44 @@ exports.test_configFile_getFileConfigSubTree_onlySpecificCallback = () => {
 
 exports.test_configFile_getConfigForIdProvider_getMatchingConfigObject = () => {
 
-    setMockReturn({
-        autoinit: true,
+  setMockConfigReturn({
+      autoinit: true,
 
-        // Target 'idprovider.target' and everything below it
-        'idprovider.target.firstkey': 'targetValue1',
-        'idprovider.target.secondkey.one': 'targetValue2.1',
-        'idprovider.target.secondkey.two.one': 'targetValue2.2.1',
-        'idprovider.target.secondkey.two.two': 'targetValue2.2.2',
-        'idprovider.target.secondkey.three': 'targetValue2.3',
-        'idprovider.target.thirdkey': 'targetValue3',
+      // Target 'idprovider.target' and everything below it
+      'idprovider.target.firstkey': 'targetValue1',
+      'idprovider.target.secondkey.one': 'targetValue2.1',
+      'idprovider.target.secondkey.two.one': 'targetValue2.2.1',
+      'idprovider.target.secondkey.two.two': 'targetValue2.2.2',
+      'idprovider.target.secondkey.three': 'targetValue2.3',
+      'idprovider.target.thirdkey': 'targetValue3',
 
-        // Ignore 'idprovider.another' and everything below it
-        'idprovider.another.firstkey': 'ANOTHER1',
-        'idprovider.another.secondkey.one': 'ANOTHER2.1',
-        'idprovider.another.secondkey.two.one': 'ANOTHER2.2.1',
-        'idprovider.another.secondkey.two.two': 'ANOTHER2.2.2',
-        'idprovider.another.secondkey.three': 'ANOTHER2.3',
-        'idprovider.another.thirdkey': 'ANOTHER3',
+      // Ignore 'idprovider.another' and everything below it
+      'idprovider.another.firstkey': 'ANOTHER1',
+      'idprovider.another.secondkey.one': 'ANOTHER2.1',
+      'idprovider.another.secondkey.two.one': 'ANOTHER2.2.1',
+      'idprovider.another.secondkey.two.two': 'ANOTHER2.2.2',
+      'idprovider.another.secondkey.three': 'ANOTHER2.3',
+      'idprovider.another.thirdkey': 'ANOTHER3',
 
-        // Ignore *.target outside of the 'idprovider' namespace
-        'no.target.firstkey': 'NOTARGET1',
-        'no.target.secondkey.one': 'NOTARGET2.1',
-        'no.target.secondkey.two.one': 'NOTARGET2.2.1',
-        'no.target.secondkey.two.two': 'NOTARGET2.2.2',
-        'no.target.secondkey.three': 'NOTARGET2.3',
-        'no.target.thirdkey': 'NOTARGET3',
-    });
+      // Ignore *.target outside of the 'idprovider' namespace
+      'no.target.firstkey': 'NOTARGET1',
+      'no.target.secondkey.one': 'NOTARGET2.1',
+      'no.target.secondkey.two.one': 'NOTARGET2.2.1',
+      'no.target.secondkey.two.two': 'NOTARGET2.2.2',
+      'no.target.secondkey.three': 'NOTARGET2.3',
+      'no.target.thirdkey': 'NOTARGET3',
+  });
 
     const result = lib.getConfigForIdProvider('target');
+    																														print("result (" +
+    																															(Array.isArray(result) ?
+    																																("array[" + result.length + "]") :
+    																																(typeof result + (result && typeof result === 'object' ? (" with keys: " + JSON.stringify(Object.keys(result))) : ""))
+    																															) + "): " + JSON.stringify(result, null, 2)
+    																														);
 
     // Expected: a tree object
-    // test.assertEquals(3, Object.keys(result).length);  // Commented out: should be 3 in a basic scenario.
-                                                          // But is 5 because the default logic adds 2 keys.
-                                                          // So this depends on defaults structure, making it unstable and
-                                                          // not really optimal for testing. We're looking at the subkeys
-                                                          // below, anyways.
+    test.assertEquals(4, Object.keys(result).length);  // 4 keys since a default key/value should have been added to the 3 keys in 'target': firstkey, secondkey and thirdkey.
     test.assertEquals(3, Object.keys(result.secondkey).length);
     test.assertEquals(2, Object.keys(result.secondkey.two).length);
     test.assertEquals('targetValue1', result.firstkey);
@@ -515,11 +528,15 @@ exports.test_configFile_getConfigForIdProvider_getMatchingConfigObject = () => {
     test.assertEquals('targetValue2.2.2', result.secondkey.two.two);
     test.assertEquals('targetValue2.3', result.secondkey.three);
     test.assertEquals('targetValue3', result.thirdkey);
+
+    // Default values should have been added during configFile fetching, at the step:
+    // config = defaultsProvider.withDefaults(config);
+    test.assertEquals('Mock added', result.defaults);
 }
 
 exports.test_configFile_getConfigForIdProvider_getNullOnNomatch = () => {
 
-    setMockReturn({
+    setMockConfigReturn({
         autoinit: true,
 
         // Ingore all keys since they don't match 'nonexistingtarget':
@@ -694,12 +711,18 @@ exports.test_arrayOrObject_obj_arrayTree = () => {
 
 
 
+
+
+///////////////////////////  Test default-value insertion:
+
+
+
 ///////////////////////////  Test all at once:
 
 
 exports.test_configFile_testEverythingComplex = () => {
 
-  setMockReturn({
+  setMockConfigReturn({
     autoinit: true,
 
     'idprovider.complex.firstkey':            'targetValue1',
@@ -719,7 +742,7 @@ exports.test_configFile_testEverythingComplex = () => {
 
   const result = lib.getConfigForIdProvider('complex');
 
-  test.assertTrue(JSON.stringify(result, null, 2).indexOf(`
+  test.assertEquals(`{
   "firstkey": "targetValue1",
   "secondkey": [` +                                        //<-- Array, since secondkey only has subkeys 0, 1 and 2 (consecutive numbers starting with 0).
 `
@@ -757,6 +780,7 @@ exports.test_configFile_testEverythingComplex = () => {
       },
       "2": "targetValue3.1.2"
     }
-  }`) > -1);                                               // <-- Cumbersome to test exactly since the default logic adds more fields. Just testing that the result contains this structure.
-}
-
+  },` +                                                   // Below: missing default values should have been added
+`
+  "defaults": "Mock added"
+}`, JSON.stringify(result, null, 2));}
