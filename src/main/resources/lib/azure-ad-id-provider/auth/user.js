@@ -25,8 +25,11 @@ var lib = {
 		common: require('/lib/xp/common'),
     event: require('/lib/xp/event')
 	},
-  config: require('/lib/azure-ad-id-provider/config')
+  config: require('/lib/azure-ad-id-provider/config'),
+  defaults: require('/lib/configFile/defaults')
 };
+
+var CONFIG_DEFAULTS = lib.defaults.getDefaults();
 
 //──────────────────────────────────────────────────────────────────────────────
 // Alias functions from libs
@@ -291,7 +294,7 @@ exports.createOrUpdateFromJwt = function(params) {
 	var idProviderConfig = getIdProviderConfig();
 	log.debug('idProviderConfig:' + toStr(idProviderConfig));
 
-	var userNameFormat = idProviderConfig.user && idProviderConfig.user.name || '${name}';
+	var userNameFormat = idProviderConfig.user && idProviderConfig.user.name || CONFIG_DEFAULTS.user.name;
 	var userName = valueFromFormat({
 		format: userNameFormat,
 		data:   params.jwt.payload
@@ -305,7 +308,7 @@ exports.createOrUpdateFromJwt = function(params) {
     userName = sanitizeName(userName);
     userName = lib.xp.common.sanitize(userName);
 
-	var userDisplayNameFormat = idProviderConfig.user && idProviderConfig.user.displayName || '${given_name} ${family_name} <${upn}>';
+	var userDisplayNameFormat = idProviderConfig.user && idProviderConfig.user.displayName || CONFIG_DEFAULTS.user.displayName;
 	var userDisplayName = valueFromFormat({
 		format: userDisplayNameFormat,
 		data:   params.jwt.payload
@@ -315,7 +318,7 @@ exports.createOrUpdateFromJwt = function(params) {
 		throw new Error('Could not generate user displayName from mapping:' + userDisplayNameFormat);
 	}
 
-	var userEmailFormat = idProviderConfig.user && idProviderConfig.user.email || '${upn}';
+	var userEmailFormat = idProviderConfig.user && idProviderConfig.user.email || CONFIG_DEFAULTS.user.email;
 	var userEmail = valueFromFormat({
 		format: userEmailFormat,
 		data:   params.jwt.payload
