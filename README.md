@@ -110,7 +110,7 @@ idprovider.<idprovidername>.groupFilter.0.and=  (true or false, optional)
 <br id="user-mapping-syntax" />
 
 - `...user` (`idprovider.<idprovidername>.user...` namespace): User mappings, Azure AD -> Enonic XP. These fields provide placeholders and patterns for how Azure's user objects will be used to populate user data in XP. Note: **The placeholders use a `@@` syntax in the .cfg file**: in the config form in previous versions of the app, placeholders looked like `${placeholder}`. But the syntax`${}` can cause unwanted behavior in .cfg files, so the `$` is changed to `@@`.
-  - `...name`: Unique user name. Eg.: `@@{name}`
+  - `...name`: Unique user name. Eg.: `@@{oid}`
   - `...displayName`: Display name. Eg.: `@@{given_name} @@{family_name} &lt;@@{upn}&gt;`
   - `...email`: Email. Recommended: `@@{upn}`
 
