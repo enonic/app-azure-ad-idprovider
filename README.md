@@ -64,7 +64,7 @@ autoinit=  (true or false, optional)
 
 idprovider.<idprovidername>.tenantId=  (string, required)
 idprovider.<idprovidername>.clientId=  (string, required)
-idprovider.<idprovidername>.logoutUrl=  (string, required)
+idprovider.<idprovidername>.logoutUrl=  (string, optional)
 idprovider.<idprovidername>.clientSecret=  (string, required)
 
 idprovider.<idprovidername>.createAndUpdateGroupsOnLoginFromGraphApi=  (true or false, optional)
@@ -75,9 +75,9 @@ idprovider.<idprovidername>.pageSize=  (number, optional)
 # If used, they have more fields/array items below them, which be required or optional.
 # The array under `groupFilter` may of course have more items (`1`, `2`, etc).
 
-idprovider.<idprovidername>.user.name=  (string, required)
-idprovider.<idprovidername>.user.displayName=  (string, required)
-idprovider.<idprovidername>.user.email=  (string, required)
+idprovider.<idprovidername>.user.name=  (string, optional)
+idprovider.<idprovidername>.user.displayName=  (string, optional)
+idprovider.<idprovidername>.user.email=  (string, optional)
 
 idprovider.<idprovidername>.proxy.host=  (string, required)
 idprovider.<idprovidername>.proxy.port=  (number between 0 and 65535, optional)
@@ -98,7 +98,7 @@ idprovider.<idprovidername>.groupFilter.0.and=  (true or false, optional)
 
 - `...tenantId`: Tenant ID, the directory (tenant) ID found in Portal Azure - in the overview page on your app in Azure as `Directory (tenant) ID`.
 - `...clientId`: Client ID, the application (client) ID for your application in Portal Azure - in the overview page on your app in Azure as `Application (client) ID`.
-- `...logoutUrl`: Logout URL. This is where you want to send the user if they press the logout button in XP. For Azure AD you'd most likely send them to the azure AD logout url, with your redirect url as a param. Remember to url encode the redirect url. See also the [oauth2 docs](https://login.microsoftonline.com/common/oauth2/v2.0/logout?post_logout_redirect_uri=http%3A%2F%2Flocalhost%3A8080%2F) or the [OIDC protocol docs](https://docs.microsoft.com/en-us/azure/active-directory/develop/v2-protocols-oidc#send-a-sign-out-request) for more info. You can also omit the post_logout_redirect_uri, and the app will try to make an educated guess - but this is not recommended.
+- `...logoutUrl`: Logout URL. This is where you want to send the user if they press the logout button in XP - default is the azure AD logout url: `https://login.microsoftonline.com/common/oauth2/v2.0/logout?post_logout_redirect_uri=http%3A%2F%2Flocalhost%3A8080%2F`. Remember to url encode the redirect url. See also the [oauth2 docs](https://login.microsoftonline.com/common/oauth2/v2.0/logout?post_logout_redirect_uri=http%3A%2F%2Flocalhost%3A8080%2F) or the [OIDC protocol docs](https://docs.microsoft.com/en-us/azure/active-directory/develop/v2-protocols-oidc#send-a-sign-out-request) for more info. You can also omit the post_logout_redirect_uri, and the app will try to make an educated guess - but this is not recommended.
 - `...clientSecret`: Client Secret found/made in Portal Azure - in the _Certificates & secrets_ section under your application in Azure.
 
 <br />
@@ -110,9 +110,9 @@ idprovider.<idprovidername>.groupFilter.0.and=  (true or false, optional)
 <br id="user-mapping-syntax" />
 
 - `...user` (`idprovider.<idprovidername>.user...` namespace): User mappings, Azure AD -> Enonic XP. These fields provide placeholders and patterns for how Azure's user objects will be used to populate user data in XP. Note: **The placeholders use a `@@` syntax in the .cfg file**: in the config form in previous versions of the app, placeholders looked like `${placeholder}`. But the syntax`${}` can cause unwanted behavior in .cfg files, so the `$` is changed to `@@`.
-  - `...name`: Unique user name. Eg.: `@@{oid}`
-  - `...displayName`: Display name. Eg.: `@@{given_name} @@{family_name} &lt;@@{upn}&gt;`
-  - `...email`: Email. Recommended: `@@{upn}`
+  - `...name`: Unique user name. Default: `@@{oid}`
+  - `...displayName`: Display name. Default: `@@{given_name} @@{family_name} <@@{upn}>`
+  - `...email`: Email. Default: `@@{upn}`
 
 <br />
 
