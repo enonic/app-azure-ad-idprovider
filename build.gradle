@@ -25,7 +25,7 @@ dependencies {
   include "com.enonic.xp:lib-cluster:${xpVersion}"
   include 'com.enonic.lib:lib-http-client:3.2.2'
   include 'com.enonic.lib:lib-text-encoding:2.1.1'
-  include 'com.enonic.lib:lib-util:3.0.0'
+  include 'com.enonic.lib:lib-util:3.1.1'
 
   testImplementation "com.enonic.xp:testing:${xpVersion}"
 }
