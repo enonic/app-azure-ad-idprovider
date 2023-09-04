@@ -12,7 +12,7 @@
     "generate-docs": "doctoc README.md --github && rm -r docs; node_modules/.bin/jsdoc -c jsdoc.json README.md"
   },
   "devDependencies": {
-    "docdash": "2.0.1",
+    "docdash": "2.0.2",
     "doctoc": "2.2.1",
     "jsdoc": "4.0.2"
   },
