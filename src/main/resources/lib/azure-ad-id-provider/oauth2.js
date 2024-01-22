@@ -47,12 +47,13 @@ exports.redirectToAuthorizationUrl = function(request) {
 
 	var clientId = idProviderConfig.clientId;
 	var redirectUri = lib.xp.portal.idProviderUrl({type:'absolute'});
-	if (!!idProviderConfig.forceHttpsOnRedirectUri && redirectUri.indexOf('https://') === -1) {
+  const forceHttpsOnRedirectUri = idProviderConfig.forceHttpsOnRedirectUri === 'true';
+  if (forceHttpsOnRedirectUri && redirectUri.indexOf('https://') === -1) {
 		redirectUri = redirectUri.replace('http://', 'https://');
 	}
     log.debug('redirectUri:' + redirectUri);
 	var returnToUrl = getReturnToUrl(request);
-	if (!!idProviderConfig.forceHttpsOnRedirectUri && returnToUrl.indexOf('https://') === -1) {
+	if (forceHttpsOnRedirectUri && returnToUrl.indexOf('https://') === -1) {
 		returnToUrl = returnToUrl.replace('http://', 'https://');
 	}
     log.debug('returnUrl:' + returnToUrl);
@@ -90,7 +91,8 @@ exports.requestAccessToken = function(request) {
 	log.debug('idProviderConfig:' + toStr(idProviderConfig));
 
 	var idProviderUrl = getIdProviderUrl({type:'absolute'});
-	if (!!idProviderConfig.forceHttpsOnRedirectUri && idProviderUrl.indexOf('https://') === -1) {
+  const forceHttpsOnRedirectUri = idProviderConfig.forceHttpsOnRedirectUri === 'true';
+  if (forceHttpsOnRedirectUri && idProviderUrl.indexOf('https://') === -1) {
 		idProviderUrl = idProviderUrl.replace('http://', 'https://');
 	}
 	log.debug('idProviderUrl:' + toStr(idProviderUrl));
