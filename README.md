@@ -6,17 +6,20 @@ This ID Provider uses the OAuth2 v2 endpoint of your Azure AD to authenticate us
 
 ## Compatibility
 
-| Version |    XP Version     |                                                                                                                                    Download |
-|---------|:-----------------:|--------------------------------------------------------------------------------------------------------------------------------------------:|
-| 0.1.0   |     >= 7.0.0      |       [Download](https://dl.bintray.com/gravitondigital/public/com/gravitondigital/app/azureadidprovider/0.1.0/azureadidprovider-0.1.0.jar) |
-| 1.0.0   |     >= 7.0.0      |       [Download](https://dl.bintray.com/gravitondigital/public/com/gravitondigital/app/azureadidprovider/1.0.0/azureadidprovider-1.0.0.jar) |
-| 1.1.0   |     >= 7.0.0      |                      [Download](https://repo1.maven.org/maven2/com/gravitondigital/app/azureadidprovider/1.1.0/azureadidprovider-1.1.0.jar) |
-| 1.2.0   |     >= 7.0.0      |                      [Download](https://repo1.maven.org/maven2/com/gravitondigital/app/azureadidprovider/1.2.0/azureadidprovider-1.2.0.jar) |
-| 1.2.1   |     >= 7.7.4      |                                      [Download](https://jitpack.io/no/item/app-azure-ad-idprovider/1.2.1/app-azure-ad-idprovider-1.2.1.jar) |
-| 1.2.2   |     >= 7.7.4      |                                      [Download](https://jitpack.io/no/item/app-azure-ad-idprovider/1.2.2/app-azure-ad-idprovider-1.2.2.jar) |
-| 1.2.3   |     >= 7.7.4      |                                      [Download](https://jitpack.io/no/item/app-azure-ad-idprovider/1.2.3/app-azure-ad-idprovider-1.2.3.jar) |
-| 1.2.4   |     >= 7.7.4      |                                      [Download](https://jitpack.io/no/item/app-azure-ad-idprovider/1.2.4/app-azure-ad-idprovider-1.2.4.jar) |
-| 2.0.0   |     >= 7.7.4      |                               [Download](https://repo.enonic.com/public/com/enonic/app/azureadidprovider/2.0.0/azureadidprovider-2.0.0.jar) |
+| Version |    XP Version     |                                                                                                                              Download |
+|---------|:-----------------:|--------------------------------------------------------------------------------------------------------------------------------------:|
+| 0.1.0   |     >= 7.0.0      | [Download](https://dl.bintray.com/gravitondigital/public/com/gravitondigital/app/azureadidprovider/0.1.0/azureadidprovider-0.1.0.jar) |
+| 1.0.0   |     >= 7.0.0      | [Download](https://dl.bintray.com/gravitondigital/public/com/gravitondigital/app/azureadidprovider/1.0.0/azureadidprovider-1.0.0.jar) |
+| 1.1.0   |     >= 7.0.0      |                [Download](https://repo1.maven.org/maven2/com/gravitondigital/app/azureadidprovider/1.1.0/azureadidprovider-1.1.0.jar) |
+| 1.2.0   |     >= 7.0.0      |                [Download](https://repo1.maven.org/maven2/com/gravitondigital/app/azureadidprovider/1.2.0/azureadidprovider-1.2.0.jar) |
+| 1.2.1   |     >= 7.7.4      |                                [Download](https://jitpack.io/no/item/app-azure-ad-idprovider/1.2.1/app-azure-ad-idprovider-1.2.1.jar) |
+| 1.2.2   |     >= 7.7.4      |                                [Download](https://jitpack.io/no/item/app-azure-ad-idprovider/1.2.2/app-azure-ad-idprovider-1.2.2.jar) |
+| 1.2.3   |     >= 7.7.4      |                                [Download](https://jitpack.io/no/item/app-azure-ad-idprovider/1.2.3/app-azure-ad-idprovider-1.2.3.jar) |
+| 1.2.4   |     >= 7.7.4      |                                [Download](https://jitpack.io/no/item/app-azure-ad-idprovider/1.2.4/app-azure-ad-idprovider-1.2.4.jar) |
+| 2.0.0   |     >= 7.7.4      |                         [Download](https://repo.enonic.com/public/com/enonic/app/azureadidprovider/2.0.0/azureadidprovider-2.0.0.jar) |
+| 2.0.1   |     >= 7.7.4      |                         [Download](https://repo.enonic.com/public/com/enonic/app/azureadidprovider/2.0.0/azureadidprovider-2.0.1.jar) |
+| 2.0.2   |     >= 7.7.4      |                         [Download](https://repo.enonic.com/public/com/enonic/app/azureadidprovider/2.0.0/azureadidprovider-2.0.2.jar) |
+| 2.0.3   |     >= 7.7.4      |                         [Download](https://repo.enonic.com/public/com/enonic/app/azureadidprovider/2.0.0/azureadidprovider-2.0.3.jar) |
 
 ## Setup
 
