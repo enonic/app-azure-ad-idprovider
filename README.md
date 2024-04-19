@@ -30,8 +30,8 @@ Can be found in Azure `Active Directory` -> `App registrations` -> `New registra
 You'll then need to add the redirect URI for your enonic XP instance to your Azure application. This can be found in the `Authentication` section of your app. Add a new Web platform and then add your url there. The redirect URI is dependent on the login domain:
 E.g. If your login domain is https://example.com/admin then the redirect URI looks like:
             `https://example.com/admin/tool/_/idprovider/${nameOfIdProvider}`. 
-and if your login domain is https://xp.example.com then the redirect URI looks like:
-            `https://xp.example.com/tool/_/idprovider/${nameOfIdProvider}`.
+and if your login domain is https://admin.example.com then the redirect URI looks like:
+            `https://admin.example.com/tool/_/idprovider/${nameOfIdProvider}`.
 
 
 <a id="api-permissions"></a>
