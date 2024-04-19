@@ -27,7 +27,12 @@ This ID Provider uses the OAuth2 v2 endpoint of your Azure AD to authenticate us
 Go to Portal Azure, and either create an app or use an existing one.
 Can be found in Azure `Active Directory` -> `App registrations` -> `New registration`
 
-You'll then need to add the redirect URI for your enonic XP instance to your Azure application. This can be found in the `Authentication` section of your app. Add a new Web platform and then add your url there, the url will most likely look something like `https://${domain}/admin/tool/_/idprovider/${nameOfIdProvider}`. You can add multiple redirect URIs if necessary.
+You'll then need to add the redirect URI for your enonic XP instance to your Azure application. This can be found in the `Authentication` section of your app. Add a new Web platform and then add your url there. The redirect URI is dependent on the login domain:
+E.g. If your login domain is https://example.com/admin then the redirect URI looks like:
+            `https://example.com/admin/tool/_/idprovider/${nameOfIdProvider}`. 
+and if your login domain is https://xp.example.com then the redirect URI looks like:
+            `https://xp.example.com/tool/_/idprovider/${nameOfIdProvider}`.
+
 
 <a id="api-permissions"></a>
 
