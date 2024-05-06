@@ -14,7 +14,7 @@
   "devDependencies": {
     "docdash": "2.0.2",
     "doctoc": "2.2.1",
-    "jsdoc": "4.0.2"
+    "jsdoc": "4.0.3"
   },
   "private": "true"
 }
