@@ -38,7 +38,6 @@ and if your login domain is https://admin.example.com then the redirect URI look
 
 If you want to auto import the users AD groups in Enonic you have to add some API permissions as well:
 * Directory.Read.All
-* Directory.ReadWrite.All
 * Directory.AccessAsUser.All
 
 [Graph API Docs](https://docs.microsoft.com/en-us/graph/api/user-list-memberof?view=graph-rest-1.0&tabs=http)
