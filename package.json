@@ -9,12 +9,20 @@
   },
   "scripts": {
     "doctoc": "doctoc README.md --github",
-    "generate-docs": "doctoc README.md --github && rm -r docs; node_modules/.bin/jsdoc -c jsdoc.json README.md"
+    "generate-docs": "doctoc README.md --github && rm -r docs; node_modules/.bin/jsdoc -c jsdoc.json README.md",
+    "lint": "eslint --cache --fix \"src/main/resources/**/*.js\""
   },
   "devDependencies": {
+    "@enonic-types/core": "^7.15.4",
+    "@eslint/js": "^9.36.0",
     "docdash": "2.0.2",
     "doctoc": "2.2.1",
-    "jsdoc": "4.0.4"
+    "eslint": "^9.36.0",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-prettier": "^5.5.4",
+    "globals": "^16.4.0",
+    "jsdoc": "4.0.4",
+    "prettier": "^3.6.2"
   },
   "private": "true"
 }

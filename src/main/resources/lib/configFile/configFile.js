@@ -1,8 +1,8 @@
-const parsingLib = require('/lib/configFile/parsingCallbacks');
-const getConfigService = require('/lib/configFile/services/getConfig.js');
+const parsingLib = require("/lib/configFile/parsingCallbacks");
+const getConfigService = require("/lib/configFile/services/getConfig.js");
 const defaultsProvider = require("./defaultsProvider");
 
-const AUTOINIT="autoinit"
+const AUTOINIT = "autoinit";
 
 // Expected format in this app's .cfg file, for separately configuring multiple idproviders: idprovider.<name>.<field>[.optional][.subfields][.etc...]
 // For example, an idprovider named "myidp", with a configuration tree { mySetting1: "false", mySetting2: { nextLevel: true } }:
@@ -13,21 +13,18 @@ const AUTOINIT="autoinit"
 const CONFIG_NAMESPACE = "idprovider";
 exports.CONFIG_NAMESPACE = CONFIG_NAMESPACE;
 
-
 // Are all the subTree's keys consequtive numbers starting with 0?
 // Then interpret the first level of the subtree as an array and return that. If not, return the subTree.
-const arrayOrObject = subTree => {
-  const subArray = []
+const arrayOrObject = (subTree) => {
+  const subArray = [];
   const uniqueIndices = [];
   const subTreeKeys = Object.keys(subTree);
 
-
-  for (let key of subTreeKeys) {
+  for (const key of subTreeKeys) {
     const index = parseInt(key, 10);
     if (index > -1 && uniqueIndices.indexOf(index) === -1) {
       subArray[index] = subTree[key];
       uniqueIndices.push(index);
-
     } else {
       return subTree;
     }
@@ -36,18 +33,16 @@ const arrayOrObject = subTree => {
   uniqueIndices.sort();
   if (
     uniqueIndices[0] === 0 &&
-    uniqueIndices[uniqueIndices.length-1] === (uniqueIndices.length - 1) &&
+    uniqueIndices[uniqueIndices.length - 1] === uniqueIndices.length - 1 &&
     uniqueIndices.length === subTreeKeys.length
   ) {
     return subArray;
   }
 
   return subTree;
-}
+};
 // Exported only for testing
 exports.arrayOrObject = arrayOrObject;
-
-
 
 /**
  *  Returns the value or subtree under the current key in the .cfg file.
@@ -70,10 +65,8 @@ exports.arrayOrObject = arrayOrObject;
  *      Values are parsingCallback functions (see above).
  */
 function getFileConfigSubTree(allConfigKeys, currentKey, currentFieldIndex, parsingCallbacks) {
-
-
   // Eg. "idprovider.myidp.mykey." with nothing after the final dot would be an invalid key.
-  if (currentKey.endsWith('.')) {
+  if (currentKey.endsWith(".")) {
     throw Error(`Malformed key in ${app.name}.cfg: '${currentKey}'`);
   }
   // Eg. currentBaseDot = "idprovider.myidp.mykey." (note the trailing dot)
@@ -89,15 +82,17 @@ function getFileConfigSubTree(allConfigKeys, currentKey, currentFieldIndex, pars
     if (key === currentKey) {
       // If at least one subtree key has already been seen: invalid
       if (deeperSubKeys.length) {
-        throw Error(`Ambiguity in ${app.name}.cfg: the key '${currentKey}' can't both have a direct value and subfields (a tree) below it ('${deeperSubKeys[0]}' etc).`);
+        throw Error(
+          `Ambiguity in ${app.name}.cfg: the key '${currentKey}' can't both have a direct value and subfields (a tree) below it ('${deeperSubKeys[0]}' etc).`,
+        );
       }
       exactConfigKey = key;
-
     } else if (key.startsWith(currentBaseDot)) {
       // If an exact match with a direct value has already been seen: invalid
       if (exactConfigKey) {
-        throw Error(`Ambiguity in ${app.name}.cfg: the key '${exactConfigKey}' can't both have a direct value and subfields (a tree) below it ('${key}' etc).`);
-
+        throw Error(
+          `Ambiguity in ${app.name}.cfg: the key '${exactConfigKey}' can't both have a direct value and subfields (a tree) below it ('${key}' etc).`,
+        );
       } else {
         deeperSubKeys.push(key);
       }
@@ -111,7 +106,6 @@ function getFileConfigSubTree(allConfigKeys, currentKey, currentFieldIndex, pars
     try {
       const value = getConfigService.getConfigOrEmpty()[exactConfigKey];
       if (parsingCallbacks) {
-
         // Look for a parsing callback function whose key in parsingCallbacks literally matches the current exact key:
         let parsingCallback = parsingCallbacks[exactConfigKey];
 
@@ -121,12 +115,8 @@ function getFileConfigSubTree(allConfigKeys, currentKey, currentFieldIndex, pars
 
           // .find is not available in this JS, hence iteration:
           let firstMatchingPatternKey;
-          for (let patternKey of Object.keys(parsingCallbacks)) {
-            if (
-              patternKey.startsWith('^') &&
-              patternKey.endsWith('$') &&
-              new RegExp(patternKey).test(exactConfigKey)
-            ) {
+          for (const patternKey of Object.keys(parsingCallbacks)) {
+            if (patternKey.startsWith("^") && patternKey.endsWith("$") && new RegExp(patternKey).test(exactConfigKey)) {
               firstMatchingPatternKey = patternKey;
               break;
             }
@@ -135,13 +125,12 @@ function getFileConfigSubTree(allConfigKeys, currentKey, currentFieldIndex, pars
           parsingCallback = parsingCallbacks[firstMatchingPatternKey];
         }
 
-        if ('function' === typeof parsingCallback) {
+        if ("function" === typeof parsingCallback) {
           return parsingCallback(value);
         }
       }
 
       return value;
-
     } catch (e) {
       throw Error(`Couldn't custom parse the value.`, e);
     }
@@ -152,23 +141,25 @@ function getFileConfigSubTree(allConfigKeys, currentKey, currentFieldIndex, pars
 
   const subTree = {};
 
-  deeperSubKeys.forEach(key => {
-    const fields = key.split('.');
+  deeperSubKeys.forEach((key) => {
+    const fields = key.split(".");
     const currentField = fields[nextFieldIndex].trim();
     if (!currentField.length) {
       throw Error(`Malformed key in ${app.name}.cfg: '${key}'`);
     }
-    subTree[currentField] = getFileConfigSubTree(deeperSubKeys, currentBaseDot + currentField, nextFieldIndex, parsingCallbacks);
+    subTree[currentField] = getFileConfigSubTree(
+      deeperSubKeys,
+      currentBaseDot + currentField,
+      nextFieldIndex,
+      parsingCallbacks,
+    );
   });
 
   return arrayOrObject(subTree);
 }
 
-
-
 // Only exported for mocking, actually used by getConfigForIdProvider:
 exports.getFileConfigSubTree = getFileConfigSubTree;
-
 
 // Prevent flooding of state logs, only log message on state change
 let alreadyLogged = null;
@@ -181,7 +172,6 @@ function logStateOnce(messageKind, message) {
     alreadyLogged = messageKind;
   }
 }
-
 
 /** Read out and return config from this-app.cfg that apply to the relevant id provider key.
  *  That is, the config keys are dot-separated,
@@ -201,28 +191,33 @@ function logStateOnce(messageKind, message) {
 exports.getConfigForIdProvider = function (idProviderName) {
   const idProviderKeyBase = `${CONFIG_NAMESPACE}.${idProviderName}`;
 
-  const rawConfigKeys = Object.keys(getConfigService.getConfigOrEmpty()).filter(k =>
-    k && (k.startsWith(idProviderKeyBase))
+  const rawConfigKeys = Object.keys(getConfigService.getConfigOrEmpty()).filter(
+    (k) => k && k.startsWith(idProviderKeyBase),
   );
 
   try {
     const config = getFileConfigSubTree(rawConfigKeys, idProviderKeyBase, 1, parsingLib.PARSING_CALLBACKS);
 
     if (Object.keys(config).length) {
-      logStateOnce(KIND_FILE, `Found config for '${idProviderKeyBase}' in ${app.name}.cfg. Using that instead of node-stored config from authLib.`);
+      logStateOnce(
+        KIND_FILE,
+        `Found config for '${idProviderKeyBase}' in ${app.name}.cfg. Using that instead of node-stored config from authLib.`,
+      );
       return defaultsProvider.withDefaults(config);
-
     } else {
-      logStateOnce(KIND_NODE, `No config for '${idProviderKeyBase}' was found in ${app.name}.cfg. Using old node-stored config from authLib.`);
+      logStateOnce(
+        KIND_NODE,
+        `No config for '${idProviderKeyBase}' was found in ${app.name}.cfg. Using old node-stored config from authLib.`,
+      );
     }
-
   } catch (e) {
-    log.warning(`Error trying to parse keys below '${idProviderKeyBase}' in config file (${app.name}.cfg). Falling back to possible node-stored config from authLib. Reason: ${e.message}`);
+    log.warning(
+      `Error trying to parse keys below '${idProviderKeyBase}' in config file (${app.name}.cfg). Falling back to possible node-stored config from authLib. Reason: ${e.message}`,
+    );
   }
 
   return null;
-}
-
+};
 
 /**
  *  Returns an array of idprovider names found in the .cfg file under the 'idprovider.<name>' namespace
@@ -230,25 +225,18 @@ exports.getConfigForIdProvider = function (idProviderName) {
 exports.getAllIdProviderNames = function () {
   const names = [];
 
-  Object.keys(getConfigService.getConfigOrEmpty()).forEach(key => {
-    const fields = key.split('.');
-    if (
-      fields.length > 1 &&
-      fields[0] === CONFIG_NAMESPACE
-    ) {
+  Object.keys(getConfigService.getConfigOrEmpty()).forEach((key) => {
+    const fields = key.split(".");
+    if (fields.length > 1 && fields[0] === CONFIG_NAMESPACE) {
       const name = (fields[1] || "").trim();
-      if (
-        name.length &&
-        names.indexOf(name) === -1
-      ) {
+      if (name.length && names.indexOf(name) === -1) {
         names.push(name);
       }
     }
   });
 
   return names;
-}
-
+};
 
 /**
  * Returns true or false: should the idProvider auto-initialize?
@@ -257,8 +245,4 @@ exports.getAllIdProviderNames = function () {
 exports.shouldAutoInit = function () {
   const autoInit = getConfigService.getConfigOrEmpty()[AUTOINIT];
   return autoInit === true || autoInit === "true";
-}
-
-
-
-
+};
