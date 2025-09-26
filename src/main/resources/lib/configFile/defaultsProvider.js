@@ -4,11 +4,7 @@
  * into a clone of the defaults won't do.
  * Adds values in the config (replaces them with values/structures from defaults), wherever values are undefined or null. Other falsy values are kept if set in the cfg file.
  */
-const defaultsLib = require('./defaults.js');
-
-
-
-
+const defaultsLib = require("./defaults.js");
 
 const addValueIfMissing = (configObject, defaultObject, key) => {
   if (Array.isArray(configObject)) {
@@ -26,34 +22,30 @@ const addValueIfMissing = (configObject, defaultObject, key) => {
 };
 
 const addKeyIfMissing = (configObject, defaultObject, key) => {
-  if (
-    'object' !== typeof configObject[key] ||
-    Array.isArray(configObject[key]) !== Array.isArray(defaultObject[key])
-  ) {
+  if ("object" !== typeof configObject[key] || Array.isArray(configObject[key]) !== Array.isArray(defaultObject[key])) {
     if (Array.isArray(defaultObject[key])) {
-      configObject[key] = []
+      configObject[key] = [];
     } else {
-      configObject[key] = {}
+      configObject[key] = {};
     }
   }
-}
+};
 
 const addObject = (configObject, defaultObject) => {
-  Object.keys(defaultObject).forEach(key => {
-    if (defaultObject[key] && 'object' === typeof defaultObject[key]) {
+  Object.keys(defaultObject).forEach((key) => {
+    if (defaultObject[key] && "object" === typeof defaultObject[key]) {
       addKeyIfMissing(configObject, defaultObject, key);
       addObject(configObject[key], defaultObject[key]);
     } else {
       addValueIfMissing(configObject, defaultObject, key);
     }
-  })
-}
-
+  });
+};
 
 exports.withDefaults = (config) => {
   const defaults = defaultsLib.getDefaults();
-  if (defaults && 'object' === typeof defaults) {
-    if (!config || 'object' !== typeof config || Array.isArray(config)) {
+  if (defaults && "object" === typeof defaults) {
+    if (!config || "object" !== typeof config || Array.isArray(config)) {
       config = {};
     }
     addObject(config, defaults);

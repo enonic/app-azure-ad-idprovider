@@ -39,20 +39,11 @@ repositories {
 // Added node so it is easy to find a version which works
 node {
   // Version of node to use.
-  version = '16.14.2'
-
-  // Version of npm to use.
-  npmVersion = '8.5.0'
+  version = '20.12.2'
 
   // If true, it will download node using above parameters.
   // If false, it will try to use globally installed node.
   download = true
-}
-
-// Added wrapper so it is easy to see which version is used in the project
-wrapper {
-  gradleVersion = '6.9.1'
-  distributionType = Wrapper.DistributionType.BIN
 }
 
 //──────────────────────────────────────────────────────────────────────────────

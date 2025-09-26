@@ -3,33 +3,33 @@
  * @module lib/azure-ad-id-provider/jwt
  */
 
- // oid:         Object ID. Contains a unique identifier of an object in Azure AD. This value is immutable and cannot be reassigned or reused. Use the object ID to identify an object in queries to Azure AD.
- // family_name: Last Name. Provides the last name, surname, or family name of the user as defined in the Azure AD user object.
- // given_name:  First Name. Provides the first or "given" name of the user, as set on the Azure AD user object.
- // unique_name: Name. Provides a human readable value that identifies the subject of the token. This value is not guaranteed to be unique within a tenant and is designed to be used only for display purposes.
- // upn:         User Principal Name. Stores the user name of the user principal.
- // groups:      Groups. Provides object IDs that represent the subject's group memberships. These values are unique (see Object ID) and can be safely used for managing access, such as enforcing authorization to access a resource. The groups included in the groups claim are configured on a per-application basis, through the "groupMembershipClaims" property of the application manifest. A value of null will exclude all groups, a value of "SecurityGroup" will include only Active Directory Security Group memberships, and a value of "All" will include both Security Groups and Office 365 Distribution Lists.
+// oid:         Object ID. Contains a unique identifier of an object in Azure AD. This value is immutable and cannot be reassigned or reused. Use the object ID to identify an object in queries to Azure AD.
+// family_name: Last Name. Provides the last name, surname, or family name of the user as defined in the Azure AD user object.
+// given_name:  First Name. Provides the first or "given" name of the user, as set on the Azure AD user object.
+// unique_name: Name. Provides a human readable value that identifies the subject of the token. This value is not guaranteed to be unique within a tenant and is designed to be used only for display purposes.
+// upn:         User Principal Name. Stores the user name of the user principal.
+// groups:      Groups. Provides object IDs that represent the subject's group memberships. These values are unique (see Object ID) and can be safely used for managing access, such as enforcing authorization to access a resource. The groups included in the groups claim are configured on a per-application basis, through the "groupMembershipClaims" property of the application manifest. A value of null will exclude all groups, a value of "SecurityGroup" will include only Active Directory Security Group memberships, and a value of "All" will include both Security Groups and Office 365 Distribution Lists.
 
 //──────────────────────────────────────────────────────────────────────────────
 // Require libs
 //──────────────────────────────────────────────────────────────────────────────
-exports.object = require('./object');
+exports.object = require("./object");
 
-var lib = {
-	enonic: {
-		textEncoding: require('/lib/text-encoding')
-	},
-	xp: {
-		io: require('/lib/xp/io'),
-	}
+const lib = {
+  enonic: {
+    textEncoding: require("/lib/text-encoding"),
+  },
+  xp: {
+    io: require("/lib/xp/io"),
+  },
 };
 
 //──────────────────────────────────────────────────────────────────────────────
 // Alias functions from libs
 //──────────────────────────────────────────────────────────────────────────────
-var toStr           = exports.object.toStr;
-var base64UrlDecode = lib.enonic.textEncoding.base64UrlDecode;
-var readText        = lib.xp.io.readText;
+const toStr = exports.object.toStr;
+const base64UrlDecode = lib.enonic.textEncoding.base64UrlDecode;
+const readText = lib.xp.io.readText;
 
 //──────────────────────────────────────────────────────────────────────────────
 // Jwt methods
@@ -63,23 +63,23 @@ var readText        = lib.xp.io.readText;
 
 /**
  * base64UrlDecode an accessToken and JSON.parse its header and payload. Return an object with header, payload and signature.
- * @param {*} request
+ * @param {import("@enonic-types/core").Request} request
  * @returns {Jwt} jwt
  */
-exports.fromAccessToken = function(params) {
-	var jwtParts = params.accessToken.split('.').map(function(base64url) {
-		//log.debug('base64url:' + toStr(base64url));
-		var stream = base64UrlDecode(base64url);
-		var decoded = readText(stream);
-		//log.debug('decoded:' + toStr(decoded));
-		return decoded;
-	});
-	//log.debug('jwtParts:' + toStr(jwtParts));
-	var jwt = {
-		header:    JSON.parse(jwtParts[0]),
-		payload:   JSON.parse(jwtParts[1]),
-		signature: jwtParts[2]
-	};
-	log.debug('jwt:' + toStr(jwt));
-	return jwt;
+exports.fromAccessToken = function (params) {
+  const jwtParts = params.accessToken.split(".").map(function (base64url) {
+    //log.debug('base64url:' + toStr(base64url));
+    const stream = base64UrlDecode(base64url);
+    const decoded = readText(stream);
+    //log.debug('decoded:' + toStr(decoded));
+    return decoded;
+  });
+  //log.debug('jwtParts:' + toStr(jwtParts));
+  const jwt = {
+    header: JSON.parse(jwtParts[0]),
+    payload: JSON.parse(jwtParts[1]),
+    signature: jwtParts[2],
+  };
+  log.debug("jwt:" + toStr(jwt));
+  return jwt;
 }; // function fromAccessToken
