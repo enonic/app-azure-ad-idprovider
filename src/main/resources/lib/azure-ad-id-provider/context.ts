@@ -2,16 +2,15 @@
  * context module.
  * @module lib/azure-ad-id-provider/context
  */
-
-const contextLib = require("/lib/xp/context");
+import { run } from "/lib/xp/context";
 
 /**
  * Runs a function within admin context.
  * @param {Function} callback
  * @returns {Object}
  */
-exports.runAsAdmin = function (callback) {
-  return contextLib.run(
+export function runAsAdmin<T>(callback: () => T): T {
+  return run<T>(
     {
       user: {
         login: "su",
@@ -21,4 +20,4 @@ exports.runAsAdmin = function (callback) {
     },
     callback,
   );
-};
+}

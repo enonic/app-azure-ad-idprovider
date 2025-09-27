@@ -2,38 +2,15 @@
  * azure-ad-id-provider module.
  * @module lib/azure-ad-id-provider
  */
-
-//──────────────────────────────────────────────────────────────────────────────
-// Require libs
-//──────────────────────────────────────────────────────────────────────────────
-exports.array = require("./array");
-exports.auth = require("./auth");
-exports.jwt = require("./jwt");
-exports.oauth2 = require("./oauth2");
-exports.object = require("./object");
-
-const lib = {
-  xp: {
-    auth: require("/lib/xp/auth"),
-    portal: require("/lib/xp/portal"),
-    event: require("/lib/xp/event"),
-  },
-  config: require("/lib/azure-ad-id-provider/config"),
-};
-
-//──────────────────────────────────────────────────────────────────────────────
-// Alias functions from libs
-//──────────────────────────────────────────────────────────────────────────────
-const inFirstButNotInSecond = exports.array.inFirstButNotInSecond;
-const createAndUpdateGroupsFromJwt = exports.auth.group.createAndUpdateGroupsFromJwt;
-const createOrUpdateFromJwt = exports.auth.user.createOrUpdateFromJwt;
-const modifyProfile = exports.auth.user.modifyProfile;
-const jwtFromAccessToken = exports.jwt.fromAccessToken;
-const requestAccessToken = exports.oauth2.requestAccessToken;
-const toStr = exports.object.toStr;
-const valueFromFormat = exports.object.valueFromFormat;
-const getIdProviderConfig = lib.config.getIdProviderConfig;
-const login = lib.xp.auth.login;
+import { login } from "/lib/xp/auth";
+import { send as sendEvent } from "/lib/xp/event";
+import { getIdProviderConfig } from "/lib/azure-ad-id-provider/config";
+import { createAndUpdateGroupsFromJwt } from "./auth/group";
+import { createOrUpdateFromJwt, modifyProfile } from "./auth/user";
+import { fromAccessToken } from "./jwt";
+import { requestAccessToken } from "./oauth2";
+import { toStr } from "./object";
+import type { Request, Response } from "@enonic-types/core";
 
 //──────────────────────────────────────────────────────────────────────────────
 // ADFS ID provider methods
@@ -45,13 +22,17 @@ const login = lib.xp.auth.login;
  * @param {import("@enonic-types/core").Request} request
  * @returns {import("@enonic-types/core").Response}
  */
-exports.handleIdProviderRequest = function (request) {
+export function handleIdProviderRequest(request: Request<{ params: { code: string } }>): Response {
   log.debug("handleIdProviderRequest(" + toStr(request) + ")");
 
   const accessTokenResponse = requestAccessToken(request);
   log.debug("accessTokenResponse:" + toStr(accessTokenResponse));
 
-  const json = JSON.parse(accessTokenResponse.body);
+  const json = JSON.parse(accessTokenResponse.body ?? "{}") as {
+    error: string;
+    access_token: string;
+    expires_in: number;
+  };
   log.debug("json:" + toStr(json));
 
   if (json.error) {
@@ -59,13 +40,13 @@ exports.handleIdProviderRequest = function (request) {
     throw new Error("Something went wrong when requesting access token.");
   }
 
-  const jwt = jwtFromAccessToken({ accessToken: json.access_token });
+  const jwt = fromAccessToken({ accessToken: json.access_token });
 
   const idProviderConfig = getIdProviderConfig();
   log.debug("idProviderConfig:" + toStr(idProviderConfig));
   log.debug("jwt payload:" + toStr(jwt.payload));
 
-  const user = createOrUpdateFromJwt({ jwt: jwt });
+  const user = createOrUpdateFromJwt({ jwt });
 
   if (json.expires_in) {
     const now = new Date();
@@ -94,7 +75,7 @@ exports.handleIdProviderRequest = function (request) {
   log.debug("loginResult:" + toStr(loginResult));
 
   // Fire event that a user is logged in
-  lib.xp.event.send({
+  sendEvent({
     type: "azure.user.login",
     distributed: true,
     data: user,
@@ -111,4 +92,4 @@ exports.handleIdProviderRequest = function (request) {
     postProcess: false,
     applyFilters: false,
   };
-}; // function handleIdProviderRequest
+}

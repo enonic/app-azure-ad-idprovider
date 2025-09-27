@@ -4,9 +4,13 @@
  * into a clone of the defaults won't do.
  * Adds values in the config (replaces them with values/structures from defaults), wherever values are undefined or null. Other falsy values are kept if set in the cfg file.
  */
-const defaultsLib = require("./defaults.js");
+import { getDefaults } from "./defaults";
 
-const addValueIfMissing = (configObject, defaultObject, key) => {
+const addValueIfMissing = (
+  configObject: Record<string, unknown>,
+  defaultObject: Record<string, unknown>,
+  key: string,
+) => {
   if (Array.isArray(configObject)) {
     // Missing value: value is not found in the config array
     if (defaultObject[key] != null && configObject.indexOf(defaultObject[key]) === -1) {
@@ -21,7 +25,11 @@ const addValueIfMissing = (configObject, defaultObject, key) => {
   }
 };
 
-const addKeyIfMissing = (configObject, defaultObject, key) => {
+const addKeyIfMissing = (
+  configObject: Record<string, unknown>,
+  defaultObject: Record<string, unknown>,
+  key: string,
+) => {
   if ("object" !== typeof configObject[key] || Array.isArray(configObject[key]) !== Array.isArray(defaultObject[key])) {
     if (Array.isArray(defaultObject[key])) {
       configObject[key] = [];
@@ -31,19 +39,19 @@ const addKeyIfMissing = (configObject, defaultObject, key) => {
   }
 };
 
-const addObject = (configObject, defaultObject) => {
+function addObject(configObject: Record<string, unknown>, defaultObject: Record<string, unknown>): void {
   Object.keys(defaultObject).forEach((key) => {
     if (defaultObject[key] && "object" === typeof defaultObject[key]) {
       addKeyIfMissing(configObject, defaultObject, key);
-      addObject(configObject[key], defaultObject[key]);
+      addObject(configObject[key] as Record<string, unknown>, defaultObject[key] as Record<string, unknown>);
     } else {
       addValueIfMissing(configObject, defaultObject, key);
     }
   });
-};
+}
 
-exports.withDefaults = (config) => {
-  const defaults = defaultsLib.getDefaults();
+export function withDefaults(config: Record<string, unknown>) {
+  const defaults = getDefaults();
   if (defaults && "object" === typeof defaults) {
     if (!config || "object" !== typeof config || Array.isArray(config)) {
       config = {};
@@ -51,4 +59,4 @@ exports.withDefaults = (config) => {
     addObject(config, defaults);
   }
   return config;
-};
+}

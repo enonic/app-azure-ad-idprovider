@@ -13,16 +13,20 @@ app {
   systemVersion = "${xpVersion}"
 }
 
+sourceCompatibility = JavaVersion.VERSION_11
+targetCompatibility = JavaVersion.VERSION_11
+
 dependencies {
+  implementation "com.enonic.xp:script-api:${xpVersion}"
   implementation "com.enonic.xp:core-api:${xpVersion}"
   implementation "com.enonic.xp:portal-api:${xpVersion}"
-  include "com.enonic.xp:lib-event:${xpVersion}"
   include "com.enonic.xp:lib-auth:${xpVersion}"
+  include "com.enonic.xp:lib-cluster:${xpVersion}"
+  include "com.enonic.xp:lib-common:${xpVersion}"
   include "com.enonic.xp:lib-context:${xpVersion}"
+  include "com.enonic.xp:lib-event:${xpVersion}"
   include "com.enonic.xp:lib-io:${xpVersion}"
   include "com.enonic.xp:lib-portal:${xpVersion}"
-  include "com.enonic.xp:lib-common:${xpVersion}"
-  include "com.enonic.xp:lib-cluster:${xpVersion}"
   include 'com.enonic.lib:lib-http-client:3.2.2'
   include 'com.enonic.lib:lib-text-encoding:2.1.1'
   include 'com.enonic.lib:lib-util:3.1.1'
@@ -36,14 +40,23 @@ repositories {
   xp.enonicRepo()
 }
 
-// Added node so it is easy to find a version which works
 node {
-  // Version of node to use.
-  version = '20.12.2'
-
-  // If true, it will download node using above parameters.
-  // If false, it will try to use globally installed node.
+  // Whether to download and install a specific Node.js version or not
+  // If false, it will use the globally installed Node.js
+  // If true, it will download node using above parameters
+  // Note that npm is bundled with Node.js
   download = true
+
+  // Version of node to download and install (only used if download is true)
+  // It will be unpacked in the workDir
+  version = '20.12.2'
+}
+
+processResources {
+  exclude '**/.gitkeep'
+  exclude '**/*.json'
+  exclude '**/*.ts'
+  exclude '**/*.tsx'
 }
 
 //──────────────────────────────────────────────────────────────────────────────
@@ -53,4 +66,51 @@ task generate_docs(type: Exec) {
   executable 'npm'
   args = ['run', 'generate-docs']
   mustRunAfter 'build'
+}
+
+
+tasks.register('dev', Exec) {
+  if (org.gradle.internal.os.OperatingSystem.current().isWindows()) {
+    commandLine 'cmd', '/c', 'gradlew.bat', 'deploy', '-t'
+  } else {
+    commandLine './gradlew', 'deploy', '-t'
+  }
+}
+
+tasks.register('npmBuild', NpmTask) {
+  args = [
+    'run',
+    '--silent',
+    'build'
+  ]
+  dependsOn npmInstall
+  environment = [
+    'FORCE_COLOR': 'true',
+    'LOG_LEVEL_FROM_GRADLE': gradle.startParameter.logLevel.toString(),
+    'NODE_ENV': project.hasProperty('dev') || project.hasProperty('development') ? 'development' : 'production'
+  ]
+  inputs.dir 'src/main/resources'
+  outputs.dir 'build/resources/main'
+  outputs.upToDateWhen { false }
+}
+
+jar.dependsOn npmBuild
+
+tasks.register('npmCheck', NpmTask) {
+  dependsOn npmInstall
+  args = [
+    'run',
+    'check'
+  ]
+  environment = [
+    'FORCE_COLOR': 'true',
+  ]
+}
+
+check.dependsOn npmCheck
+compileTestJava.dependsOn npmBuild
+compileTestJava.mustRunAfter npmBuild
+
+tasks.withType(Copy).configureEach {
+  includeEmptyDirs = false
 }

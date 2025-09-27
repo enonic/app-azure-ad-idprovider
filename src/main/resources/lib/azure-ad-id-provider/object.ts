@@ -2,6 +2,7 @@
  * object module.
  * @module lib/azure-ad-id-provider/object
  */
+import type { JwtPayload } from "/lib/azure-ad-id-provider/jwt";
 
 /**
  * Syntactic sugar for JSON.stringify
@@ -10,21 +11,27 @@
  * @param {String|Number} space - default: 4
  * @returns {String} A JSON string representing the given value.
  */
-function toStr(value) {
-  const replacer = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
-  const space = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 4;
+export function toStr(
+  value: unknown,
+  replacer?: (this: unknown, key: string, value: unknown) => unknown,
+  space: string | number = 4,
+): string {
   return JSON.stringify(value, replacer, space);
 }
-exports.toStr = toStr;
 
 /**
  * Checks whether something is null or undefined.
  * @param {*} value
  * @returns {Boolean} true or false
  */
-function isNotSet(v) {
+function isNotSet(v: unknown): v is null | undefined {
   return v === null || typeof v === "undefined";
 }
+
+type ValueFromFormatParams = {
+  format: string;
+  data: JwtPayload;
+};
 
 /**
  * "Parses" pseudocode, fetches values from the data, and returns the formatted result.
@@ -33,16 +40,17 @@ function isNotSet(v) {
  * @param {Object} params.data
  * @returns {string|Array} value
  */
-exports.valueFromFormat = function (params) {
+export function valueFromFormat(params: ValueFromFormatParams): string {
   log.debug("valueFromFormat(" + toStr(params) + ")");
-  let value = "";
+  let value: string = "";
   const formatParts = params.format.split(/\$\{/);
   log.debug("formatParts:" + toStr(formatParts));
   if (formatParts.length == 1) {
     // No variables in format
     return params.format;
   }
-  formatParts.forEach(function (formatPart) {
+
+  formatParts.forEach((formatPart) => {
     if (formatPart) {
       if (formatPart.indexOf("}") === -1) {
         // Not a variable, just characters
@@ -57,10 +65,15 @@ exports.valueFromFormat = function (params) {
         log.debug("evalString:" + toStr(evalString));
         let partOfValue;
         try {
-          partOfValue = eval(evalString);
+          partOfValue = eval(evalString) as string;
         } catch (e) {
-          log.error("valueFromFormat(" + toStr(params) + "): " + e.message);
-          throw new Error('valueFromFormat: Something wrong in format:"' + params.format + '" : ' + e.message);
+          log.error("valueFromFormat(" + toStr(params) + "): " + (e as { message: string }).message);
+          throw new Error(
+            'valueFromFormat: Something wrong in format:"' +
+              params.format +
+              '" : ' +
+              (e as { message: string }).message,
+          );
         }
         log.debug("partOfValue:" + toStr(partOfValue));
         if (isNotSet(partOfValue)) {
@@ -76,4 +89,4 @@ exports.valueFromFormat = function (params) {
   }); //forEach.formatPart
   log.debug("valueFromFormat(" + toStr(params) + ") --> " + toStr(value));
   return value;
-};
+}

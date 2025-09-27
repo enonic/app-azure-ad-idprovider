@@ -6,6 +6,8 @@ const CONFIG_DEFAULTS = {
     displayName: "${given_name} ${family_name} <${upn}>",
     email: "${upn}",
   },
-};
+} as const;
 
-exports.getDefaults = () => CONFIG_DEFAULTS;
+export function getDefaults(): typeof CONFIG_DEFAULTS {
+  return CONFIG_DEFAULTS;
+}

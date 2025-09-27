@@ -2,55 +2,42 @@
  * auth.user module.
  * @module lib/azure-ad-id-provider/auth/user
  */
+import { sanitizeName } from "/lib/azure-ad-id-provider/auth/sanitizeName";
+import { runAsAdmin } from "/lib/azure-ad-id-provider/context";
+import { toStr, valueFromFormat } from "/lib/azure-ad-id-provider/object";
+import { forceArray } from "/lib/util/data";
+import {
+  createUser,
+  findUsers,
+  getMemberships,
+  getProfile as xpGetProfile,
+  modifyProfile as xpModifyProfile,
+  modifyUser,
+  type Group,
+  type GroupKey,
+  type Role,
+  type UserKey,
+  type User,
+  type GetProfileParams,
+  type RoleKey,
+  type ModifyProfileParams as XPModifyProfileParams,
+} from "/lib/xp/auth";
+import { getIdProviderKey } from "/lib/xp/portal";
+import { sanitize } from "/lib/xp/common";
+import { send as sendEvent } from "/lib/xp/event";
+import { getIdProviderConfig } from "/lib/azure-ad-id-provider/config";
+import { getDefaults } from "/lib/configFile/defaults";
+import type { Jwt } from "/lib/azure-ad-id-provider/jwt";
 
-//──────────────────────────────────────────────────────────────────────────────
-// Require libs
-//──────────────────────────────────────────────────────────────────────────────
-const lib = {
-  azureAdIdProvider: {
-    auth: {
-      sanitizeName: require("/lib/azure-ad-id-provider/auth/sanitizeName"),
-    },
-    context: require("/lib/azure-ad-id-provider/context"),
-    object: require("/lib/azure-ad-id-provider/object"),
-  },
-  enonic: {
-    util: {
-      data: require("/lib/util/data"),
-    },
-  },
-  xp: {
-    auth: require("/lib/xp/auth"),
-    portal: require("/lib/xp/portal"),
-    common: require("/lib/xp/common"),
-    event: require("/lib/xp/event"),
-  },
-  config: require("/lib/azure-ad-id-provider/config"),
-  defaults: require("/lib/configFile/defaults"),
+const CONFIG_DEFAULTS = getDefaults();
+
+type CreateOrModifyParams = {
+  name: string;
+  displayName: string;
+  email: string;
+  idProvider: string;
 };
 
-const CONFIG_DEFAULTS = lib.defaults.getDefaults();
-
-//──────────────────────────────────────────────────────────────────────────────
-// Alias functions from libs
-//──────────────────────────────────────────────────────────────────────────────
-const sanitizeName = lib.azureAdIdProvider.auth.sanitizeName.sanitizeName;
-const runAsAdmin = lib.azureAdIdProvider.context.runAsAdmin;
-const toStr = lib.azureAdIdProvider.object.toStr;
-const valueFromFormat = lib.azureAdIdProvider.object.valueFromFormat;
-const forceArray = lib.enonic.util.data.forceArray;
-const createUser = lib.xp.auth.createUser;
-const findUsers = lib.xp.auth.findUsers;
-const getIdProviderConfig = lib.config.getIdProviderConfig;
-const getMemberships = lib.xp.auth.getMemberships;
-const xpGetProfile = lib.xp.auth.getProfile;
-const xpModifyProfile = lib.xp.auth.modifyProfile;
-const modifyUser = lib.xp.auth.modifyUser;
-const getIdProviderKey = lib.xp.portal.getIdProviderKey;
-
-//──────────────────────────────────────────────────────────────────────────────
-// auth.user methods
-//──────────────────────────────────────────────────────────────────────────────
 /**
  * Creates or modifies a user and returns the user.
  * @param {Object} params
@@ -61,7 +48,7 @@ const getIdProviderKey = lib.xp.portal.getIdProviderKey;
  * @returns {user}
  */
 // NOTE: The user content has a disabled parameter, that could be used for something.
-function createOrModify(params) {
+export function createOrModify(params: CreateOrModifyParams) {
   log.debug("createOrModify(" + toStr(params) + ")");
 
   // NOTE: Could have used getUser() instead.
@@ -75,7 +62,7 @@ function createOrModify(params) {
   });
   log.debug("findUsersResult:" + toStr(findUsersResult));
 
-  let user;
+  let user: User | null = null;
   if (findUsersResult.total > 1) {
     const msg = "Found multiple users with name:" + params.name;
     log.error(msg);
@@ -86,8 +73,10 @@ function createOrModify(params) {
       log.debug("unchanged user:" + toStr(user));
     } else {
       log.debug("before modify user:" + toStr(user));
-      user = runAsAdmin(function () {
+      user = runAsAdmin(() => {
         return modifyUser({
+          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+          // @ts-ignore
           key: user.key,
           editor: function (c) {
             c.displayName = params.displayName;
@@ -97,10 +86,10 @@ function createOrModify(params) {
         });
       });
 
-      lib.xp.event.send({
+      sendEvent({
         type: "azure.user.modify",
         distributed: true,
-        data: user,
+        data: user ?? undefined,
       });
 
       log.debug("modified user:" + toStr(user));
@@ -110,16 +99,15 @@ function createOrModify(params) {
       user = createUser(params);
     });
 
-    lib.xp.event.send({
+    sendEvent({
       type: "azure.user.create",
       distributed: true,
-      data: user,
+      data: user ?? undefined,
     });
     log.debug("created user:" + toStr(user));
   }
   return user;
-} // function createOrModify
-exports.createOrModify = createOrModify;
+}
 
 /**
  * Gets a user profile.
@@ -128,16 +116,24 @@ exports.createOrModify = createOrModify;
  * @param {string} params.scope
  * @returns {profile}
  */
-exports.getProfile = function (params) {
-  const getProfileParams = { key: params.key };
+export function getProfile(params: { key: UserKey; scope?: string }) {
+  const getProfileParams: GetProfileParams = { key: params.key };
   if (params.scope) {
     getProfileParams.scope = params.scope;
   }
-  const getProfileResult = runAsAdmin(function () {
+
+  const getProfileResult = runAsAdmin(() => {
     return xpGetProfile(getProfileParams);
   });
   log.debug("getProfile(" + toStr(params) + ") --> " + toStr(getProfileResult));
   return getProfileResult;
+}
+
+type ModifyProfileParams = {
+  key: UserKey;
+  profile: Record<string, unknown>;
+  log?: boolean;
+  scope?: string;
 };
 
 /**
@@ -150,15 +146,15 @@ exports.getProfile = function (params) {
  * @param {Object} params.log - Log this change? Default is true
  * @returns {profile}
  */
-function modifyProfile(params) {
-  const modifyProfileParams = {
+export function modifyProfile(params: ModifyProfileParams): Record<string, unknown> | null {
+  const modifyProfileParams: XPModifyProfileParams<Record<string, unknown>> = {
     key: params.key,
     scope: "adfs",
-    editor: function (c) {
+    editor: (c) => {
       if (!c) {
         c = {};
       }
-      Object.keys(params.profile).forEach(function (property) {
+      Object.keys(params.profile).forEach((property) => {
         c[property] = params.profile[property];
       });
       return c;
@@ -167,15 +163,12 @@ function modifyProfile(params) {
   if (params.scope) {
     modifyProfileParams.scope = params.scope;
   }
-  const modifyProfileResult = runAsAdmin(function () {
-    return xpModifyProfile(modifyProfileParams);
-  });
-  if (params.log != false) {
+  const modifyProfileResult = runAsAdmin(() => xpModifyProfile(modifyProfileParams));
+  if (params.log !== false) {
     log.debug("modifyProfile(" + toStr(params) + ") --> " + toStr(modifyProfileResult));
   }
   return modifyProfileResult;
 }
-exports.modifyProfile = modifyProfile;
 
 /**
  * Sets the value of a property on a path within an object.
@@ -187,15 +180,19 @@ exports.modifyProfile = modifyProfile;
  * @returns {Object}
  */
 // http://stackoverflow.com/questions/6842795/dynamic-deep-setting-for-a-javascript-object
-function setPathToValue(object, path, value) {
+function setPathToValue(object: Record<string, unknown>, path: string, value: unknown): Record<string, unknown> {
   const a = path.split(".");
   let o = object;
   for (let i = 0; i < a.length - 1; i++) {
     const n = a[i];
     if (n in o) {
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
       o = o[n];
     } else {
       o[n] = {};
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
       o = o[n];
     }
   }
@@ -210,14 +207,15 @@ function setPathToValue(object, path, value) {
  * @param {Object} params.jwt
  * @returns {}
  */
-function enrichProfileFromJwt(params) {
+export function enrichProfileFromJwt(params: { key: UserKey; jwt: Jwt }) {
   const idProviderConfig = getIdProviderConfig();
   log.debug("idProviderConfig:" + toStr(idProviderConfig));
 
   if (!idProviderConfig.profile) {
     return;
   }
-  forceArray(idProviderConfig.profile).forEach(function (property) {
+
+  forceArray(idProviderConfig.profile).forEach((property) => {
     if (property.from && property.to) {
       modifyProfile({
         key: params.key,
@@ -231,17 +229,16 @@ function enrichProfileFromJwt(params) {
         ),
       });
     }
-  }); // forEach property
-} // function enrichProfileFromJwt
-exports.enrichProfileFromJwt = enrichProfileFromJwt;
+  });
+}
 
 /**
  * Gets a list of groups a user is a member of.
  * @param {string} principalKey
  * @returns {groups}
  */
-exports.getGroups = function (principalKey) {
-  const principals = runAsAdmin(function () {
+export function getGroups(principalKey: UserKey | GroupKey): Group[] {
+  const principals = runAsAdmin(() => {
     return getMemberships(principalKey);
   });
   log.debug("getGroups(" + toStr(principalKey) + ") principals:" + toStr(principals));
@@ -250,28 +247,28 @@ exports.getGroups = function (principalKey) {
   });
   log.debug("getGroups(" + toStr(principalKey) + ") -->" + toStr(groups));
   return groups;
-};
+}
 
 /**
  * Gets a list of keys for groups a user is a member of.
  * @param {string} principalKey
  * @returns {groupKeys[]}
  */
-exports.getGroupKeys = function (principalKey) {
-  const groups = exports.getGroups(principalKey);
+export function getGroupKeys(principalKey: UserKey | GroupKey): (GroupKey | RoleKey)[] {
+  const groups = getGroups(principalKey);
   const groupKeys = groups.map(function (group) {
     return group.key;
   });
   log.debug("getGroupKeys(" + toStr(principalKey) + ") -->" + toStr(groupKeys));
   return groupKeys;
-};
+}
 
 /**
  * Gets a list of roles a user has.
  * @param {string} principalKey
  * @returns {roles[]}
  */
-exports.getRoles = function (principalKey) {
+export function getRoles(principalKey: UserKey | GroupKey): (Group | Role)[] {
   const principals = runAsAdmin(function () {
     return getMemberships(principalKey);
   });
@@ -281,7 +278,7 @@ exports.getRoles = function (principalKey) {
   });
   log.debug("getRoles(" + toStr(principalKey) + ") -->" + toStr(roles));
   return roles;
-};
+}
 
 /**
  * Creates or updates a user and its profile based on data in jwt.
@@ -289,7 +286,7 @@ exports.getRoles = function (principalKey) {
  * @param {Object} params.jwt
  * @returns {user}
  */
-exports.createOrUpdateFromJwt = function (params) {
+export function createOrUpdateFromJwt(params: { jwt: Jwt }): User {
   const idProviderConfig = getIdProviderConfig();
   log.debug("idProviderConfig:" + toStr(idProviderConfig));
 
@@ -305,7 +302,7 @@ exports.createOrUpdateFromJwt = function (params) {
 
   //Keep first sanitization to improve backward compatibility rate
   userName = sanitizeName(userName);
-  userName = lib.xp.common.sanitize(userName);
+  userName = sanitize(userName);
 
   const userDisplayNameFormat =
     (idProviderConfig.user && idProviderConfig.user.displayName) || CONFIG_DEFAULTS.user.displayName;
@@ -328,37 +325,19 @@ exports.createOrUpdateFromJwt = function (params) {
     throw new Error("Could not generate user email from mapping:" + userEmailFormat);
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   const user = createOrModify({
     name: userName,
     displayName: userDisplayName,
     email: userEmail,
-    idProvider: getIdProviderKey(),
-  });
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    idProvider: getIdProviderKey()!,
+  })!;
 
   enrichProfileFromJwt({
-    key: user.key,
+    key: user?.key,
     jwt: params.jwt,
   });
 
   return user;
-}; // createOrUpdateFromJwt
-
-exports.debugAllUsers = function () {
-  const findUsersResult = runAsAdmin(function () {
-    return findUsers({
-      count: -1,
-      includeProfile: true,
-      query: "",
-    });
-  });
-  log.debug("findUsersResult:" + toStr(findUsersResult)); // Does not show profile?
-  /*findUsersResult.hits.forEach(function(user) {
-		var getProfileResult = runAsAdmin(function() {
-			return xpGetProfile({
-				key: user.key
-				//scope
-			});
-		});
-		log.debug('getProfile({ key: '+ user.key +' }) --> ' + toStr(getProfileResult));
-	});*/
-}; // debugAllUsers
+}

@@ -1,19 +1,19 @@
-import js from "@eslint/js";
+import tseslint from "typescript-eslint";
 import eslintPluginPrettierRecommended from "eslint-plugin-prettier/recommended";
-import { defineConfig } from "eslint/config";
 
-export default defineConfig([
+export default tseslint.config(
+  tseslint.configs.strictTypeChecked,
   eslintPluginPrettierRecommended,
   {
-    files: ["**/*.{js}"],
-    plugins: { js },
-    extends: ["js/recommended"],
-  },
-  {
-    files: ["**/*.js"],
-    languageOptions: { sourceType: "commonjs" },
-    rules: {
-      "prefer-const": "error",
+    languageOptions: {
+      parserOptions: {
+        projectService: true,
+        tsconfigRootDir: import.meta.dirname
+      }
     },
-  },
-]);
+    rules: {
+      "@typescript-eslint/no-unnecessary-condition": "off",
+      "@typescript-eslint/restrict-template-expressions": "off"
+    }
+  }
+);

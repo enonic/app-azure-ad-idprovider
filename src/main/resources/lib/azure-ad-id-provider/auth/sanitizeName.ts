@@ -26,7 +26,7 @@
  * @param {string} name
  * @returns {string}
  */
-exports.sanitizeName = function (name) {
+export function sanitizeName(name: string): string {
   return name
     .toLowerCase()
     .replace(/[!"()]+/g, "") // ASCII removed.
@@ -39,4 +39,4 @@ exports.sanitizeName = function (name) {
     .replace(/--+/g, "-") // Two or more dashes becomes just one.
     .replace(/^[-.]+/, "") // Do not begin with - or .
     .replace(/[-.]+$/, ""); // Do not end in - or .
-};
+}

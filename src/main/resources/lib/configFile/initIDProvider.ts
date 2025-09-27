@@ -1,7 +1,11 @@
 // Based on app-simple-idprovider
-
-const beanService = require("/lib/configFile/services/bean");
-const configFileLib = require("/lib/configFile/configFile");
+import { createIdProvider, getIdProviders, type IdProvider } from "/lib/configFile/services/bean";
+import {
+  CONFIG_NAMESPACE,
+  getAllIdProviderNames,
+  shouldAutoInit,
+  getConfigForIdProvider,
+} from "/lib/configFile/configFile";
 
 /**
  * Check all idproviders by name
@@ -9,9 +13,8 @@ const configFileLib = require("/lib/configFile/configFile");
  * @param {Array} providers
  * @returns {Boolean} true if exists, false if not
  */
-function exists(providers, name) {
-  for (const count in providers) {
-    const provider = providers[count];
+function exists(providers: IdProvider[], name: string): boolean {
+  for (const provider of providers) {
     if (provider && provider.key === name) {
       log.info(`Userstore '${name}' already exists - no autoinit.`);
       return true;
@@ -21,25 +24,25 @@ function exists(providers, name) {
   return false;
 }
 
-exports.initUserStores = function () {
-  const systemIdProviders = beanService.getIdProviders();
-  const configedIdProviderNames = configFileLib.getAllIdProviderNames();
+export function initUserStores() {
+  const systemIdProviders = getIdProviders();
+  const configedIdProviderNames = getAllIdProviderNames();
 
   configedIdProviderNames.forEach((idProviderName) => {
-    if (configFileLib.shouldAutoInit() && !exists(systemIdProviders, idProviderName)) {
+    if (shouldAutoInit() && !exists(systemIdProviders, idProviderName)) {
       log.info(`Autoinit: creating userstore '${idProviderName}'...`);
 
-      const config = configFileLib.getConfigForIdProvider(idProviderName);
-      const displayName = config.displayName || idProviderName;
+      const config = getConfigForIdProvider(idProviderName);
+      const displayName = (config?.displayName as string) ?? idProviderName;
       const description =
-        config.description || `${configFileLib.CONFIG_NAMESPACE}.${idProviderName} in ${app.config["config.filename"]}`;
+        (config?.description as string) ?? `${CONFIG_NAMESPACE}.${idProviderName} in ${app.config["config.filename"]}`;
 
-      const result = beanService.createIdProvider({
+      const result = createIdProvider({
         name: idProviderName,
         displayName: displayName,
-        descripton: description,
+        description,
         idProviderConfig: {
-          descripton: description,
+          description,
           applicationKey: app.name,
           config: [], // Skipping the node-level config entirely; we're going to use the .cfg anyway (although this causes invalid config fields when viewing it in the user manager)
         },
@@ -61,4 +64,4 @@ exports.initUserStores = function () {
       }
     }
   });
-};
+}
