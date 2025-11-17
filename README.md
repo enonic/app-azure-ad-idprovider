@@ -1,4 +1,4 @@
-# Entra ID Provider
+# Azure ID Provider
 
 **Authenticate your users using Azure Active Directory.**
 This ID Provider uses the OAuth2 v2 endpoint of your Azure AD to authenticate users.
@@ -29,7 +29,7 @@ Can be found in Azure `Active Directory` -> `App registrations` -> `New registra
 
 You'll then need to add the redirect URI for your enonic XP instance to your Azure application. This can be found in the `Authentication` section of your app. Add a new Web platform and then add your url there. The redirect URI is dependent on the login domain:
 E.g. If your login domain is https://example.com/admin then the redirect URI looks like:
-            `https://example.com/admin/tool/_/idprovider/${nameOfIdProvider}`.
+            `https://example.com/admin/tool/_/idprovider/${nameOfIdProvider}`. 
 and if your login domain is https://admin.example.com then the redirect URI looks like:
             `https://admin.example.com/tool/_/idprovider/${nameOfIdProvider}`.
 
@@ -45,13 +45,13 @@ If you want to auto import the users AD groups in Enonic you have to add some AP
 <br />
 
 ### App installation in Enonic XP
-Install the _Entra ID Provider_ app if you haven't already. Note that these docs don't apply to older versions of the app. Versions 1.x are deprecated, and are named _Azure **AD** ID provider_. Most likely you'll want the more **recent version**, without "AD" in the name, and this updated logo:
+Install the _Azure ID Provider_ app if you haven't already. Note that these docs don't apply to older versions of the app. Versions 1.x are deprecated, and are named _Azure **AD** ID provider_. Most likely you'll want the more **recent version**, without "AD" in the name, and this updated logo:
 
 <img id="azure-id-provider-logo" src="src/main/resources/application.svg" height="70" width="70" />
 
 Open up the User manage interface, add a new ID provider and [give it a name](#users-app). Verify that the path name of the Id Provider is the same as the last part of the redirect URI added to your application in Azure.
 
-Connect the ID provider to this app, by choosing `Entra ID provider` in the Application. Also remember to configure the app.
+Connect the ID provider to this app, by choosing `Azure ID provider` in the Application. Also remember to configure the app.
 
 <br />
 
@@ -180,7 +180,7 @@ For user mapping config (`idprovider.<idprovidername>.user.*`), remember the `@@
 ### 2. Change the app
 
 _After_ migrating the configuration as above, a few more steps are needed:
-- Open the Application manager in XP. The app cannot simply be version-upgraded here (because of the app key change). First, install the new version of the app: _Entra ID provider_. Don't uninstall the old one yet.
+- Open the Application manager in XP. The app cannot simply be version-upgraded here (because of the app key change). First, install the new version of the app: _Azure ID provider_. Don't uninstall the old one yet.
 - Existing ID provider(s) must be re-pointed to the new app instead of the old. Edit it (/them) in the Users app: under Applications, select the new _Azure IP provider_ and remove the old _Azure AD ID provider_. Save and close.
 - If there are any added customizations (hardcoded references etc) in your apps/environments that refer to the old app key `com.gravitondigital.app.azureadidprovider`, they must be updated to `com.enonic.app.azureadidprovider`.
 - Finally, back in the Application manager in XP, the old app _Azure **AD** ID provider_ can be uninstalled.
