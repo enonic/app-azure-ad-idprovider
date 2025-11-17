@@ -1,5 +1,9 @@
 # Azure ID Provider
 
+## Deprecation Notice:
+
+As of November 2025, this app is deprecated and will no longer receive updates or support. Users are encouraged to transition to new [Entra ID provider](https://github.com/enonic/app-entra-idprovider).
+
 **Authenticate your users using Azure Active Directory.**
 This ID Provider uses the OAuth2 v2 endpoint of your Azure AD to authenticate users.
 
@@ -29,7 +33,7 @@ Can be found in Azure `Active Directory` -> `App registrations` -> `New registra
 
 You'll then need to add the redirect URI for your enonic XP instance to your Azure application. This can be found in the `Authentication` section of your app. Add a new Web platform and then add your url there. The redirect URI is dependent on the login domain:
 E.g. If your login domain is https://example.com/admin then the redirect URI looks like:
-            `https://example.com/admin/tool/_/idprovider/${nameOfIdProvider}`. 
+            `https://example.com/admin/tool/_/idprovider/${nameOfIdProvider}`.
 and if your login domain is https://admin.example.com then the redirect URI looks like:
             `https://admin.example.com/tool/_/idprovider/${nameOfIdProvider}`.
 
